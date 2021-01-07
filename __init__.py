@@ -47,15 +47,18 @@ class OVOSHomescreen(MycroftSkill):
         self.gui.clear()
         self.log.debug('Activating Time/Date resting page')
         self.gui['time_string'] = self.dt_skill.get_display_current_time()
-        self.gui['ampm_string'] = ''
         self.gui['date_string'] = self.dt_skill.get_display_date()
         self.gui['weekday_string'] = self.dt_skill.get_weekday()
         self.gui['month_string'] = self.dt_skill.get_month_date()
         self.gui['year_string'] = self.dt_skill.get_year()
-        self.gui.show_page('homescreen.qml')
+        self.gui.show_page('idle.qml')
 
     def handle_idle_update_time(self):
         self.gui['time_string'] = self.dt_skill.get_display_current_time()
+        self.gui['date_string'] = self.dt_skill.get_display_date()
+        self.gui['weekday_string'] = self.dt_skill.get_weekday()
+        self.gui['month_string'] = self.dt_skill.get_month_date()
+        self.gui['year_string'] = self.dt_skill.get_year()
 
     def update_dt(self):
         self.gui['time_string'] = self.dt_skill.get_display_current_time()
