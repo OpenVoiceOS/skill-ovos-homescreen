@@ -10,6 +10,119 @@ Mycroft.Delegate {
     skillBackgroundColorOverlay: "transparent"
     skillBackgroundSource: Qt.resolvedUrl("img/background.jpg")
     property bool horizontalMode: idleRoot.width > idleRoot.height ? 1 : 0
+    readonly property color primaryBorderColor: Qt.rgba(1, 0, 0, 0.9)
+    readonly property color secondaryBorderColor: Qt.rgba(1, 1, 1, 0.7)
+    property bool runListenerAnimation: sessionData.show_listener_animation
+    
+    onRunListenerAnimationChanged: {
+        root.visible = runListenerAnimation
+    }
+
+    Rectangle {
+        id: root
+        property Gradient borderGradient: borderGradient
+        property int borderWidth: Kirigami.Units.largeSpacing - Kirigami.Units.smallSpacing
+        anchors.fill: parent
+        color: "transparent"
+        visible: false
+        anchors.leftMargin: -Kirigami.Units.largeSpacing
+        anchors.rightMargin: -Kirigami.Units.largeSpacing
+        anchors.topMargin: -Kirigami.Units.largeSpacing
+        anchors.bottomMargin: -Kirigami.Units.largeSpacing
+
+        Loader {
+            id: loader
+            width: parent.width
+            height: parent.height
+            anchors.centerIn: parent
+            active: borderGradient
+            sourceComponent: border
+        }
+
+        Gradient {
+            id: borderGradient
+            GradientStop {
+                position: 0.000
+                SequentialAnimation on color {
+                    loops: Animation.Infinite
+                    running: root.visible
+                    ColorAnimation { from: primaryBorderColor; to: secondaryBorderColor;  duration: 1000 }
+                    ColorAnimation { from: secondaryBorderColor; to: primaryBorderColor;  duration: 1000 }
+                }
+            }
+            GradientStop {
+                position: 0.256
+                color: Qt.rgba(0, 1, 1, 1)
+                SequentialAnimation on color {
+                    loops: Animation.Infinite
+                    running: root.visible
+                    ColorAnimation { from: secondaryBorderColor; to: primaryBorderColor;  duration: 1000 }
+                    ColorAnimation { from: primaryBorderColor; to: secondaryBorderColor;  duration: 1000 }
+                }
+            }
+            GradientStop {
+                position: 0.500
+                SequentialAnimation on color {
+                    loops: Animation.Infinite
+                    running: root.visible
+                    ColorAnimation { from: primaryBorderColor; to: secondaryBorderColor;  duration: 1000 }
+                    ColorAnimation { from: secondaryBorderColor; to: primaryBorderColor;  duration: 1000 }
+                }
+            }
+            GradientStop {
+                position: 0.756
+                SequentialAnimation on color {
+                    loops: Animation.Infinite
+                    running: root.visible
+                    ColorAnimation { from: secondaryBorderColor; to: primaryBorderColor;  duration: 1000 }
+                    ColorAnimation { from: primaryBorderColor; to: secondaryBorderColor;  duration: 1000 }
+                }
+            }
+            GradientStop {
+                position: 1.000
+                SequentialAnimation on color {
+                    loops: Animation.Infinite
+                    running: root.visible
+                    ColorAnimation { from: primaryBorderColor; to: secondaryBorderColor;  duration: 1000 }
+                    ColorAnimation { from: secondaryBorderColor; to: primaryBorderColor;  duration: 1000 }
+                }
+            }
+        }
+
+        Component {
+            id: border
+            Item {
+                ConicalGradient {
+                    id: borderFill
+                    anchors.fill: parent
+                    gradient: borderGradient
+                    visible: false
+                }
+                
+                FastBlur {
+                    anchors.fill: parent
+                    source: parent
+                    radius: 32
+                }
+
+                Rectangle {
+                    id: mask
+                    radius: root.radius
+                    border.width: root.borderWidth
+                    anchors.fill: parent
+                    color: 'transparent'
+                    visible: false
+                }
+
+                OpacityMask {
+                    id: opM
+                    anchors.fill: parent
+                    source: borderFill
+                    maskSource: mask
+                }
+            }
+        }
+    }
     
     ColumnLayout {        
         id: grid  
