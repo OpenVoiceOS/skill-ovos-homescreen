@@ -30,14 +30,14 @@ class OVOSHomescreen(MycroftSkill):
         self.skill_manager = SkillManager(self.bus)
         
         # Handle Listner Animations
-        self.add_event("recognizer_loop:wakeword",
-                       self.handle_listener_started)
-        self.add_event("mycroft.mic.listen", 
-                       self.handle_listener_started)
-        self.add_event("recognizer_loop:record_end",
-                       self.handle_listener_ended)
-        self.add_event("mycroft.speech.recognition.unknown",
-                       self.handle_listener_ended)
+        #self.add_event("recognizer_loop:wakeword",
+        #               self.handle_listener_started)
+        #self.add_event("mycroft.mic.listen", 
+        #               self.handle_listener_started)
+        #self.add_event("recognizer_loop:record_end",
+        #               self.handle_listener_ended)
+        #self.add_event("mycroft.speech.recognition.unknown",
+        #               self.handle_listener_ended)
 
         # Make Import For TimeData
         root_dir = self.root_dir.rsplit('/', 1)[0]
