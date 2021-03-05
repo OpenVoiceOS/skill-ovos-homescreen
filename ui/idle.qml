@@ -12,10 +12,93 @@ Mycroft.Delegate {
     property bool horizontalMode: idleRoot.width > idleRoot.height ? 1 : 0
     readonly property color primaryBorderColor: Qt.rgba(1, 0, 0, 0.9)
     readonly property color secondaryBorderColor: Qt.rgba(1, 1, 1, 0.7)
-    property bool runListenerAnimation: sessionData.show_listener_animation
+    property int notificationCounter: sessionData.notifcation_counter
+    property var notificationData: sessionData.notification
+    property var notificationModel: sessionData.notification_model
+    property var previous_model
+    signal clearNotificationSessionData
     
-    onRunListenerAnimationChanged: {
-        root.visible = runListenerAnimation
+    onNotificationDataChanged: {
+        console.log("Notification Should Have Changed")
+        console.log(idleRoot.notificationModel.storedmodel)
+        if(sessionData.notification.text && sessionData.notification !== "") {
+            display_notification()
+        }
+    }
+    
+    onNotificationModelChanged: {
+        if(notificationModel.count > 0) {
+            notificationsStorageView.model = sessionData.notification_model.storedmodel
+        } else {
+            notificationsStorageView.model = sessionData.notification_model.storedmodel
+            notificationsStorageView.forceLayout()
+            if(notificationsStorageViewBox.opened) {
+                notificationsStorageViewBox.close()
+            }
+        }
+    }
+    
+    Connections {
+        target: idleRoot
+        onClearNotificationSessionData: {
+            triggerGuiEvent("homescreen.notification.pop.clear", {"notification": idleRoot.notificationData})
+        }
+    }
+    
+    function display_notification() {
+        console.log("Notification Counter Changed")
+        console.log(notificationData)
+        if(idleRoot.notificationData !== undefined) {
+            console.log("Got A Notification")
+            if(idleRoot.notificationData.type == "sticky"){
+                console.log("Got Sticky Type")
+                var component = Qt.createComponent("NotificationPopSticky.qml");
+            } else {
+                console.log("Got Other Type")
+                var component = Qt.createComponent("NotificationPopTransient.qml");
+            }
+            if (component.status != Component.Ready)
+            {
+                if (component.status == Component.Error) {
+                    console.debug("Error: "+ component.errorString());
+                }
+                return;
+            } else {
+                var notif_object = component.createObject(notificationPopupLayout, {currentNotification: idleRoot.notificationData})
+            }
+        } else {
+            console.log(idleRoot.notificationData)
+        }
+    }
+        
+    Button {
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        width: Kirigami.Theme.iconSizes.Large
+        height: width
+        icon.source: Qt.resolvedUrl("img/notification-icon.svg")
+        visible: idleRoot.notificationModel.count > 0
+        
+        onClicked: {
+            notificationsStorageViewBox.open()
+        }
+        
+        Rectangle {
+            color: "red"
+            anchors.right: parent.right
+            anchors.rightMargin: -Kirigami.Units.largeSpacing * 0.50
+            anchors.top: parent.top
+            anchors.topMargin: -Kirigami.Units.largeSpacing * 0.50
+            width: parent.width * 0.50
+            height: parent.height * 0.50
+            radius: width
+            
+            Label {
+                color: "white"
+                anchors.centerIn: parent
+                text: idleRoot.notificationModel.count
+            }
+        }
     }
 
     Rectangle {
@@ -213,6 +296,125 @@ Mycroft.Delegate {
                     samples: 8
                 }
             }
+        }
+    }
+    
+    Column {
+        id: notificationPopupLayout
+        anchors.fill: parent
+        spacing: Kirigami.Units.largeSpacing * 4
+        property int cellWidth: idleRoot.width
+        property int cellHeight: idleRoot.height
+        z: 9999
+    }
+
+    Button {
+        id: msArea
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 150
+        height: 100
+        text: "Transient Notification"
+        onClicked: {
+                triggerGuiEvent("homescreen.notification.set", {"sender": "Example Skill " + Math.random(), "text": "Received A Sample Notification, This Is Sample Content!", "action": "none", "type": "transient"})
+        }
+    }
+    
+    Button {
+        id: msArea2
+        anchors.bottom: parent.bottom
+        anchors.left: msArea.right
+        anchors.leftMargin: Kirigami.Units.largeSpacing
+        width: 150
+        height: 100
+        text: "Sticky Notification"
+        onClicked: {
+                triggerGuiEvent("homescreen.notification.set", {"sender": "Example Skill " + Math.random(), "text": "Received A Sticky Sample Notification, This Is Sample Sticky Content!", "action": "none", "type": "sticky"})
+        }
+    }
+    
+    Popup {
+        id: notificationsStorageViewBox
+        width: parent.width * 0.80
+        height: parent.height * 0.80
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        parent: idleRoot
+        
+        background: Rectangle {
+            color: "transparent"
+        }
+        
+        Row {
+            id: topBar
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: parent.height * 0.15
+            spacing: parent.width * 0.10
+
+            Rectangle {
+                width: parent.width * 0.50
+                height: parent.height
+                color: "#313131"
+                radius: 10
+                
+                Kirigami.Heading {
+                    level: 3
+                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.leftMargin: Kirigami.Units.largeSpacing
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "Notifications"
+                    color: "#ffffff"
+                }
+            }
+            
+            Rectangle {
+                width: parent.width * 0.40
+                height: parent.height
+                color: "#313131"
+                radius: 10
+                
+                RowLayout {
+                    anchors.centerIn: parent
+                    
+                    Kirigami.Icon {
+                        Layout.preferredWidth: Kirigami.iconSizes.medium
+                        Layout.preferredHeight: Kirigami.iconSizes.medium
+                        source: Qt.resolvedUrl("img/clear.svg")
+                    }
+                   
+                    Kirigami.Heading {
+                        level: 3
+                        width: parent.width
+                        Layout.fillWidth: true
+                        text: "Clear"
+                        color: "#ffffff"
+                    }
+                }
+                
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        triggerGuiEvent("homescreen.notification.storage.clear", {})
+                    }
+                }
+            }
+        }
+        
+        ListView {
+            id: notificationsStorageView
+            anchors.top: topBar.bottom
+            anchors.topMargin: Kirigami.Units.smallSpacing
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            clip: true
+            highlightFollowsCurrentItem: false
+            spacing: Kirigami.Units.smallSpacing
+            property int cellHeight: notificationsStorageView.height            
+            delegate: NotificationDelegate{}
         }
     }
 }
