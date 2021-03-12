@@ -34,6 +34,7 @@ class OVOSHomescreen(MycroftSkill):
         self.skill_manager = SkillManager(self.bus)
         
         # Handle Listner Animations
+        self.add_event("homescreen.notification.set", self.handle_display_notification)
         self.gui.register_handler("homescreen.notification.set", self.handle_display_notification)
         self.gui.register_handler("homescreen.notification.pop.clear", self.handle_clear_notification_data)
         self.gui.register_handler("homescreen.notification.pop.clear.delete", self.handle_clear_delete_notification_data)

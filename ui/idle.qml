@@ -307,31 +307,6 @@ Mycroft.Delegate {
         property int cellHeight: idleRoot.height
         z: 9999
     }
-
-    Button {
-        id: msArea
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        width: 150
-        height: 100
-        text: "Transient Notification"
-        onClicked: {
-                triggerGuiEvent("homescreen.notification.set", {"sender": "Example Skill " + Math.random(), "text": "Received A Sample Notification, This Is Sample Content!", "action": "none", "type": "transient"})
-        }
-    }
-    
-    Button {
-        id: msArea2
-        anchors.bottom: parent.bottom
-        anchors.left: msArea.right
-        anchors.leftMargin: Kirigami.Units.largeSpacing
-        width: 150
-        height: 100
-        text: "Sticky Notification"
-        onClicked: {
-                triggerGuiEvent("homescreen.notification.set", {"sender": "Example Skill " + Math.random(), "text": "Received A Sticky Sample Notification, This Is Sample Sticky Content!", "action": "none", "type": "sticky"})
-        }
-    }
     
     Popup {
         id: notificationsStorageViewBox
