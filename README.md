@@ -1,3 +1,3 @@
-OVOS Homescreen Skill for Mycroft GUI
+Android Homescreen Launcher Skill for Mycroft GUI
 ------------------------------------------------------------------------------ 
-###### Provides Custom Resting Face for OVOS
+##### Displays Mycroft Skills that ship an android.json file as Application Delegates
