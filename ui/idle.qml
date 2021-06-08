@@ -406,47 +406,60 @@ Mycroft.CardDelegate {
                 Layout.rightMargin: Mycroft.Units.gridUnit * 2
                 Layout.fillHeight: true
 
-
-                Label {
-                    id: exampleLabel
+                Row {
                     width: parent.width
                     height: parent.height
-                    fontSizeMode: Text.Fit
-                    visible: true
-                    minimumPixelSize: 50
-                    font.pixelSize: parent.height * 0.35
-                    horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    wrapMode: Text.WordWrap
-                    font.weight: Font.DemiBold
-                    property string entry
-                    text: '<i>“Hey Mycroft, ' + entry + '”</i>'
-                    color: "white"
-                    layer.enabled: true
-                    layer.effect: DropShadow {
-                        verticalOffset: 4
-                        color: idleRoot.shadowColor
-                        radius: 11
-                        spread: 0.4
-                        samples: 16
+                    spacing: Mycroft.Units.gridUnit * 0.5
+
+                    Kirigami.Icon {
+                        id: exampleLabelIcon
+                        source: Qt.resolvedUrl("icons/mic-min.svg")
+                        width: parent.height * 0.50
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: width
                     }
 
-                    PropertyAnimation {
-                        id: entryChangeA
-                        target: exampleLabel
-                        running: false
-                        property: "opacity"
-                        to: 0.5
-                        duration: 500
-                    }
+                    Label {
+                        id: exampleLabel
+                        width: parent.width
+                        height: parent.height
+                        fontSizeMode: Text.Fit
+                        visible: true
+                        minimumPixelSize: 50
+                        font.pixelSize: parent.height * 0.35
+                        horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                        wrapMode: Text.WordWrap
+                        font.weight: Font.DemiBold
+                        property string entry
+                        text: '<i>“Ask Me, ' + entry + '”</i>'
+                        color: "white"
+                        layer.enabled: true
+                        layer.effect: DropShadow {
+                            verticalOffset: 4
+                            color: idleRoot.shadowColor
+                            radius: 11
+                            spread: 0.4
+                            samples: 16
+                        }
 
-                    PropertyAnimation {
-                        id: entryChangeB
-                        target: exampleLabel
-                        running: false
-                        property: "opacity"
-                        to: 1
-                        duration: 500
+                        PropertyAnimation {
+                            id: entryChangeA
+                            target: exampleLabel
+                            running: false
+                            property: "opacity"
+                            to: 0.5
+                            duration: 500
+                        }
+
+                        PropertyAnimation {
+                            id: entryChangeB
+                            target: exampleLabel
+                            running: false
+                            property: "opacity"
+                            to: 1
+                            duration: 500
+                        }
                     }
                 }
             }
