@@ -13,6 +13,7 @@ from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill, resting_screen_handler, intent_file_handler
 from mycroft.skills.skill_loader import load_skill_module
 from mycroft.skills.skill_manager import SkillManager
+from mycroft.skills.api import SkillApi
 
 
 class OVOSHomescreen(MycroftSkill):
@@ -34,7 +35,6 @@ class OVOSHomescreen(MycroftSkill):
         ) + datetime.timedelta(seconds=60)
         self.schedule_repeating_event(self.update_dt, callback_time, 10)
         self.skill_manager = SkillManager(self.bus)
-        print(self.file_system.path)
 
         # Handler Registeration For Notifications
         self.add_event("homescreen.notification.set",
@@ -70,6 +70,20 @@ class OVOSHomescreen(MycroftSkill):
         except:
             self.log.info("Failed To Import DateTime Skill")
 
+        self.weather_api = SkillApi.get('skill-weather.openvoiceos')
+        self.schedule_repeating_event(self.update_weather, callback_time, 900)
+
+        self.skill_info_api = SkillApi.get('ovos-skills-info.openvoiceos')
+
+        try:
+            is_rtl = self.config_core.get("rtl", False)
+            if is_rtl:
+                self.rtlMode = 1
+            else:
+                self.rtlMode = 0
+        except:
+            self.log.debug("RTL config not set")
+
     #####################################################################
     # Homescreen Registeration & Handling
 
@@ -88,6 +102,9 @@ class OVOSHomescreen(MycroftSkill):
             "storedmodel": self.notifications_storage_model,
             "count": len(self.notifications_storage_model),
         }
+        self.update_weather()
+        self.gui['skill_examples'] = {"examples": self.skill_info_api.skill_info_examples()}
+        self.gui['rtl_mode'] = self.rtlMode
         self.gui.show_page("idle.qml")
 
     def handle_idle_update_time(self):
@@ -103,6 +120,11 @@ class OVOSHomescreen(MycroftSkill):
         self.gui["weekday_string"] = self.dt_skill.get_weekday()
         self.gui["month_string"] = self.dt_skill.get_month_date()
         self.gui["year_string"] = self.dt_skill.get_year()
+
+    def update_weather(self):
+        current_weather_report = self.weather_api.get_current_weather_homescreen()
+        self.gui["weather_code"] = current_weather_report.get("weather_code")
+        self.gui["weather_temp"] = current_weather_report.get("weather_temp")
 
     #####################################################################
     # Wallpaper Manager
