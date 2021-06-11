@@ -61,7 +61,7 @@ class OVOSHomescreen(MycroftSkill):
         # TODO - replace with Skills API call in 21.02
         root_dir = self.root_dir.rsplit("/", 1)[0]
         try:
-            time_date_path = str(root_dir) + "/mycroft-date-time.mycroftai/__init__.py"
+            time_date_path = str(root_dir) + "/skill-date-time.mycroftai/__init__.py"
             time_date_id = "datetimeskill"
             datetimeskill = load_skill_module(time_date_path, time_date_id)
             from datetimeskill import TimeSkill
