@@ -51,6 +51,7 @@ class OVOSHomescreen(MycroftSkill):
                                   self.handle_clear_notification_storage)
         self.gui.register_handler("homescreen.notification.storage.item.rm",
                                   self.handle_clear_notification_storage_item)
+        self.add_event("mycroft.ready", self.handle_mycroft_ready)
         
         if not self.file_system.exists("wallpapers"):
             os.mkdir(path.join(self.file_system.path, "wallpapers"))
@@ -68,12 +69,19 @@ class OVOSHomescreen(MycroftSkill):
 
             self.dt_skill = TimeSkill()
         except:
-            self.log.info("Failed To Import DateTime Skill")
+            self.log.error("Failed To Import DateTime Skill")
 
-        self.weather_api = SkillApi.get('skill-weather.openvoiceos')
+        try:
+            self.weather_api = SkillApi.get('skill-weather.openvoiceos')
+        except:
+            self.log.error("Failed To Import Weather Skill")
+
         self.schedule_repeating_event(self.update_weather, callback_time, 900)
 
-        self.skill_info_api = SkillApi.get('ovos-skills-info.openvoiceos')
+        try:
+            self.skill_info_api = SkillApi.get('ovos-skills-info.openvoiceos')
+        except:
+            self.log.error("Failed To Import OVOS Info Skill")
 
         try:
             is_rtl = self.config_core.get("rtl", False)
@@ -122,9 +130,25 @@ class OVOSHomescreen(MycroftSkill):
         self.gui["year_string"] = self.dt_skill.get_year()
 
     def update_weather(self):
-        current_weather_report = self.weather_api.get_current_weather_homescreen()
-        self.gui["weather_code"] = current_weather_report.get("weather_code")
-        self.gui["weather_temp"] = current_weather_report.get("weather_temp")
+        try:
+            current_weather_report = self.weather_api.get_current_weather_homescreen()
+            self.gui["weather_code"] = current_weather_report.get("weather_code")
+            self.gui["weather_temp"] = current_weather_report.get("weather_temp")
+        except:
+            self.log.error("Failed To Fetch Weather Report")
+
+    def handle_mycroft_ready(self, message):
+        try:
+            if not self.weather_api:
+                self.weather_api = SkillApi.get('skill-weather.openvoiceos')
+        except:
+            self.log.error("Failed To Import Weather Skill")
+
+        try:
+            if not self.skill_info_api:
+                self.skill_info_api = SkillApi.get('ovos-skills-info.openvoiceos')
+        except:
+            self.log.error("Failed To Import OVOS Info Skill")
 
     #####################################################################
     # Wallpaper Manager
