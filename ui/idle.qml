@@ -184,6 +184,51 @@ Mycroft.CardDelegate {
         id: mainContentItemArea
         anchors.fill: parent
 
+        Kirigami.Icon {
+            id: downArrowMenuHint
+            anchors.top: parent.top
+            anchors.topMargin: -Mycroft.Units.gridUnit
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: Mycroft.Units.gridUnit * 2.5
+            height: Mycroft.Units.gridUnit * 2.5
+            opacity: 0
+            source:  Qt.resolvedUrl("icons/down.svg")
+            color: "white"
+
+            SequentialAnimation {
+                id: downArrowMenuHintAnim
+                running: idleRoot.visible ? 1 : 0
+
+                PropertyAnimation {
+                    target: downArrowMenuHint
+                    property: "opacity"
+                    to: 1
+                    duration: 1000
+                }
+
+                PropertyAnimation {
+                    target: downArrowMenuHint
+                    property: "opacity"
+                    to: 0.5
+                    duration: 1000
+                }
+
+                PropertyAnimation {
+                    target: downArrowMenuHint
+                    property: "opacity"
+                    to: 1
+                    duration: 1000
+                }
+
+                PropertyAnimation {
+                    target: downArrowMenuHint
+                    property: "opacity"
+                    to: 0
+                    duration: 1000
+                }
+            }
+        }
+
         ColumnLayout {
             id: grid
             anchors.fill: parent
@@ -194,7 +239,7 @@ Mycroft.CardDelegate {
                 Layout.fillWidth: true
                 Layout.leftMargin: Mycroft.Units.gridUnit
                 Layout.rightMargin: Mycroft.Units.gridUnit
-                Layout.minimumHeight: parent.height * 0.15
+                Layout.minimumHeight: parent.height * 0.17
 
                 Row {
                     id: widgetsRow
@@ -272,8 +317,9 @@ Mycroft.CardDelegate {
                 Item {
                     id: weatherItemBox
                     anchors.right: parent.right
-                    width: parent.width * 0.20
-                    height: parent.height
+                    anchors.rightMargin: Mycroft.Units.gridUnit * 0.50
+                    width: parent.width * 0.30
+                    height: parent.height + Mycroft.Units.gridUnit * 2
 
                     Kirigami.Icon {
                         id: weatherItemIcon
@@ -281,7 +327,7 @@ Mycroft.CardDelegate {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
-                        width: parent.height * 0.8;
+                        width: parent.height * 0.80
                         height: width
                         visible: true
                         layer.enabled: true
@@ -296,7 +342,7 @@ Mycroft.CardDelegate {
 
                     Text {
                         id: weatherItem
-                        text: sessionData.weather_temp //"50°"
+                        text: sessionData.weather_temp + "°" //"50°"
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.left: weatherItemIcon.right
@@ -304,7 +350,7 @@ Mycroft.CardDelegate {
                         anchors.leftMargin: Mycroft.Units.gridUnit
                         fontSizeMode: Text.Fit
                         minimumPixelSize: 50
-                        font.pixelSize: parent.height * 0.75
+                        font.pixelSize: parent.height
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignLeft
                         color: "white"
@@ -323,13 +369,13 @@ Mycroft.CardDelegate {
 
             Item {
                 Layout.fillWidth: true
-                Layout.minimumHeight: parent.height * 0.15
+                Layout.minimumHeight: Math.round(parent.height * 0.125)
             }
 
             Rectangle {
                 color: "transparent"
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                Layout.preferredHeight: parent.height * 0.30
                 Layout.leftMargin: Mycroft.Units.gridUnit
                 Layout.rightMargin: Mycroft.Units.gridUnit
                 Layout.topMargin: 1
@@ -343,7 +389,8 @@ Mycroft.CardDelegate {
                     horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     font.weight: Font.ExtraBold
-                    font.pixelSize: horizontalMode ? parent.height / 1 : parent.height / 1.5
+                    font.pixelSize: parent.height
+                    //font.pixelSize: horizontalMode ? parent.height / 0.8 : parent.height / 1.5
                     color: "white"
                     text: sessionData.time_string.replace(":", "꞉")
                     layer.enabled: true
@@ -375,7 +422,7 @@ Mycroft.CardDelegate {
                     height: parent.height
                     fontSizeMode: Text.Fit
                     minimumPixelSize: 50
-                    font.pixelSize: parent.height * 0.75
+                    font.pixelSize: Math.round(parent.height * 0.725)
                     horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     wrapMode: Text.WordWrap
@@ -414,7 +461,7 @@ Mycroft.CardDelegate {
                     Kirigami.Icon {
                         id: exampleLabelIcon
                         source: Qt.resolvedUrl("icons/mic-min.svg")
-                        width: parent.height * 0.50
+                        width: parent.height * 0.65
                         anchors.verticalCenter: parent.verticalCenter
                         height: width
                     }
@@ -426,7 +473,7 @@ Mycroft.CardDelegate {
                         fontSizeMode: Text.Fit
                         visible: true
                         minimumPixelSize: 50
-                        font.pixelSize: parent.height * 0.35
+                        font.pixelSize: Math.round(parent.height * 0.475)
                         horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
                         wrapMode: Text.WordWrap
@@ -462,6 +509,11 @@ Mycroft.CardDelegate {
                         }
                     }
                 }
+            }
+
+            Item {
+                Layout.fillWidth: true
+                Layout.minimumHeight: Mycroft.Units.gridUnit
             }
         }
     }
