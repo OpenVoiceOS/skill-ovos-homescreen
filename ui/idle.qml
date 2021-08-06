@@ -428,7 +428,7 @@ Mycroft.CardDelegate {
                     wrapMode: Text.WordWrap
                     font.weight: Font.DemiBold
                     font.letterSpacing: 1.1
-                    text: sessionData.weekday_string.substring(0,3) + " " + sessionData.month_string + ", " + sessionData.year_string
+                    text: sessionData.weekday_string.substring(0,3) + " " + sessionData.month_string + " " + sessionData.day_string + ", " + sessionData.year_string
                     color: "white"
                     layer.enabled: true
                     layer.effect: DropShadow {
