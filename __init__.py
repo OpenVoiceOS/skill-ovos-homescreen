@@ -5,7 +5,7 @@ import requests
 
 from os import path
 from mycroft_bus_client import Message
-from neon_utils.log_utils import LOG
+from ovos_utils.log_utils import LOG
 
 from mycroft.skills.core import resting_screen_handler, intent_file_handler, MycroftSkill
 from mycroft.skills.skill_loader import load_skill_module
