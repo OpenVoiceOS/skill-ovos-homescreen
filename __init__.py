@@ -81,10 +81,13 @@ class OVOSHomescreen(MycroftSkill):
             "storedmodel": self.notifications_storage_model,
             "count": len(self.notifications_storage_model),
         }
-        self._load_skill_apis()
-        self.update_dt()
-        self.update_weather()
-        self.update_examples()
+
+        try:
+            self.update_dt()
+            self.update_weather()
+            self.update_examples()
+        except Exception as e:
+            LOG.error(e)
 
         self.gui['rtl_mode'] = self.rtlMode
         self.gui.show_page("idle.qml")
@@ -94,36 +97,42 @@ class OVOSHomescreen(MycroftSkill):
         Loads or updates skill examples via the skill_info_api.
         """
         if not self.skill_info_api:
-            LOG.warning(f"Requested update before API's loaded!")
+            LOG.warning("Requested update before skill_info API loaded")
             self._load_skill_apis()
-        try:
+        if self.skill_info_api:
             self.gui['skill_examples'] = {"examples": self.skill_info_api.skill_info_examples()}
-        except Exception as e:
-            LOG.error(e)
+        else:
+            LOG.warning("No skill_info_api, skipping update")
 
     def update_dt(self):
         """
         Loads or updates date/time via the datetime_api.
         """
         if not self.datetime_api:
-            LOG.warning(f"Requested update before API's loaded!")
+            LOG.warning("Requested update before datetime API loaded")
             self._load_skill_apis()
-        self.gui["time_string"] = self.datetime_api.get_display_current_time()
-        self.gui["date_string"] = self.datetime_api.get_display_date()
-        self.gui["weekday_string"] = self.datetime_api.get_weekday()
-        self.gui['day_string'], self.gui["month_string"] = self._split_month_string(self.datetime_api.get_month_date())
-        self.gui["year_string"] = self.datetime_api.get_year()
+        if self.datetime_api:
+            self.gui["time_string"] = self.datetime_api.get_display_current_time()
+            self.gui["date_string"] = self.datetime_api.get_display_date()
+            self.gui["weekday_string"] = self.datetime_api.get_weekday()
+            self.gui['day_string'], self.gui["month_string"] = self._split_month_string(self.datetime_api.get_month_date())
+            self.gui["year_string"] = self.datetime_api.get_year()
+        else:
+            LOG.warning("No datetime_api, skipping update")
 
     def update_weather(self):
         """
         Loads or updates weather via the weather_api.
         """
-        try:
+        if not self.weather_api:
+            LOG.warning("Requested update before weather API loaded")
+            self._load_skill_apis()
+        if self.weather_api:
             current_weather_report = self.weather_api.get_current_weather_homescreen()
             self.gui["weather_code"] = current_weather_report.get("weather_code")
             self.gui["weather_temp"] = current_weather_report.get("weather_temp")
-        except Exception as e:
-            LOG.error(f"Failed To Fetch Weather Report: {e}")
+        else:
+            LOG.warning("No weather_api, skipping update")
 
     #####################################################################
     # Wallpaper Manager
