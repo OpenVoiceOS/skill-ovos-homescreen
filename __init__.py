@@ -303,10 +303,13 @@ class OVOSHomescreen(MycroftSkill):
 
         # Import Date Time Skill As Date Time Provider
         try:
-            self.datetime_api = SkillApi.get(self.datetime_skill)
+            if not self.datetime_api:
+                self.datetime_api = SkillApi.get(self.datetime_skill)
         except Exception as e:
-            # TODO: Depreciate this
             LOG.error(f"Failed to import DateTime Skill: {e}")
+
+        # TODO: Depreciate this
+        if not self.datetime_api:
             try:
                 root_dir = self.root_dir.rsplit("/", 1)[0]
                 time_date_path = str(root_dir) + f"/{self.datetime_skill}/__init__.py"
