@@ -309,7 +309,7 @@ class OVOSHomescreen(MycroftSkill):
             LOG.error(f"Failed to import DateTime Skill: {e}")
             try:
                 root_dir = self.root_dir.rsplit("/", 1)[0]
-                time_date_path = str(root_dir) + "/date-time.neon/__init__.py"
+                time_date_path = str(root_dir) + f"/{self.datetime_skill}/__init__.py"
                 time_date_id = "datetimeskill"
                 datetimeskill = load_skill_module(time_date_path, time_date_id)
                 from datetimeskill import TimeSkill
