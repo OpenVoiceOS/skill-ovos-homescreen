@@ -7,8 +7,8 @@ import Mycroft 1.0 as Mycroft
 
 Rectangle {
     id: popbox
-    color: "#313131"
-    radius: 10
+    color: "#212121"
+    radius: 15
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.leftMargin: Kirigami.Units.largeSpacing
@@ -34,7 +34,7 @@ Rectangle {
                 elide: Text.ElideRight
                 font.capitalization: Font.SmallCaps
                 font.bold: true
-                font.pixelSize: parent.width * 0.065
+                font.pixelSize: parent.width * 0.035
                 color: "#ffffff"
                 
                 MouseArea {
@@ -56,7 +56,7 @@ Rectangle {
                 text: currentNotification.text
                 width: parent.width
                 wrapMode: Text.WordWrap
-                font.pixelSize: parent.width * 0.045
+                font.pixelSize: parent.width * 0.0375
                 maximumLineCount: 2
                 elide: Text.ElideRight
                 color: "#ffffff"
@@ -91,7 +91,7 @@ Rectangle {
 
                 contentItem: Kirigami.Icon {
                     anchors.centerIn: parent
-                    width: Kirigami.Units.iconSizes.medium
+                    width: Kirigami.Units.iconSizes.small
                     height: width
                     source: Qt.resolvedUrl("icons/close.svg")
                 }

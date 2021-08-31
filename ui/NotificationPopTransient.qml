@@ -7,8 +7,8 @@ import Mycroft 1.0 as Mycroft
 
 Rectangle {
     id: popbox
-    color: "#313131"
-    radius: 10
+    color: "#212121"
+    radius: 15
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.leftMargin: Kirigami.Units.largeSpacing
@@ -22,7 +22,28 @@ Rectangle {
 
     Rectangle {
         id: timerBar
-        color: "skyblue"
+        gradient: Gradient {
+            GradientStop {
+                position: 0.000
+                color: Qt.rgba(1, 0.2, 0.3, 0.85)
+            }
+            GradientStop {
+                position: 0.150
+                color: Qt.rgba(1, 0.2, 0.3, 0.65)
+            }
+            GradientStop {
+                position: 0.500
+                color: Qt.rgba(1, 0.2, 0.3, 0.85)
+            }
+            GradientStop {
+                position: 0.850
+                color: Qt.rgba(1, 0.2, 0.3, 0.65)
+            }
+            GradientStop {
+                position: 1.000
+                color: Qt.rgba(1, 0.2, 0.3, 0.85)
+            }
+        }
         anchors.bottom: parent.bottom
         width: parent.width
         height: Kirigami.Units.smallSpacing * 2
@@ -70,7 +91,7 @@ Rectangle {
                 elide: Text.ElideRight
                 font.capitalization: Font.SmallCaps
                 font.bold: true
-                font.pixelSize: parent.width * 0.065
+                font.pixelSize: parent.width * 0.035
                 color: "#ffffff"
                 
                 MouseArea {
@@ -92,7 +113,7 @@ Rectangle {
                 text: currentNotification.text
                 width: parent.width
                 wrapMode: Text.WordWrap
-                font.pixelSize: parent.width * 0.045
+                font.pixelSize: parent.width * 0.0375
                 maximumLineCount: 2
                 elide: Text.ElideRight
                 color: "#ffffff"
@@ -127,7 +148,7 @@ Rectangle {
 
                 contentItem: Kirigami.Icon {
                     anchors.centerIn: parent
-                    width: Kirigami.Units.iconSizes.medium
+                    width: Kirigami.Units.iconSizes.small
                     height: width
                     source: Qt.resolvedUrl("icons/close.svg")
                 }
