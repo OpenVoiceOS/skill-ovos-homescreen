@@ -140,6 +140,7 @@ Mycroft.CardDelegate {
             return "icons/fog.svg";
             break
         }
+        return weathercode;
     }
 
     function setExampleText(){
