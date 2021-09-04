@@ -7,8 +7,8 @@ import Mycroft 1.0 as Mycroft
 
 Rectangle {
     id: delegate
-    color: "#313131"
-    radius: 10
+    color: "#212121"
+    radius: 15
     readonly property ListView listView: ListView.view
     width: listView.width
     height: notificationRowBoxLayout.implicitHeight + (Kirigami.Units.gridUnit + Kirigami.Units.largeSpacing)
@@ -31,7 +31,7 @@ Rectangle {
                 elide: Text.ElideRight
                 font.capitalization: Font.SmallCaps
                 font.bold: true
-                font.pixelSize: parent.width * 0.060
+                font.pixelSize: parent.width * 0.035
                 color: "#ffffff"
                 
                 MouseArea {
@@ -44,7 +44,7 @@ Rectangle {
 
             Kirigami.Separator {
                 width: parent.width
-                height: Kirigami.Units.smallSpacing * 0.25
+                height: Kirigami.Units.smallSpacing * 0.15
                 color: "#8F8F8F"
             }
 
@@ -53,7 +53,7 @@ Rectangle {
                 text: modelData.text
                 width: parent.width
                 wrapMode: Text.WordWrap
-                font.pixelSize: parent.width * 0.040
+                font.pixelSize: parent.width * 0.0375
                 maximumLineCount: 2
                 elide: Text.ElideRight
                 color: "#ffffff"
@@ -88,7 +88,7 @@ Rectangle {
 
                 contentItem: Kirigami.Icon {
                     anchors.centerIn: parent
-                    width: Kirigami.Units.iconSizes.medium
+                    width: Kirigami.Units.iconSizes.small
                     height: width
                     source: Qt.resolvedUrl("icons/delete.svg")
                 }

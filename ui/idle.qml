@@ -1,7 +1,7 @@
 import QtQuick.Layouts 1.4
-import QtQuick 2.4
-import QtQuick.Controls 2.0
-import org.kde.kirigami 2.4 as Kirigami
+import QtQuick 2.9
+import QtQuick.Controls 2.12
+import org.kde.kirigami 2.11 as Kirigami
 import QtGraphicalEffects 1.0
 import Mycroft 1.0 as Mycroft
 
@@ -184,6 +184,17 @@ Mycroft.CardDelegate {
     Item {
         id: mainContentItemArea
         anchors.fill: parent
+
+        SwipeArea {
+            id: swipeAreaType
+            anchors.fill: parent
+            propagateComposedEvents: true
+            onSwipe: {
+                if(direction == "left") {
+                    triggerGuiEvent("homescreen.swipe.change.wallpaper", {})
+                }
+            }
+        }
 
         Kirigami.Icon {
             id: downArrowMenuHint
@@ -429,7 +440,7 @@ Mycroft.CardDelegate {
                     wrapMode: Text.WordWrap
                     font.weight: Font.DemiBold
                     font.letterSpacing: 1.1
-                    text: sessionData.weekday_string.substring(0,3) + " " + sessionData.month_string + ", " + sessionData.year_string
+                    text: sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  sessionData.month_string + ", " + sessionData.year_string
                     color: "white"
                     layer.enabled: true
                     layer.effect: DropShadow {
@@ -535,6 +546,18 @@ Mycroft.CardDelegate {
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
         parent: idleRoot
+        dim: true
+
+        Overlay.modeless: Rectangle {
+            id: modelessBg
+            color: Qt.rgba(0, 0, 0, 0.75)
+
+            FastBlur {
+                anchors.fill: modelessBg
+                source: modelessBg
+                radius: 32
+            }
+        }
 
         background: Rectangle {
             color: "transparent"
@@ -549,13 +572,35 @@ Mycroft.CardDelegate {
             spacing: parent.width * 0.10
 
             Rectangle {
-                width: parent.width * 0.50
+                width: parent.width * 0.15
                 height: parent.height
-                color: "#313131"
+                color: "#212121"
+                radius: 10
+
+                Kirigami.Icon {
+                    width: parent.width * 0.75
+                    height: width
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                    source: Qt.resolvedUrl("icons/dialog-close.svg")
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        notificationsStorageViewBox.close()
+                    }
+                }
+            }
+
+            Rectangle {
+                width: parent.width * 0.35
+                height: parent.height
+                color: "#212121"
                 radius: 10
 
                 Kirigami.Heading {
-                    level: 1
+                    level: 2
                     width: parent.width
                     anchors.left: parent.left
                     anchors.leftMargin: Kirigami.Units.largeSpacing
@@ -566,9 +611,9 @@ Mycroft.CardDelegate {
             }
 
             Rectangle {
-                width: parent.width * 0.40
+                width: parent.width * 0.30
                 height: parent.height
-                color: "#313131"
+                color: "#212121"
                 radius: 10
 
                 RowLayout {

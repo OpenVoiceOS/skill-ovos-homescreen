@@ -57,6 +57,8 @@ class OVOSHomescreen(MycroftSkill):
                                   self.handle_clear_notification_storage)
         self.gui.register_handler("homescreen.notification.storage.item.rm",
                                   self.handle_clear_notification_storage_item)
+        self.gui.register_handler("homescreen.swipe.change.wallpaper",
+                                  self.change_wallpaper)
 
         self.add_event("mycroft.ready", self.handle_mycroft_ready)
         
