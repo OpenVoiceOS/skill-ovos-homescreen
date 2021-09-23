@@ -185,11 +185,22 @@ Mycroft.CardDelegate {
         id: mainContentItemArea
         anchors.fill: parent
 
+        AppsBar {
+            id: appsBar
+            width: parent.width
+            height: parent.height * 0.35
+            parent: idleRoot
+            appsModel: sessionData.applications_model
+        }
+
         SwipeArea {
             id: swipeAreaType
             anchors.fill: parent
             propagateComposedEvents: true
             onSwipe: {
+                if(direction == "up") {
+                    appsBar.open()
+                }
                 if(direction == "left") {
                     triggerGuiEvent("homescreen.swipe.change.wallpaper", {})
                 }

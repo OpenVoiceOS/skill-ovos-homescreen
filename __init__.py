@@ -2,10 +2,12 @@ import datetime
 import os
 import time
 import requests
+import json
 
-from os import path
+from os import path, listdir
 from mycroft_bus_client import Message
 from ovos_utils.log import LOG
+from ovos_utils.skills import get_skills_folder
 
 from mycroft.skills.core import resting_screen_handler, intent_file_handler, MycroftSkill
 from mycroft.skills.skill_loader import load_skill_module
@@ -83,6 +85,7 @@ class OVOSHomescreen(MycroftSkill):
             "storedmodel": self.notifications_storage_model,
             "count": len(self.notifications_storage_model),
         }
+        self.gui["applications_model"] = self.build_voice_applications_model()
 
         try:
             self.update_dt()
@@ -338,6 +341,61 @@ class OVOSHomescreen(MycroftSkill):
             month_string = month_string[1]
 
         return [day_string, month_string]
+
+    #####################################################################
+    # Build Voice Applications Model
+
+    def build_voice_applications_model(self):
+        voiceApplicationsList = []
+
+        if path.exists("/opt/mycroft/skills/"):
+            skill_folders = listdir("/opt/mycroft/skills/")
+            folder_prefix = "/opt/mycroft/skills"
+        else:
+            skill_folders = listdir(get_skills_folder())
+            folder_prefix = get_skills_folder()
+
+        resource_app = "app.json"
+        resource_mobile = "android.json"
+
+        for folder in skill_folders:
+            absolute_folder_path = path.join(folder_prefix, folder)
+
+            if path.exists(path.join(absolute_folder_path, resource_app)) and path.isfile(
+                path.join(absolute_folder_path, resource_app)) :
+                with open(path.join(absolute_folder_path, resource_app)) as f:
+                    expand_file = json.load(f)
+                    folder_path = folder
+                    if not any(d.get('folder', None) == folder_path
+                               for d in voiceApplicationsList):
+                        thumb = absolute_folder_path + expand_file["icon"]
+                        voiceApplicationsList.append({"thumbnail": thumb,
+                                                      "name": expand_file["name"],
+                                                      "action": expand_file["action"],
+                                                      "folder": folder_path})
+
+            elif path.exists(path.join(absolute_folder_path, resource_mobile)) and path.isfile(
+                path.join(absolute_folder_path, resource_mobile)) :
+                with open(path.join(absolute_folder_path, resource_mobile)) as f:
+                    expand_file = json.load(f)
+                    folder_path = folder
+                    if not any(d.get('folder', None) == folder_path
+                               for d in voiceApplicationsList):
+                        thumb = absolute_folder_path + expand_file["android_icon"]
+                        voiceApplicationsList.append({"thumbnail": thumb,
+                                                      "name": expand_file["android_name"],
+                                                      "action": expand_file["android_handler"],
+                                                      "folder": folder_path})
+
+        try:
+            sort_on = "name"
+            decorated = [(dict_[sort_on], dict_)
+                            for dict_ in voiceApplicationsList]
+            decorated.sort()
+            return [dict_ for (key, dict_) in decorated]
+
+        except Exception:
+            return voiceApplicationsList
 
 
 def create_skill():
