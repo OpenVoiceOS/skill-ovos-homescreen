@@ -14,13 +14,11 @@ Mycroft.CardDelegate {
     property bool horizontalMode: idleRoot.width > idleRoot.height ? 1 : 0
     readonly property color primaryBorderColor: Qt.rgba(1, 0, 0, 0.9)
     readonly property color secondaryBorderColor: Qt.rgba(1, 1, 1, 0.7)
-    property int notificationCounter: sessionData.notifcation_counter
-    property var notificationData: sessionData.notification
     property var notificationModel: sessionData.notification_model
     property var textModel: sessionData.skill_examples.examples
     property color shadowColor: Qt.rgba(0, 0, 0, 0.7)
     property bool rtlMode: Boolean(sessionData.rtl_mode)
-    signal clearNotificationSessionData
+    property bool weatherEnabled: Boolean(sessionData.weather_api_enabled)
 
     background: Item {
         anchors.fill: parent
@@ -55,12 +53,6 @@ Mycroft.CardDelegate {
         console.log(idleRoot.rtlMode)
     }
 
-    onNotificationDataChanged: {
-        if(sessionData.notification.text && sessionData.notification !== "") {
-            display_notification()
-        }
-    }
-
     onNotificationModelChanged: {
         if(notificationModel.count > 0) {
             notificationsStorageView.model = sessionData.notification_model.storedmodel
@@ -81,34 +73,6 @@ Mycroft.CardDelegate {
     onVisibleChanged: {
         if(visible && idleRoot.textModel){
             textTimer.running = true
-        }
-    }
-
-    Connections {
-        target: idleRoot
-        onClearNotificationSessionData: {
-            triggerGuiEvent("homescreen.notification.pop.clear", {"notification": idleRoot.notificationData})
-        }
-    }
-
-    function display_notification() {
-        if(idleRoot.notificationData !== undefined) {
-            if(idleRoot.notificationData.type == "sticky"){
-                var component = Qt.createComponent("NotificationPopSticky.qml");
-            } else {
-                var component = Qt.createComponent("NotificationPopTransient.qml");
-            }
-            if (component.status != Component.Ready)
-            {
-                if (component.status == Component.Error) {
-                    console.debug("Error: "+ component.errorString());
-                }
-                return;
-            } else {
-                var notif_object = component.createObject(notificationPopupLayout, {currentNotification: idleRoot.notificationData})
-            }
-        } else {
-            console.log(idleRoot.notificationData)
         }
     }
 
@@ -343,6 +307,7 @@ Mycroft.CardDelegate {
                     anchors.rightMargin: Mycroft.Units.gridUnit * 0.50
                     width: parent.width * 0.30
                     height: parent.height + Mycroft.Units.gridUnit * 2
+                    visible: idleRoot.weatherEnabled
 
                     Kirigami.Icon {
                         id: weatherItemIcon
@@ -541,15 +506,6 @@ Mycroft.CardDelegate {
         }
     }
 
-    Column {
-        id: notificationPopupLayout
-        anchors.fill: parent
-        spacing: Kirigami.Units.largeSpacing * 4
-        property int cellWidth: idleRoot.width
-        property int cellHeight: idleRoot.height
-        z: 9999
-    }
-
     Popup {
         id: notificationsStorageViewBox
         width: parent.width * 0.80
@@ -649,7 +605,7 @@ Mycroft.CardDelegate {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        triggerGuiEvent("homescreen.notification.storage.clear", {})
+                        Mycroft.MycroftController.sendRequest("ovos.notification.api.storage.clear", {})
                     }
                 }
             }

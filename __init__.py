@@ -20,7 +20,6 @@ class OVOSHomescreenSkill(MycroftSkill):
     def __init__(self):
         super(OVOSHomescreenSkill, self).__init__(name="OVOSHomescreen")
         self.skill_manager = None
-        self.notifications_model = []
         self.notifications_storage_model = []
         self.def_wallpaper_folder = path.dirname(__file__) + '/ui/wallpapers/'
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
@@ -45,23 +44,14 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.skill_manager = SkillManager(self.bus)
 
         # Handler Registration For Notifications
-        self.add_event("homescreen.notification.set",
-                       self.handle_display_notification)
         self.add_event("homescreen.wallpaper.set",
                        self.handle_set_wallpaper)
-        self.gui.register_handler("homescreen.notification.set",
-                                  self.handle_display_notification)
-        self.gui.register_handler("homescreen.notification.pop.clear",
-                                  self.handle_clear_notification_data)
-        self.gui.register_handler("homescreen.notification.pop.clear.delete",
-                                  self.handle_clear_delete_notification_data)
-        self.gui.register_handler("homescreen.notification.storage.clear",
-                                  self.handle_clear_notification_storage)
-        self.gui.register_handler("homescreen.notification.storage.item.rm",
-                                  self.handle_clear_notification_storage_item)
+        self.add_event("ovos.notification.update_counter",
+                       self.handle_notification_widget_update)
+        self.add_event("ovos.notification.update_storage_model",
+                       self.handle_notification_storage_model_update)
         self.gui.register_handler("homescreen.swipe.change.wallpaper",
                                   self.change_wallpaper)
-
         self.add_event("mycroft.ready", self.handle_mycroft_ready)
         
         if not self.file_system.exists("wallpapers"):
@@ -134,9 +124,11 @@ class OVOSHomescreenSkill(MycroftSkill):
             self._load_skill_apis()
         if self.weather_api:
             current_weather_report = self.weather_api.get_current_weather_homescreen()
+            self.gui["weather_api_enabled"] = True
             self.gui["weather_code"] = current_weather_report.get("weather_code")
             self.gui["weather_temp"] = current_weather_report.get("weather_temp")
         else:
+            self.gui["weather_api_enabled"] = False
             LOG.warning("No weather_api, skipping update")
 
     #####################################################################
@@ -203,83 +195,22 @@ class OVOSHomescreenSkill(MycroftSkill):
             return self.loc_wallpaper_folder
 
     #####################################################################
-    # Manage notifications
+    # Manage notifications widget
 
-    def handle_display_notification(self, message):
-        """ Get Notification & Action """
-        notification_message = {
-            "sender": message.data.get("sender", ""),
-            "text": message.data.get("text", ""),
-            "action": message.data.get("action", ""),
-            "type": message.data.get("type", ""),
-        }
-        if notification_message not in self.notifications_model:
-            self.notifications_model.append(notification_message)
-            self.gui["notifcation_counter"] = len(self.notifications_model)
-            self.gui["notification"] = notification_message
-            time.sleep(2)
-            self.bus.emit(Message("homescreen.notification.show"))
+    def handle_notification_widget_update(self, message):
+        notifcation_count = message.data.get("notification_counter", "")
+        self.log.info("Notifications Counter Changed")
+        self.log.info(notifcation_count)
+        self.gui["notifcation_counter"] = notifcation_count
+        self.bus.emit(Message("ovos.notification.api.request.storage.model"))
 
-    def handle_clear_notification_data(self, message):
-        """ Clear Pop Notification """
-        notification_data = message.data.get("notification", "")
-        self.notifications_storage_model.append(notification_data)
-        for i in range(len(self.notifications_model)):
-            if (
-                self.notifications_model[i]["sender"] == notification_data["sender"]
-                and self.notifications_model[i]["text"] == notification_data["text"]
-            ):
-                if not len(self.notifications_model) > 0:
-                    del self.notifications_model[i]
-                    self.notifications_model = []
-                else:
-                    del self.notifications_model[i]
-                break
+    def handle_notification_storage_model_update(self, message):
+        notification_model = message.data.get("notification_model", "")
+        self.log.info("Notification Storage Model Changed")
+        self.gui["notification_model"] = notification_model
 
-        self.gui["notification_model"] = {
-            "storedmodel": self.notifications_storage_model,
-            "count": len(self.notifications_storage_model),
-        }
-        self.gui["notification"] = {}
-
-    def handle_clear_delete_notification_data(self, message):
-        """ Clear Pop Notification & Delete Notification Data """
-        notification_data = message.data.get("notification", "")
-        for i in range(len(self.notifications_model)):
-            if (
-                self.notifications_model[i]["sender"] == notification_data["sender"]
-                and self.notifications_model[i]["text"] == notification_data["text"]
-            ):
-                if not len(self.notifications_model) > 0:
-                    del self.notifications_model[i]
-                    self.notifications_model = []
-                else:
-                    del self.notifications_model[i]
-                break
-
-    def handle_clear_notification_storage(self, _):
-        """ Clear All Notification Storage Model """
-        self.notifications_storage_model = []
-        self.gui["notification_model"] = {
-            "storedmodel": self.notifications_storage_model,
-            "count": len(self.notifications_storage_model),
-        }
-
-    def handle_clear_notification_storage_item(self, message):
-        """ Clear Single Item From Notification Storage Model """
-        notification_data = message.data.get("notification", "")
-        for i in range(len(self.notifications_storage_model)):
-            if (
-                self.notifications_storage_model[i]["sender"]
-                == notification_data["sender"]
-                and self.notifications_storage_model[i]["text"]
-                == notification_data["text"]
-            ):
-                self.notifications_storage_model.pop(i)
-                self.gui["notification_model"] = {
-                    "storedmodel": self.notifications_storage_model,
-                    "count": len(self.notifications_storage_model),
-                }
+    #####################################################################
+    # Misc
 
     def stop(self):
         pass

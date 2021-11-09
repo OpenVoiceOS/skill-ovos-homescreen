@@ -94,8 +94,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    triggerGuiEvent("homescreen.notification.storage.item.rm", {"notification": modelData})
-                    popbox.destroy()
+                    Mycroft.MycroftController.sendRequest("ovos.notification.api.storage.clear.item", {"notification": modelData})
                 }
             }
         }
