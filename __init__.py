@@ -15,10 +15,10 @@ from mycroft.skills.skill_manager import SkillManager
 from mycroft.skills.api import SkillApi
 
 
-class OVOSHomescreen(MycroftSkill):
+class OVOSHomescreenSkill(MycroftSkill):
     # The constructor of the skill, which calls MycroftSkill's constructor
     def __init__(self):
-        super(OVOSHomescreen, self).__init__(name="OVOSHomescreen")
+        super(OVOSHomescreenSkill, self).__init__(name="OVOSHomescreen")
         self.skill_manager = None
         self.notifications_model = []
         self.notifications_storage_model = []
@@ -399,4 +399,4 @@ class OVOSHomescreen(MycroftSkill):
 
 
 def create_skill():
-    return OVOSHomescreen()
+    return OVOSHomescreenSkill()
