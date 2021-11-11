@@ -198,15 +198,15 @@ class OVOSHomescreenSkill(MycroftSkill):
     # Manage notifications widget
 
     def handle_notification_widget_update(self, message):
+        # Receives notification counter update
+        # Emits request to update storage model on counter update
         notifcation_count = message.data.get("notification_counter", "")
-        self.log.info("Notifications Counter Changed")
-        self.log.info(notifcation_count)
         self.gui["notifcation_counter"] = notifcation_count
         self.bus.emit(Message("ovos.notification.api.request.storage.model"))
 
     def handle_notification_storage_model_update(self, message):
+        # Receives updated storage model and forwards it to widget
         notification_model = message.data.get("notification_model", "")
-        self.log.info("Notification Storage Model Changed")
         self.gui["notification_model"] = notification_model
 
     #####################################################################
