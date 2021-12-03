@@ -22,7 +22,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.skill_manager = None
         self.notifications_storage_model = []
         self.def_wallpaper_folder = path.dirname(__file__) + '/ui/wallpapers/'
-        self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
+        self.loc_wallpaper_folder = None
         self.selected_wallpaper = self.settings.get("wallpaper") or "default.jpg"
         self.wallpaper_collection = []
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
@@ -36,6 +36,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.skill_info_api = None
 
     def initialize(self):
+        self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
             now.year, now.month, now.day, now.hour, now.minute
