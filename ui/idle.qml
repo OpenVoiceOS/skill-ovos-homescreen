@@ -19,6 +19,7 @@ Mycroft.CardDelegate {
     property color shadowColor: Qt.rgba(0, 0, 0, 0.7)
     property bool rtlMode: Boolean(sessionData.rtl_mode)
     property bool weatherEnabled: Boolean(sessionData.weather_api_enabled)
+    property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
 
     background: Item {
         anchors.fill: parent
@@ -416,7 +417,20 @@ Mycroft.CardDelegate {
                     wrapMode: Text.WordWrap
                     font.weight: Font.DemiBold
                     font.letterSpacing: 1.1
-                    text: sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  sessionData.month_string + ", " + sessionData.year_string
+                    text: switch(idleRoot.dateFormat) {
+                        case "DMY":
+                            return sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  sessionData.month_string + ", " + sessionData.year_string
+                            break
+                        case "MDY":
+                            return sessionData.month_string + " " + sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + ", " + sessionData.year_string
+                            break
+                        case "YMD":
+                            return sessionData.year_string + ", " + sessionData.month_string + " " + sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string
+                            break
+                        default:
+                            return sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  sessionData.month_string + ", " + sessionData.year_string
+                            break
+                    }
                     color: "white"
                     layer.enabled: true
                     layer.effect: DropShadow {
