@@ -316,7 +316,7 @@ Mycroft.CardDelegate {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
-                        width: parent.height * 0.80
+                        width: (parent.height >= parent.width) ? parent.width * 0.30 : parent.height * 0.80
                         height: width
                         visible: true
                         layer.enabled: true
@@ -378,8 +378,7 @@ Mycroft.CardDelegate {
                     horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     font.weight: Font.ExtraBold
-                    font.pixelSize: parent.height
-                    //font.pixelSize: horizontalMode ? parent.height / 0.8 : parent.height / 1.5
+                    font.pixelSize: horizontalMode ? parent.height / 0.8 : parent.height / 1.5
                     color: "white"
                     text: sessionData.time_string.replace(":", "꞉")
                     layer.enabled: true
