@@ -23,14 +23,14 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.notifications_storage_model = []
         self.def_wallpaper_folder = path.dirname(__file__) + '/ui/wallpapers/'
         self.loc_wallpaper_folder = None
-        self.selected_wallpaper = None
+        self.selected_wallpaper = None # Get from config after __init__ is done
         self.wallpaper_collection = []
-        self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
+        self.rtlMode = None # Get from config after __init__ is done
 
         # Populate skill IDs to use for data sources
-        self.weather_skill = self.settings.get("weather_skill") or "skill-weather.openvoiceos"
-        self.datetime_skill = self.settings.get("datetime_skill") or "skill-date-time.mycroftai"
-        self.skill_info_skill = self.settings.get("examples_skill") or "ovos-skills-info.openvoiceos"
+        self.weather_skill = None # Get from config after __init__ is done
+        self.datetime_skill = None # Get from config after __init__ is done
+        self.skill_info_skill = None # Get from config after __init__ is done
         self.weather_api = None
         self.datetime_api = None
         self.skill_info_api = None
@@ -38,6 +38,11 @@ class OVOSHomescreenSkill(MycroftSkill):
     def initialize(self):
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.selected_wallpaper = self.settings.get("wallpaper") or "default.jpg"
+        self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
+        self.weather_skill = self.settings.get("weather_skill") or "skill-weather.openvoiceos"
+        self.datetime_skill = self.settings.get("datetime_skill") or "skill-date-time.mycroftai"
+        self.skill_info_skill = self.settings.get("examples_skill") or "ovos-skills-info.openvoiceos"
+
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
             now.year, now.month, now.day, now.hour, now.minute
