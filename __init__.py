@@ -23,7 +23,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.notifications_storage_model = []
         self.def_wallpaper_folder = path.dirname(__file__) + '/ui/wallpapers/'
         self.loc_wallpaper_folder = None
-        self.selected_wallpaper = self.settings.get("wallpaper") or "default.jpg"
+        self.selected_wallpaper = None
         self.wallpaper_collection = []
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
 
@@ -37,6 +37,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
     def initialize(self):
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
+        self.selected_wallpaper = self.settings.get("wallpaper") or "default.jpg"
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
             now.year, now.month, now.day, now.hour, now.minute
@@ -54,10 +55,10 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.gui.register_handler("homescreen.swipe.change.wallpaper",
                                   self.change_wallpaper)
         self.add_event("mycroft.ready", self.handle_mycroft_ready)
-        
+
         if not self.file_system.exists("wallpapers"):
             os.mkdir(path.join(self.file_system.path, "wallpapers"))
-        
+
         self.collect_wallpapers()
         self._load_skill_apis()
 
@@ -140,10 +141,10 @@ class OVOSHomescreenSkill(MycroftSkill):
         def_wallpaper_collection, loc_wallpaper_collection = None, None
         for dirname, dirnames, filenames in os.walk(self.def_wallpaper_folder):
             def_wallpaper_collection = filenames
-        
+
         for dirname, dirnames, filenames in os.walk(self.loc_wallpaper_folder):
             loc_wallpaper_collection = filenames
-        
+
         self.wallpaper_collection = def_wallpaper_collection + loc_wallpaper_collection
 
     @intent_file_handler("change.wallpaper.intent")
@@ -169,7 +170,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             return index_element
         except ValueError:
             return None
-        
+
     def handle_set_wallpaper(self, message):
         image_url = message.data.get("url", "")
         now = datetime.datetime.now()
@@ -187,7 +188,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
             self.gui['wallpaper_path'] = self.check_wallpaper_path(setname)
             self.gui['selected_wallpaper'] = self.selected_wallpaper
-            
+
     def check_wallpaper_path(self, wallpaper):
         file_def_check = self.def_wallpaper_folder + wallpaper
         file_loc_check = self.loc_wallpaper_folder + wallpaper
