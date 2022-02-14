@@ -316,7 +316,7 @@ Mycroft.CardDelegate {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
-                        width: (parent.height >= parent.width) ? parent.width * 0.30 : parent.height * 0.80
+                        width: horizontalMode ? parent.height * 0.80 : parent.width * 0.50
                         height: width
                         visible: true
                         layer.enabled: true
@@ -339,7 +339,7 @@ Mycroft.CardDelegate {
                         anchors.leftMargin: Mycroft.Units.gridUnit
                         fontSizeMode: Text.Fit
                         minimumPixelSize: 50
-                        font.pixelSize: parent.height
+                        font.pixelSize: horizontalMode ? parent.height : parent.height * 0.65
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignLeft
                         color: "white"
@@ -378,7 +378,8 @@ Mycroft.CardDelegate {
                     horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     font.weight: Font.ExtraBold
-                    font.pixelSize: horizontalMode ? parent.height / 0.8 : parent.height / 1.5
+                    //font.pixelSize: parent.height
+                    font.pixelSize: horizontalMode ? parent.height : parent.height * 0.65
                     color: "white"
                     text: sessionData.time_string.replace(":", "꞉")
                     layer.enabled: true
@@ -410,24 +411,25 @@ Mycroft.CardDelegate {
                     height: parent.height
                     fontSizeMode: Text.Fit
                     minimumPixelSize: 50
-                    font.pixelSize: Math.round(parent.height * 0.725)
+                    font.pixelSize: horizontalMode ? Math.round(parent.height * 0.725) : Math.round(parent.height * 0.5)
                     horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     wrapMode: Text.WordWrap
                     font.weight: Font.DemiBold
                     font.letterSpacing: 1.1
+                    property var longShortMonth: horizontalMode ? sessionData.month_string : sessionData.month_string.substring(0,3)
                     text: switch(idleRoot.dateFormat) {
                         case "DMY":
-                            return sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  sessionData.month_string + ", " + sessionData.year_string
+                            return sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  longShortMonth + ", " + sessionData.year_string
                             break
                         case "MDY":
-                            return sessionData.month_string + " " + sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + ", " + sessionData.year_string
+                            return longShortMonth + " " + sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + ", " + sessionData.year_string
                             break
                         case "YMD":
-                            return sessionData.year_string + ", " + sessionData.month_string + " " + sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string
+                            return sessionData.year_string + ", " + longShortMonth + " " + sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string
                             break
                         default:
-                            return sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  sessionData.month_string + ", " + sessionData.year_string
+                            return sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  longShortMonth + ", " + sessionData.year_string
                             break
                     }
                     color: "white"
@@ -461,8 +463,9 @@ Mycroft.CardDelegate {
 
                     Kirigami.Icon {
                         id: exampleLabelIcon
+                        visible: true
                         source: Qt.resolvedUrl("icons/mic-min.svg")
-                        width: parent.height * 0.65
+                        width: horizontalMode ? parent.height * 0.65 : parent.height * 0.45
                         anchors.verticalCenter: parent.verticalCenter
                         height: width
                     }
@@ -474,7 +477,7 @@ Mycroft.CardDelegate {
                         fontSizeMode: Text.Fit
                         visible: true
                         minimumPixelSize: 50
-                        font.pixelSize: Math.round(parent.height * 0.475)
+                        font.pixelSize: horizontalMode ? Math.round(parent.height * 0.475) : Math.round(parent.height * 0.2)
                         horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
                         wrapMode: Text.WordWrap
