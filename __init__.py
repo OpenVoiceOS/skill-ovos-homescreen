@@ -9,25 +9,23 @@ from mycroft_bus_client import Message
 from ovos_utils.log import LOG
 from ovos_utils.skills import get_skills_folder
 
-from mycroft.skills.core import resting_screen_handler, intent_file_handler, MycroftSkill
+from mycroft.skills.core import resting_screen_handler, intent_file_handler
+from mycroft.skills import IdleDisplaySkill
 from mycroft.skills.skill_loader import load_skill_module
 from mycroft.skills.skill_manager import SkillManager
 from mycroft.skills.api import SkillApi
 
 
-class OVOSHomescreenSkill(MycroftSkill):
+class OVOSHomescreenSkill(IdleDisplaySkill):
     # The constructor of the skill, which calls MycroftSkill's constructor
     def __init__(self):
-        super(OVOSHomescreenSkill, self).__init__(name="OVOSHomescreen")
-        self.skill_manager = None
+        super().__init__(name="OVOSHomescreen")
         self.notifications_storage_model = []
         self.def_wallpaper_folder = path.dirname(__file__) + '/ui/wallpapers/'
         self.loc_wallpaper_folder = None
         self.selected_wallpaper = None # Get from config after __init__ is done
         self.wallpaper_collection = []
         self.rtlMode = None # Get from config after __init__ is done
-
-        # Populate skill IDs to use for data sources
         self.weather_skill = None # Get from config after __init__ is done
         self.datetime_skill = None # Get from config after __init__ is done
         self.skill_info_skill = None # Get from config after __init__ is done
@@ -36,11 +34,13 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.skill_info_api = None
 
     def initialize(self):
+        super().initialize()
+        self.log.info("After super initialize")
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.selected_wallpaper = self.settings.get("wallpaper") or "default.jpg"
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
-        self.weather_skill = self.settings.get("weather_skill") or "skill-weather.openvoiceos"
-        self.datetime_skill = self.settings.get("datetime_skill") or "skill-date-time.mycroftai"
+        self.weather_skill = self.settings.get("weather_skill") or "mycroft-weather.mycroftai"
+        self.datetime_skill = self.settings.get("datetime_skill") or "mycroft-date-time.mycroftai"
         self.skill_info_skill = self.settings.get("examples_skill") or "ovos-skills-info.openvoiceos"
 
         now = datetime.datetime.now()
@@ -48,7 +48,6 @@ class OVOSHomescreenSkill(MycroftSkill):
             now.year, now.month, now.day, now.hour, now.minute
         ) + datetime.timedelta(seconds=60)
         self.schedule_repeating_event(self.update_dt, callback_time, 10)
-        self.skill_manager = SkillManager(self.bus)
 
         # Handler Registration For Notifications
         self.add_event("homescreen.wallpaper.set",
@@ -59,7 +58,6 @@ class OVOSHomescreenSkill(MycroftSkill):
                        self.handle_notification_storage_model_update)
         self.gui.register_handler("homescreen.swipe.change.wallpaper",
                                   self.change_wallpaper)
-        self.add_event("mycroft.ready", self.handle_mycroft_ready)
 
         if not self.file_system.exists("wallpapers"):
             os.mkdir(path.join(self.file_system.path, "wallpapers"))
@@ -67,14 +65,12 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.collect_wallpapers()
         self._load_skill_apis()
 
-        self.bus.emit(Message("mycroft.device.show.idle"))
+    def _show_idle_screen(self):
+        """Populates and shows the resting screen."""
+        self.handle_show_home()
 
-    #####################################################################
-    # Homescreen Registration & Handling
-
-    @resting_screen_handler("OVOSHomescreen")
-    def handle_idle(self, _):
-        LOG.debug('Activating Time/Date resting page')
+    def handle_show_home(self):
+        LOG.info("On show home")
         self.gui['wallpaper_path'] = self.check_wallpaper_path(self.selected_wallpaper)
         self.gui['selected_wallpaper'] = self.selected_wallpaper
         self.gui['notification'] = {}
@@ -226,8 +222,8 @@ class OVOSHomescreenSkill(MycroftSkill):
     def shutdown(self):
         self.cancel_all_repeating_events()
 
-    def handle_mycroft_ready(self, _):
-        self._load_skill_apis()
+    #def handle_mycroft_ready(self, _):
+        #self._load_skill_apis()
 
     def _load_skill_apis(self):
         """
@@ -336,6 +332,6 @@ class OVOSHomescreenSkill(MycroftSkill):
         except Exception:
             return voiceApplicationsList
 
-
 def create_skill():
+    """Boilerplate code to instantiate the skill."""
     return OVOSHomescreenSkill()
