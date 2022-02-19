@@ -34,6 +34,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.weather_api = None
         self.datetime_api = None
         self.skill_info_api = None
+        self.show_examples = None
 
     def initialize(self):
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
@@ -42,12 +43,14 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.weather_skill = self.settings.get("weather_skill") or "skill-weather.openvoiceos"
         self.datetime_skill = self.settings.get("datetime_skill") or "skill-date-time.mycroftai"
         self.skill_info_skill = self.settings.get("examples_skill") or "ovos-skills-info.openvoiceos"
-
+        self.show_examples = 1 if self.settings.get("show_examples") else 0
+        LOG.debug(self.settings.get("show_examples"))
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
             now.year, now.month, now.day, now.hour, now.minute
         ) + datetime.timedelta(seconds=60)
         self.schedule_repeating_event(self.update_dt, callback_time, 10)
+        self.schedule_repeating_event(self.update_weather, callback_time, 900)
         self.skill_manager = SkillManager(self.bus)
 
         # Handler Registration For Notifications
@@ -83,7 +86,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             "count": len(self.notifications_storage_model),
         }
         self.gui["applications_model"] = self.build_voice_applications_model()
-
+        self.gui["show_examples"] = self.show_examples
         try:
             self.update_dt()
             self.update_weather()

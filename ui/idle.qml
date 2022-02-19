@@ -20,6 +20,7 @@ Mycroft.CardDelegate {
     property bool rtlMode: Boolean(sessionData.rtl_mode)
     property bool weatherEnabled: Boolean(sessionData.weather_api_enabled)
     property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
+    property bool showExamples: Boolean(sessionData.show_examples)
 
     background: Item {
         anchors.fill: parent
@@ -420,7 +421,7 @@ Mycroft.CardDelegate {
                     property var longShortMonth: horizontalMode ? sessionData.month_string : sessionData.month_string.substring(0,3)
                     text: switch(idleRoot.dateFormat) {
                         case "DMY":
-                            return sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  longShortMonth + ", " + sessionData.year_string
+                            return sessionData.weekday_string.substring(0,3) + ", " +  longShortMonth + " " + sessionData.day_string + " " + sessionData.year_string
                             break
                         case "MDY":
                             return longShortMonth + " " + sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + ", " + sessionData.year_string
@@ -463,7 +464,7 @@ Mycroft.CardDelegate {
 
                     Kirigami.Icon {
                         id: exampleLabelIcon
-                        visible: true
+                        visible: idleRoot.showExamples
                         source: Qt.resolvedUrl("icons/mic-min.svg")
                         width: horizontalMode ? parent.height * 0.65 : parent.height * 0.45
                         anchors.verticalCenter: parent.verticalCenter
@@ -475,7 +476,7 @@ Mycroft.CardDelegate {
                         width: parent.width
                         height: parent.height
                         fontSizeMode: Text.Fit
-                        visible: true
+                        visible: idleRoot.showExamples
                         minimumPixelSize: 50
                         font.pixelSize: horizontalMode ? Math.round(parent.height * 0.475) : Math.round(parent.height * 0.2)
                         horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
