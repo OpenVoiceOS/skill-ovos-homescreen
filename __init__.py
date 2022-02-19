@@ -34,6 +34,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.weather_api = None
         self.datetime_api = None
         self.skill_info_api = None
+        self.show_examples = True
 
     def initialize(self):
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
@@ -42,6 +43,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.weather_skill = self.settings.get("weather_skill") or "skill-weather.openvoiceos"
         self.datetime_skill = self.settings.get("datetime_skill") or "skill-date-time.mycroftai"
         self.skill_info_skill = self.settings.get("examples_skill") or "ovos-skills-info.openvoiceos"
+        self.show_examples = self.settings.get("show_examples") or True
 
         now = datetime.datetime.now()
         callback_time = datetime.datetime(

@@ -20,6 +20,7 @@ Mycroft.CardDelegate {
     property bool rtlMode: Boolean(sessionData.rtl_mode)
     property bool weatherEnabled: Boolean(sessionData.weather_api_enabled)
     property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
+    property bool showExamples: Boolean(sessionData.show_examples)
 
     background: Item {
         anchors.fill: parent
@@ -463,7 +464,7 @@ Mycroft.CardDelegate {
 
                     Kirigami.Icon {
                         id: exampleLabelIcon
-                        visible: true
+                        visible: showExamples
                         source: Qt.resolvedUrl("icons/mic-min.svg")
                         width: horizontalMode ? parent.height * 0.65 : parent.height * 0.45
                         anchors.verticalCenter: parent.verticalCenter
