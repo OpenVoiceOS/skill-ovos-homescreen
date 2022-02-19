@@ -464,7 +464,7 @@ Mycroft.CardDelegate {
 
                     Kirigami.Icon {
                         id: exampleLabelIcon
-                        visible: showExamples
+                        visible: idleRoot.showExamples
                         source: Qt.resolvedUrl("icons/mic-min.svg")
                         width: horizontalMode ? parent.height * 0.65 : parent.height * 0.45
                         anchors.verticalCenter: parent.verticalCenter
@@ -476,7 +476,7 @@ Mycroft.CardDelegate {
                         width: parent.width
                         height: parent.height
                         fontSizeMode: Text.Fit
-                        visible: showExamples
+                        visible: idleRoot.showExamples
                         minimumPixelSize: 50
                         font.pixelSize: horizontalMode ? Math.round(parent.height * 0.475) : Math.round(parent.height * 0.2)
                         horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
