@@ -20,7 +20,7 @@ setup(
     package_data={'ovos_skill_homescreen': ["vocab/*", "ui/*"]},
     packages=['ovos_skill_homescreen'],
     include_package_data=True,
-    install_requires=["ovos-plugin-manager>=0.0.2", "astral==1.4", "arrow==0.12.0"],
+    install_requires=["astral==1.4", "arrow==0.12.0"],
     keywords='ovos skill plugin',
     entry_points={'ovos.plugin.skill': PLUGIN_ENTRY_POINT}
 )
