@@ -48,6 +48,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             now.year, now.month, now.day, now.hour, now.minute
         ) + datetime.timedelta(seconds=60)
         self.schedule_repeating_event(self.update_dt, callback_time, 10)
+        self.schedule_repeating_event(self.update_weather, callback_time, 900)
         self.skill_manager = SkillManager(self.bus)
 
         # Handler Registration For Notifications
