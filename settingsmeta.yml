@@ -20,3 +20,7 @@ skillMetadata:
           type: text
           label: Wallpaper
           value: default.jpg
+        - name: show_examples
+          type: text
+          label: Show Skill Examples
+          value: true
