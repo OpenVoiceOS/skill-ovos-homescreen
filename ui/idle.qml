@@ -20,6 +20,8 @@ Mycroft.CardDelegate {
     property bool rtlMode: Boolean(sessionData.rtl_mode)
     property bool weatherEnabled: Boolean(sessionData.weather_api_enabled)
     property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
+    property string exampleEntry
+    signal exampleEntryUpdate(string exampleEntry)
 
     background: Item {
         anchors.fill: parent
@@ -67,7 +69,9 @@ Mycroft.CardDelegate {
     }
 
     onTextModelChanged: {
-        exampleLabel.entry = textModel[0]
+        console.log("TextModelChanged")
+        exampleEntry = idleRoot.textModel[0]
+        exampleEntryUpdate(exampleEntry)
         textTimer.running = true
     }
 
@@ -110,12 +114,13 @@ Mycroft.CardDelegate {
 
     function setExampleText(){
         timer.setTimeout(function(){
-            entryChangeB.running = true;
-            var index = idleRoot.textModel.indexOf(exampleLabel.entry);
+            textTimer.runEntryChangeB()
+            var index = idleRoot.textModel.indexOf(exampleEntry);
             var nextItem;
             if(index >= 0) {
                 nextItem = idleRoot.textModel[index + 1]
-                exampleLabel.entry = nextItem
+                idleRoot.exampleEntry = nextItem
+                exampleEntryUpdate(exampleEntry)
             }
         }, 500);
     }
@@ -125,9 +130,11 @@ Mycroft.CardDelegate {
         interval: 30000
         running: false
         repeat: true
+        signal runEntryChangeA
+        signal runEntryChangeB
 
         onTriggered: {
-            entryChangeA.running = true;
+            runEntryChangeA()
             setExampleText()
         }
     }
@@ -217,308 +224,18 @@ Mycroft.CardDelegate {
             }
         }
 
-        ColumnLayout {
-            id: grid
+        HorizontalDisplayLayout {
             anchors.fill: parent
             spacing: 0
+            enabled: horizontalMode ? 1 : 0
+            visible: horizontalMode ? 1 : 0
+        }
 
-            Rectangle {
-                color: "transparent"
-                Layout.fillWidth: true
-                Layout.leftMargin: Mycroft.Units.gridUnit
-                Layout.rightMargin: Mycroft.Units.gridUnit
-                Layout.minimumHeight: parent.height * 0.17
-
-                Row {
-                    id: widgetsRow
-                    anchors.left: parent.left
-                    anchors.right: weatherItemBox.left
-                    height: parent.height
-                    spacing: Mycroft.Units.gridUnit
-
-                    Kirigami.Icon {
-                        id: notificationWigBtn
-                        width: parent.height
-                        height: width
-                        visible: idleRoot.notificationModel.count > 0
-                        enabled: idleRoot.notificationModel.count > 0
-                        source: Qt.resolvedUrl("icons/notificationicon.svg")
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                notificationsStorageViewBox.open()
-                            }
-                        }
-
-                        Rectangle {
-                            color: "red"
-                            anchors.right: parent.right
-                            anchors.rightMargin: -Kirigami.Units.largeSpacing * 0.50
-                            anchors.top: parent.top
-                            anchors.topMargin: -Kirigami.Units.largeSpacing * 0.50
-                            width: parent.width * 0.50
-                            height: parent.height * 0.50
-                            radius: width
-                            z: 10
-
-                            Label {
-                                color: "white"
-                                anchors.centerIn: parent
-                                text: idleRoot.notificationModel.count
-                            }
-                        }
-                    }
-
-                    Kirigami.Icon {
-                        id: timerWigBtn
-                        width: parent.height
-                        height: width
-                        visible: false
-                        enabled: false
-                        source: Qt.resolvedUrl("icons/timericon.svg")
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                            }
-                        }
-                    }
-
-
-                    Kirigami.Icon {
-                        id: alarmWigBtn
-                        width: parent.height
-                        height: width
-                        visible: false
-                        enabled: false
-                        source: Qt.resolvedUrl("icons/alarmicon.svg")
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                            }
-                        }
-                    }
-                }
-
-                Item {
-                    id: weatherItemBox
-                    anchors.right: parent.right
-                    anchors.rightMargin: Mycroft.Units.gridUnit * 0.50
-                    width: parent.width * 0.30
-                    height: parent.height + Mycroft.Units.gridUnit * 2
-                    visible: idleRoot.weatherEnabled
-
-                    Kirigami.Icon {
-                        id: weatherItemIcon
-                        source: Qt.resolvedUrl(getWeatherImagery(sessionData.weather_code)) //Qt.resolvedUrl("icons/sun.svg")
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.left: parent.left
-                        width: horizontalMode ? parent.height * 0.80 : parent.width * 0.50
-                        height: width
-                        visible: true
-                        layer.enabled: true
-                        layer.effect: DropShadow {
-                            verticalOffset: 4
-                            color: idleRoot.shadowColor
-                            radius: 11
-                            spread: 0.4
-                            samples: 16
-                        }
-                    }
-
-                    Text {
-                        id: weatherItem
-                        text: sessionData.weather_temp + "°" //"50°"
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.left: weatherItemIcon.right
-                        anchors.right: parent.right
-                        anchors.leftMargin: Mycroft.Units.gridUnit
-                        fontSizeMode: Text.Fit
-                        minimumPixelSize: 50
-                        font.pixelSize: horizontalMode ? parent.height : parent.height * 0.65
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignLeft
-                        color: "white"
-                        visible: true
-                        layer.enabled: true
-                        layer.effect: DropShadow {
-                            verticalOffset: 4
-                            color: idleRoot.shadowColor
-                            radius: 11
-                            spread: 0.4
-                            samples: 16
-                        }
-                    }
-                }
-            }
-
-            Item {
-                Layout.fillWidth: true
-                Layout.minimumHeight: Math.round(parent.height * 0.125)
-            }
-
-            Rectangle {
-                color: "transparent"
-                Layout.fillWidth: true
-                Layout.preferredHeight: parent.height * 0.30
-                Layout.leftMargin: Mycroft.Units.gridUnit
-                Layout.rightMargin: Mycroft.Units.gridUnit
-                Layout.topMargin: 1
-                Layout.bottomMargin: 1
-
-                Label {
-                    id: time
-                    width: parent.width
-                    height: parent.height
-                    font.capitalization: Font.AllUppercase
-                    horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    font.weight: Font.ExtraBold
-                    //font.pixelSize: parent.height
-                    font.pixelSize: horizontalMode ? parent.height : parent.height * 0.65
-                    color: "white"
-                    text: sessionData.time_string.replace(":", "꞉")
-                    layer.enabled: true
-                    layer.effect: DropShadow {
-                        verticalOffset: 4
-                        color: idleRoot.shadowColor
-                        radius: 11
-                        spread: 0.4
-                        samples: 16
-                    }
-                }
-            }
-
-            Item {
-                Layout.fillWidth: true
-                Layout.minimumHeight: Mycroft.Units.gridUnit
-            }
-
-            Rectangle {
-                color: "transparent"
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.leftMargin: Mycroft.Units.gridUnit * 2
-                Layout.rightMargin: Mycroft.Units.gridUnit * 2
-
-                Label {
-                    id: weekday
-                    width: parent.width
-                    height: parent.height
-                    fontSizeMode: Text.Fit
-                    minimumPixelSize: 50
-                    font.pixelSize: horizontalMode ? Math.round(parent.height * 0.725) : Math.round(parent.height * 0.5)
-                    horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    wrapMode: Text.WordWrap
-                    font.weight: Font.DemiBold
-                    font.letterSpacing: 1.1
-                    property var longShortMonth: horizontalMode ? sessionData.month_string : sessionData.month_string.substring(0,3)
-                    text: switch(idleRoot.dateFormat) {
-                        case "DMY":
-                            return sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  longShortMonth + ", " + sessionData.year_string
-                            break
-                        case "MDY":
-                            return longShortMonth + " " + sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + ", " + sessionData.year_string
-                            break
-                        case "YMD":
-                            return sessionData.year_string + ", " + longShortMonth + " " + sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string
-                            break
-                        default:
-                            return sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  longShortMonth + ", " + sessionData.year_string
-                            break
-                    }
-                    color: "white"
-                    layer.enabled: true
-                    layer.effect: DropShadow {
-                        verticalOffset: 4
-                        color: idleRoot.shadowColor
-                        radius: 11
-                        spread: 0.4
-                        samples: 16
-                    }
-                }
-            }
-
-            Item {
-                Layout.fillWidth: true
-                Layout.minimumHeight: Mycroft.Units.gridUnit
-            }
-
-            Rectangle {
-                color: "transparent"
-                Layout.fillWidth: true
-                Layout.leftMargin: Mycroft.Units.gridUnit * 2
-                Layout.rightMargin: Mycroft.Units.gridUnit * 2
-                Layout.fillHeight: true
-
-                Row {
-                    width: parent.width
-                    height: parent.height
-                    spacing: Mycroft.Units.gridUnit * 0.5
-
-                    Kirigami.Icon {
-                        id: exampleLabelIcon
-                        visible: true
-                        source: Qt.resolvedUrl("icons/mic-min.svg")
-                        width: horizontalMode ? parent.height * 0.65 : parent.height * 0.45
-                        anchors.verticalCenter: parent.verticalCenter
-                        height: width
-                    }
-
-                    Label {
-                        id: exampleLabel
-                        width: parent.width
-                        height: parent.height
-                        fontSizeMode: Text.Fit
-                        visible: true
-                        minimumPixelSize: 50
-                        font.pixelSize: horizontalMode ? Math.round(parent.height * 0.475) : Math.round(parent.height * 0.2)
-                        horizontalAlignment: idleRoot.rtlMode ? Text.AlignRight : Text.AlignLeft
-                        verticalAlignment: Text.AlignVCenter
-                        wrapMode: Text.WordWrap
-                        font.weight: Font.DemiBold
-                        property string entry
-                        text: '<i>“Ask Me, ' + entry + '”</i>'
-                        color: "white"
-                        layer.enabled: true
-                        layer.effect: DropShadow {
-                            verticalOffset: 4
-                            color: idleRoot.shadowColor
-                            radius: 11
-                            spread: 0.4
-                            samples: 16
-                        }
-
-                        PropertyAnimation {
-                            id: entryChangeA
-                            target: exampleLabel
-                            running: false
-                            property: "opacity"
-                            to: 0.5
-                            duration: 500
-                        }
-
-                        PropertyAnimation {
-                            id: entryChangeB
-                            target: exampleLabel
-                            running: false
-                            property: "opacity"
-                            to: 1
-                            duration: 500
-                        }
-                    }
-                }
-            }
-
-            Item {
-                Layout.fillWidth: true
-                Layout.minimumHeight: Mycroft.Units.gridUnit
-            }
+        VerticalDisplayLayout {
+            anchors.fill: parent
+            spacing: 0
+            enabled: horizontalMode ? 0 : 1
+            visible: horizontalMode ? 0 : 1
         }
     }
 

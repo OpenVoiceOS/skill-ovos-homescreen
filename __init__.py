@@ -10,7 +10,7 @@ from ovos_utils.log import LOG
 from ovos_utils.skills import get_skills_folder
 
 from mycroft.skills.core import resting_screen_handler, intent_file_handler
-from mycroft.skills import IdleDisplaySkill
+from ovos_workshop.skills.idle_display_skill import IdleDisplaySkill
 from mycroft.skills.skill_loader import load_skill_module
 from mycroft.skills.skill_manager import SkillManager
 from mycroft.skills.api import SkillApi
@@ -34,13 +34,11 @@ class OVOSHomescreenSkill(IdleDisplaySkill):
         self.skill_info_api = None
 
     def initialize(self):
-        super().initialize()
-        self.log.info("After super initialize")
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.selected_wallpaper = self.settings.get("wallpaper") or "default.jpg"
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
-        self.weather_skill = self.settings.get("weather_skill") or "mycroft-weather.mycroftai"
-        self.datetime_skill = self.settings.get("datetime_skill") or "mycroft-date-time.mycroftai"
+        self.weather_skill = self.settings.get("weather_skill") or "skill-weather.openvoiceos"
+        self.datetime_skill = self.settings.get("datetime_skill") or "skill-date-time.openvoiceos"
         self.skill_info_skill = self.settings.get("examples_skill") or "ovos-skills-info.openvoiceos"
 
         now = datetime.datetime.now()
@@ -64,9 +62,14 @@ class OVOSHomescreenSkill(IdleDisplaySkill):
 
         self.collect_wallpapers()
         self._load_skill_apis()
+        self.schedule_repeating_event(self.update_weather, callback_time, 900)
+        super().initialize()
 
     def _show_idle_screen(self):
         """Populates and shows the resting screen."""
+        self._load_skill_apis()
+        self.update_examples()
+        self.update_weather()
         self.handle_show_home()
 
     def handle_show_home(self):
@@ -96,12 +99,13 @@ class OVOSHomescreenSkill(IdleDisplaySkill):
         Loads or updates skill examples via the skill_info_api.
         """
         if not self.skill_info_api:
-            LOG.warning("Requested update before skill_info API loaded")
+            LOG.info("Requested update before skill_info API loaded")
+            self.gui['skill_examples'] = ""
             self._load_skill_apis()
         if self.skill_info_api:
             self.gui['skill_examples'] = {"examples": self.skill_info_api.skill_info_examples()}
         else:
-            LOG.warning("No skill_info_api, skipping update")
+            LOG.info("No skill_info_api, skipping update")
 
     def update_dt(self):
         """
