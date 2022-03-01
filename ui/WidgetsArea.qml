@@ -13,8 +13,8 @@ Row {
         id: notificationWigBtn
         width: widgetsRow.verticalMode ? parent.height * 0.5 : parent.height
         height: width
-        //visible: idleRoot.notificationModel.count > 0
-        //enabled: idleRoot.notificationModel.count > 0
+        visible: idleRoot.notificationModel.count > 0
+        enabled: idleRoot.notificationModel.count > 0
         source: Qt.resolvedUrl("icons/notificationicon.svg")
 
         MouseArea {
@@ -47,8 +47,8 @@ Row {
         id: timerWigBtn
         width: widgetsRow.verticalMode ? parent.height * 0.5 : parent.height
         height: width
-        //visible: false
-        //enabled: false
+        visible: false
+        enabled: false
         source: Qt.resolvedUrl("icons/timericon.svg")
 
         MouseArea {
@@ -63,8 +63,8 @@ Row {
         id: alarmWigBtn
         width: widgetsRow.verticalMode ? parent.height * 0.5 : parent.height
         height: width
-        //visible: false
-        //enabled: false
+        visible: false
+        enabled: false
         source: Qt.resolvedUrl("icons/alarmicon.svg")
 
         MouseArea {
