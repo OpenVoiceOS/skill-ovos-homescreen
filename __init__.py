@@ -42,8 +42,8 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.selected_wallpaper = self.settings.get("wallpaper") or "default.jpg"
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
-        self.weather_skill = self.settings.get("weather_skill") or "mycroft-weather.mycroftai"
-        self.datetime_skill = self.settings.get("datetime_skill") or "mycroft-date-time.mycroftai"
+        self.weather_skill = self.settings.get("weather_skill") or "skill-weather.openvoiceos"
+        self.datetime_skill = self.settings.get("datetime_skill") or "skill-date-time.mycroftai"
         self.skill_info_skill = self.settings.get("examples_skill") or "ovos-skills-info.openvoiceos"
 
         now = datetime.datetime.now()
