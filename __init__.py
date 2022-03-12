@@ -35,6 +35,9 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.datetime_api = None
         self.skill_info_api = None
 
+        # A variable to turn on/off the example text
+        self.examples_enabled = True
+
     def initialize(self):
         self.weather_api = None
         self.datetime_api = None
@@ -44,7 +47,9 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
         self.weather_skill = self.settings.get("weather_skill") or "skill-weather.openvoiceos"
         self.datetime_skill = self.settings.get("datetime_skill") or "skill-date-time.mycroftai"
-        self.skill_info_skill = self.settings.get("examples_skill") or "ovos-skills-info.openvoiceos"
+        self.examples_enabled = 1 if self.settings.get("examples_enabled", True) else 0
+        if self.examples_enabled:
+            self.skill_info_skill = self.settings.get("examples_skill") or "ovos-skills-info.openvoiceos"
 
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
@@ -107,12 +112,16 @@ class OVOSHomescreenSkill(MycroftSkill):
         Loads or updates skill examples via the skill_info_api.
         """
         if not self.skill_info_api:
-            LOG.warning("Requested update before skill_info API loaded")
-            self._load_skill_apis()
+            if not self.examples_enabled:
+                LOG.warning("Examples are disabled in settings")
+            else:
+                LOG.warning("Requested update before skill_info API loaded")
+                self._load_skill_apis()
         if self.skill_info_api:
             self.gui['skill_examples'] = {"examples": self.skill_info_api.skill_info_examples()}
         else:
             LOG.warning("No skill_info_api, skipping update")
+        self.gui['skill_info_enabled'] = self.examples_enabled
 
     def update_dt(self):
         """
@@ -248,7 +257,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         try:
             if not self.skill_info_api:
-                self.skill_info_api = SkillApi.get(self.skill_info_skill)
+                self.skill_info_api = SkillApi.get(self.skill_info_skill) or None
         except Exception as e:
             LOG.error(f"Failed To Import OVOS Info Skill: {e}")
 
