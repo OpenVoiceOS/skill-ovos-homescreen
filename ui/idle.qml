@@ -18,6 +18,7 @@ Mycroft.CardDelegate {
     property var textModel: sessionData.skill_examples.examples
     property color shadowColor: Qt.rgba(0, 0, 0, 0.7)
     property bool rtlMode: Boolean(sessionData.rtl_mode)
+    property bool examplesEnabled: Boolean(sessionData.skill_info_enabled)
     property bool weatherEnabled: Boolean(sessionData.weather_api_enabled)
     property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
     property string exampleEntry
