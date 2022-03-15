@@ -36,6 +36,9 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.skill_info_api = None
 
     def initialize(self):
+        self.weather_api = None
+        self.datetime_api = None
+        self.skill_info_api = None
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.selected_wallpaper = self.settings.get("wallpaper") or "default.jpg"
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
@@ -67,6 +70,9 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.collect_wallpapers()
         self._load_skill_apis()
 
+        self.schedule_repeating_event(self.update_weather, callback_time, 900)
+        self.schedule_repeating_event(self.update_examples, callback_time, 900)
+
         self.bus.emit(Message("mycroft.device.show.idle"))
 
     #####################################################################
@@ -74,6 +80,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
     @resting_screen_handler("OVOSHomescreen")
     def handle_idle(self, _):
+        self._load_skill_apis()
         LOG.debug('Activating Time/Date resting page')
         self.gui['wallpaper_path'] = self.check_wallpaper_path(self.selected_wallpaper)
         self.gui['selected_wallpaper'] = self.selected_wallpaper
