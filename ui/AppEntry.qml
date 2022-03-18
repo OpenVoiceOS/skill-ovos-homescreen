@@ -56,7 +56,7 @@ ItemDelegate {
     }
 
     onClicked: {
-        appsBar.close()
+        appBarRoot.close()
         Mycroft.MycroftController.sendRequest(model.action, {})
     }
 }

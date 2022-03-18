@@ -7,6 +7,7 @@ import Mycroft 1.0 as Mycroft
 
 Rectangle {
     id: examplesDisplay
+    visible: idleRoot.examplesEnabled
     property bool verticalMode: false
     color: "transparent"
 
@@ -34,7 +35,7 @@ Rectangle {
 
             Kirigami.Icon {
                 id: exampleLabelIcon
-                visible: true
+                visible: idleRoot.examplesEnabled
                 source: Qt.resolvedUrl("icons/mic-min.svg")
                 anchors.right: examplesDisplay.verticalMode ? parent.right : null
                 width: parent.height * 0.70
