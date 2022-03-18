@@ -4,6 +4,7 @@ import QtQuick.Controls 2.12
 import org.kde.kirigami 2.11 as Kirigami
 import QtGraphicalEffects 1.0
 import Mycroft 1.0 as Mycroft
+import "." as Local
 
 Mycroft.CardDelegate {
     id: idleRoot
@@ -11,17 +12,30 @@ Mycroft.CardDelegate {
     cardBackgroundOverlayColor: "transparent"
     cardRadius: 0
     skillBackgroundSource: Qt.resolvedUrl(sessionData.wallpaper_path + sessionData.selected_wallpaper)
+
     property bool horizontalMode: idleRoot.width > idleRoot.height ? 1 : 0
     readonly property color primaryBorderColor: Qt.rgba(1, 0, 0, 0.9)
     readonly property color secondaryBorderColor: Qt.rgba(1, 1, 1, 0.7)
     property var notificationModel: sessionData.notification_model
     property var textModel: sessionData.skill_examples.examples
     property color shadowColor: Qt.rgba(0, 0, 0, 0.7)
-    property bool rtlMode: Boolean(sessionData.rtl_mode)
-    property bool weatherEnabled: Boolean(sessionData.weather_api_enabled)
+    property bool rtlMode: sessionData.rtl_mode ? Boolean(sessionData.rtl_mode) : false
+    property bool examplesEnabled: sessionData.skill_info_enabled ? Boolean(sessionData.skill_info_enabled) : true
+    property bool weatherEnabled: sessionData.weather_api_enabled ? Boolean(sessionData.weather_api_enabled) : false
     property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
+    property var timeString: sessionData.time_string
     property string exampleEntry
     signal exampleEntryUpdate(string exampleEntry)
+
+    controlBar: Local.AppsBar {
+        id: appBar
+        anchors {
+            bottom: parent.bottom
+        }
+        parentItem: idleRoot
+        appsModel: sessionData.applications_model
+        z: 100
+    }
 
     background: Item {
         anchors.fill: parent
@@ -153,169 +167,125 @@ Mycroft.CardDelegate {
         }
     }
 
+
     Item {
-        id: mainContentItemArea
-        anchors.fill: parent
-
-        AppsBar {
-            id: appsBar
-            width: parent.width
-            height: parent.height * 0.35
-            parent: idleRoot
-            appsModel: sessionData.applications_model
-        }
-
-        BoxesOverlay {
-            id: boxesOverlay
-            width: parent.width
-            height: parent.height
-            parent: idleRoot
-            clip: true
-
-            Component.onCompleted: {
-                timer.setTimeout(function(){
-                    boxesOverlay.model.append({"url": Qt.resolvedUrl("boxes/SetAlarmBox.qml")})
-                    boxesOverlay.model.append({"url": Qt.resolvedUrl("boxes/TakeNoteBox.qml")})
-                    boxesOverlay.model.append({"url": Qt.resolvedUrl("boxes/PlayRelaxingMusic.qml")})
-                    boxesOverlay.model.append({"url": Qt.resolvedUrl("boxes/PlayTheNews.qml")})
-                }, 1000)
-            }
-        }
-
-        NightTimeOverlay {
-            id: nightTimeOverlay
-            width: parent.width
-            height: parent.height
-            parent: idleRoot
-            clip: true
-        }
-
-        SwipeArea {
-            id: swipeAreaType
-            anchors.fill: parent
-            propagateComposedEvents: true
-            onSwipe: {
-                if(direction == "up") {
-                    appsBar.open()
-                }
-                if(direction == "left") {
-                    triggerGuiEvent("homescreen.swipe.change.wallpaper", {})
-                }
-            }
-        }
-
-        Kirigami.Icon {
-            id: downArrowMenuHint
-            anchors.top: parent.top
-            anchors.topMargin: -Mycroft.Units.gridUnit
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: Mycroft.Units.gridUnit * 2.5
-            height: Mycroft.Units.gridUnit * 2.5
-            opacity: 0
-            source:  Qt.resolvedUrl("icons/down.svg")
-            color: "white"
-
-            SequentialAnimation {
-                id: downArrowMenuHintAnim
-                running: idleRoot.visible ? 1 : 0
-
-                PropertyAnimation {
-                    target: downArrowMenuHint
-                    property: "opacity"
-                    to: 1
-                    duration: 1000
-                }
-
-                PropertyAnimation {
-                    target: downArrowMenuHint
-                    property: "opacity"
-                    to: 0.5
-                    duration: 1000
-                }
-
-                PropertyAnimation {
-                    target: downArrowMenuHint
-                    property: "opacity"
-                    to: 1
-                    duration: 1000
-                }
-
-                PropertyAnimation {
-                    target: downArrowMenuHint
-                    property: "opacity"
-                    to: 0
-                    duration: 1000
-                }
-            }
-        }
-
-        Rectangle {
-            id: bottomAreaHandler
-            width: horizontalMode ? Mycroft.Units.gridUnit * 3.5 : Mycroft.Units.gridUnit * 2.5
-            height: Mycroft.Units.gridUnit * 0.5
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: -Mycroft.Units.gridUnit * 1.5
-            anchors.horizontalCenter: parent.horizontalCenter
-            color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
-            radius: Mycroft.Units.gridUnit
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    appsBar.open()
-                }
-            }
-        }
+        width: Mycroft.Units.gridUnit * 4
+        height: Mycroft.Units.gridUnit * 12
+        anchors.right: parent.right
+        anchors.rightMargin: -Mycroft.Units.gridUnit * 2
+        anchors.verticalCenter: parent.verticalCenter
+        visible: mainView.currentIndex == 0 || mainView.currentIndex == 1
+        enabled: mainView.currentIndex == 0 || mainView.currentIndex == 1
+        z: 2
 
         Rectangle {
             id: rightAreaHandler
             width: Mycroft.Units.gridUnit * 0.5
             height: horizontalMode ? Mycroft.Units.gridUnit * 3.5 : Mycroft.Units.gridUnit * 2.5
             anchors.right: parent.right
-            anchors.rightMargin: -Mycroft.Units.gridUnit * 1.5
+            anchors.rightMargin: Mycroft.Units.gridUnit * 0.5
             anchors.verticalCenter: parent.verticalCenter
             color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
             radius: Mycroft.Units.gridUnit
+            z: 2
+        }
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    boxesOverlay.open()
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                if(mainView.currentIndex == 0) {
+                    mainView.currentIndex = 1
+                } else if (mainView.currentIndex == 1) {
+                    mainView.currentIndex = 2
+                    boxesView.layoutGrid()
                 }
             }
         }
+    }
 
+    Item {
+        width: Mycroft.Units.gridUnit * 12
+        height: Mycroft.Units.gridUnit * 4
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: -Mycroft.Units.gridUnit * 2
+        anchors.horizontalCenter: parent.horizontalCenter
+        visible: mainView.currentIndex == 1
+        enabled: mainView.currentIndex == 1
+        z: 2
+
+        Rectangle {
+                id: bottomAreaHandler
+                width: horizontalMode ? Mycroft.Units.gridUnit * 3.5 : Mycroft.Units.gridUnit * 2.5
+                height: Mycroft.Units.gridUnit * 0.5
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: Mycroft.Units.gridUnit * 0.5
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
+                radius: Mycroft.Units.gridUnit
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                controlBarItem.open()
+            }
+        }
+    }
+
+    Item {
+        width: Mycroft.Units.gridUnit * 4
+        height: Mycroft.Units.gridUnit * 12
+        anchors.left: parent.left
+        anchors.leftMargin: -Mycroft.Units.gridUnit * 2
+        anchors.verticalCenter: parent.verticalCenter
+        visible: mainView.currentIndex == 1 || mainView.currentIndex == 2
+        enabled: mainView.currentIndex == 1 || mainView.currentIndex == 2
+        z: 2
 
         Rectangle {
             id: leftAreaHandler
             width: Mycroft.Units.gridUnit * 0.5
             height: horizontalMode ? Mycroft.Units.gridUnit * 3.5 : Mycroft.Units.gridUnit * 2.5
             anchors.left: parent.left
-            anchors.leftMargin: -Mycroft.Units.gridUnit * 1.5
+            anchors.leftMargin: Mycroft.Units.gridUnit * 0.5
             anchors.verticalCenter: parent.verticalCenter
             color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
             radius: Mycroft.Units.gridUnit
+        }
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    nightTimeOverlay.open()
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                if(mainView.currentIndex == 1) {
+                    mainView.currentIndex = 0
+                } else if (mainView.currentIndex == 2) {
+                    mainView.currentIndex = 1
                 }
             }
         }
+    }
 
-        HorizontalDisplayLayout {
-            anchors.fill: parent
-            spacing: 0
-            enabled: horizontalMode ? 1 : 0
-            visible: horizontalMode ? 1 : 0
+    StackLayout {
+        id: mainView
+        currentIndex: 1
+        anchors.fill: parent
+
+        NightTimePage {
+            id: nightTimeView
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
 
-        VerticalDisplayLayout {
-            anchors.fill: parent
-            spacing: 0
-            enabled: horizontalMode ? 0 : 1
-            visible: horizontalMode ? 0 : 1
+        MainPage {
+            id: mainPageView
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+
+        BoxesPage {
+            id: boxesView
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
 

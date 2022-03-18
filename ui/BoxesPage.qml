@@ -5,36 +5,36 @@ import org.kde.kirigami 2.11 as Kirigami
 import QtGraphicalEffects 1.0
 import Mycroft 1.0 as Mycroft
 
-Drawer {
+Control {
     id: boxoverlayroot
     Kirigami.Theme.inherit: false
     Kirigami.Theme.colorSet: Kirigami.Theme.View
-    edge: Qt.RightEdge
-
-    height: parent.height
-    width: parent.width
-    interactive: false
 
     property alias model: gridBox.model
     property bool horizontalMode: boxoverlayroot.width > boxoverlayroot.height ? 1 : 0
+    property bool layoutGridLoaded: false
 
-    Overlay.modal: Rectangle {
-        FastBlur{
-            id: dblur
-            anchors.fill: parent
-            source: idleRoot
-            radius: 64
-        }
-        color: Qt.rgba(0, 0, 0, 0.4)
-    }
-
-    onPositionChanged: {
-        if(position == 1){
-            boxoverlayroot.interactive = false
+    function layoutGrid() {
+        if(!layoutGridLoaded){
+            gridBox.enabled = true
+            gridBox.visible = true
+            timer.setTimeout(function(){
+                boxesView.model.append({"url": Qt.resolvedUrl("boxes/SetAlarmBox.qml")})
+                boxesView.model.append({"url": Qt.resolvedUrl("boxes/TakeNoteBox.qml")})
+                boxesView.model.append({"url": Qt.resolvedUrl("boxes/PlayRelaxingMusic.qml")})
+                boxesView.model.append({"url": Qt.resolvedUrl("boxes/PlayTheNews.qml")})
+                layoutGridLoaded = true
+            }, 500)
         }
     }
 
     background: Rectangle {
+        width: idleRoot.width
+        height: idleRoot.height
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.leftMargin: -Mycroft.Units.gridUnit * 2
+        anchors.topMargin: -Mycroft.Units.gridUnit * 2
         color: "#000000"
     }
 
@@ -61,29 +61,13 @@ Drawer {
             height: 1
         }
 
-        Rectangle {
-            id: leftBoxesOverlayAreaHandler
-            width: Mycroft.Units.gridUnit * 0.5
-            height: Mycroft.Units.gridUnit * 3.5
-            anchors.left: parent.left
-            anchors.leftMargin: Mycroft.Units.gridUnit / 2
-            anchors.verticalCenter: parent.verticalCenter
-            color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
-            radius: Mycroft.Units.gridUnit
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    boxoverlayroot.close()
-                }
-            }
-        }
-
         GridBox {
             id: gridBox
-            anchors.left: leftBoxesOverlayAreaHandler.right
+            enabled: false
+            visible: false
+            anchors.left: parent.left
             anchors.leftMargin: Mycroft.Units.gridUnit / 2
-            anchors.right: parent.right
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: boxesOverlayHeaderSept.bottom
             anchors.topMargin: Mycroft.Units.gridUnit / 2
             anchors.bottom: parent.bottom
