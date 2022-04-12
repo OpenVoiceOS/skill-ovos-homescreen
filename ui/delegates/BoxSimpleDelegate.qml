@@ -7,8 +7,8 @@ import Mycroft 1.0 as Mycroft
 
 Rectangle {
     id: boxDelegateRootItem
-    color: "#313131"
-    border.color: "#414141"
+    color: Kirigami.Theme.backgroundColor
+    border.color: Kirigami.Theme.highlightColor
     border.width: 1
     radius: 15
     z: 1
@@ -52,14 +52,14 @@ Rectangle {
                 Layout.preferredHeight: parent.height * 0.35
                 Layout.margins: -Mycroft.Units.gridUnit / 2.5
                 radius: 15
-                color: "#212121"
+                color: Kirigami.Theme.highlightColor
 
                 Kirigami.Icon {
                     id: headerIcon
                     anchors.centerIn: parent
                     width: parent.height
                     height: width
-                    color: boxDelegateRootItem.iconColor
+                    color: Kirigami.Theme.backgroundColor
                 }
             }
 
@@ -77,7 +77,7 @@ Rectangle {
                     elide: Text.ElideRight
                     maximumLineCount: 1
                     level: 3
-                    color: boxDelegateRootItem.textColor
+                    color: Kirigami.Theme.textColor
                     enabled: hasHeading
                     visible: hasHeading
                 }
@@ -95,7 +95,7 @@ Rectangle {
                     fontSizeMode: Text.Fit
                     minimumPixelSize: 10
                     font.pixelSize: 100
-                    color: boxDelegateRootItem.textColor
+                    color: Kirigami.Theme.textColor
                 }
             }
         }

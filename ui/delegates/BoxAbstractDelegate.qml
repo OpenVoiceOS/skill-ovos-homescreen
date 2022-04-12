@@ -14,8 +14,8 @@ Control {
     property int preferredCellHeight: 4
 
     background: Rectangle {
-        color: "#313131"
-        border.color: "#414141"
+        color: Kirigami.Theme.backgroundColor
+        border.color: Kirigami.Theme.highlightColor
         border.width: 1
         radius: 15
         layer.enabled: true
