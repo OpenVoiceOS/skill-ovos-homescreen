@@ -22,14 +22,14 @@ Delegates.BoxAbstractDelegate {
             Layout.preferredHeight: parent.height * 0.25
             Layout.margins: -Mycroft.Units.gridUnit / 2.5
             radius: 15
-            color: "#212121"
+            color: Kirigami.Theme.highlightColor
 
             Kirigami.Icon {
                 id: headerIcon
                 anchors.centerIn: parent
                 width: parent.height
                 height: width
-                color: "white"
+                color: Kirigami.Theme.backgroundColor
                 source: "new-audio-alarm"
             }
         }
@@ -47,7 +47,7 @@ Delegates.BoxAbstractDelegate {
             Layout.preferredHeight: parent.height * 0.25
             Layout.margins: -Mycroft.Units.gridUnit / 2.5
             radius: 15
-            color: "#212121"
+            color: Kirigami.Theme.highlightColor
 
             Label {
                 id: primaryBoxText
@@ -61,7 +61,7 @@ Delegates.BoxAbstractDelegate {
                 fontSizeMode: Text.Fit
                 minimumPixelSize: 10
                 font.pixelSize: 100
-                color: "white"
+                color: Kirigami.Theme.textColor
                 text: "Play relaxing music & sounds"
             }
         }

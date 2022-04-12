@@ -68,7 +68,7 @@ Item {
                         anchors.bottom: parent.bottom
                         anchors.bottomMargin: Mycroft.Units.gridUnit * 1.5
                         anchors.horizontalCenter: parent.horizontalCenter
-                        color: Qt.rgba(1, 0, 0, 0.5)
+                        color: Kirigami.Theme.highlightColor
                         radius: Mycroft.Units.gridUnit
                 }
 
@@ -93,23 +93,14 @@ Item {
                 anchors.bottom: parent.bottom
                 width: parent.width
                 height: parent.height
-                gradient: Gradient {
-                        orientation: Gradient.Vertical
-                        GradientStop { color: Qt.rgba(0, 0, 0, 0); position: 0 }
-                        GradientStop { color: "#313131"; position: 0.001 }
-                        GradientStop { color: "#313131"; position: 1 }
-                }
+                color: Qt.lighter(Kirigami.Theme.backgroundColor, 1.25)
 
                 Rectangle {
                     id: appsBarHeader
                     anchors.top: parent.top
                     width: parent.width
                     height: 5
-                    gradient: Gradient {
-                        orientation: Gradient.Vertical
-                        GradientStop { color: Qt.rgba(1, 0, 0, 0.9); position: 0 }
-                        GradientStop { color: Qt.rgba(1, 0, 0, 0.9); position: 1 }
-                    }
+                    color: Kirigami.Theme.highlightColor
                 }
 
                 Item {

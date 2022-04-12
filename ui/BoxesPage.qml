@@ -35,7 +35,7 @@ Control {
         anchors.top: parent.top
         anchors.leftMargin: -Mycroft.Units.gridUnit * 2
         anchors.topMargin: -Mycroft.Units.gridUnit * 2
-        color: "#000000"
+        color: Kirigami.Theme.backgroundColor
     }
 
     contentItem: Item {
@@ -44,7 +44,7 @@ Control {
             id: boxesOverlayHeader
             level: 1
             text: "Quick Access"
-            color: "white"
+            color: Kirigami.Theme.textColor
             anchors.top: parent.top
             anchors.topMargin: Mycroft.Units.gridUnit / 2
             anchors.left: parent.left
@@ -57,7 +57,7 @@ Control {
             anchors.topMargin: Mycroft.Units.gridUnit / 2
             anchors.left: parent.left
             anchors.right: parent.right
-            color: "#313131"
+            color: Kirigami.Theme.highlightColor
             height: 1
         }
 

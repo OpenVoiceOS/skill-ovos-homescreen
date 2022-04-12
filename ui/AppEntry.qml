@@ -10,12 +10,12 @@ ItemDelegate {
     property var metricHeight
 
     background: Rectangle {
-        color: "#212121"
+        color: Qt.darker(Kirigami.Theme.backgroundColor, 1.25)
         anchors.fill: parent
         anchors.margins: Kirigami.Units.smallSpacing
         radius: 5
         border.width: 1
-        border.color: "#a70f1b"
+        border.color: Kirigami.Theme.highlightColor
     }
 
     contentItem: Item {
@@ -30,7 +30,7 @@ ItemDelegate {
                 Layout.preferredWidth: parent.height / 2
                 Layout.preferredHeight: width
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                color: "#121212"
+                color: Qt.darker(Kirigami.Theme.backgroundColor, 2)
                 radius: 200
 
                 Image {
@@ -43,7 +43,7 @@ ItemDelegate {
             Label {
                 Layout.preferredWidth: parent.width
                 horizontalAlignment: Text.AlignHCenter
-                color: "white"
+                color: Kirigami.Theme.textColor
                 text: model.name
                 font.bold: true
                 font.capitalization: Font.Capitalize
