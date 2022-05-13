@@ -43,7 +43,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.selected_wallpaper = self.settings.get("wallpaper") or "default.jpg"
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
-        self.weather_skill = self.settings.get("weather_skill") or "skill-weather.openvoiceos"
+        self.weather_skill = self.settings.get("weather_skill") or "ovos-skill-weather.openvoiceos"
         self.datetime_skill = self.settings.get("datetime_skill") or "skill-date-time.openvoiceos"
         self.examples_enabled = 1 if self.settings.get("examples_enabled", True) else 0
         if self.examples_enabled:
@@ -66,6 +66,11 @@ class OVOSHomescreenSkill(MycroftSkill):
                                   self.change_wallpaper)
         self.add_event("mycroft.ready", self.handle_mycroft_ready)
 
+        # Handler Registration For Widgets
+        self.add_event("ovos.widgets.timer.update", self.handle_timer_widget_manager)
+        self.add_event("ovos.widgets.timer.display", self.handle_timer_widget_manager)
+        self.add_event("ovos.widgets.timer.remove", self.handle_timer_widget_manager)
+
         if not self.file_system.exists("wallpapers"):
             os.mkdir(path.join(self.file_system.path, "wallpapers"))
 
@@ -87,6 +92,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.gui['wallpaper_path'] = self.check_wallpaper_path(self.selected_wallpaper)
         self.gui['selected_wallpaper'] = self.selected_wallpaper
         self.gui['notification'] = {}
+        self.gui['timer_widget'] = {}
         self.gui["notification_model"] = {
             "storedmodel": self.notifications_storage_model,
             "count": len(self.notifications_storage_model),
@@ -349,6 +355,9 @@ class OVOSHomescreenSkill(MycroftSkill):
         except Exception:
             return voiceApplicationsList
 
+    def handle_timer_widget_manager(self, message):
+        timerWidget = message.data.get("widget", {})
+        self.gui['timer_widget'] = timerWidget
 
 def create_skill():
     return OVOSHomescreenSkill()

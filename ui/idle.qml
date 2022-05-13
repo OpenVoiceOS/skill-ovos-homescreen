@@ -25,7 +25,13 @@ Mycroft.CardDelegate {
     property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
     property var timeString: sessionData.time_string
     property string exampleEntry
+    property var timerWidgetData: sessionData.timer_widget
+    property int timerWidgetCount: 0
     signal exampleEntryUpdate(string exampleEntry)
+
+    onTimerWidgetDataChanged: {
+        timerWidgetCount = timerWidgetData.count
+    }
 
     controlBar: Local.AppsBar {
         id: appBar
