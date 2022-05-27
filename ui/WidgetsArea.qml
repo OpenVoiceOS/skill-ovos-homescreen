@@ -47,13 +47,14 @@ Row {
         id: timerWigBtn
         width: widgetsRow.verticalMode ? parent.height * 0.5 : parent.height
         height: width
-        visible: false
-        enabled: false
+        visible: idleRoot.timerWidgetCount > 0 ? 1 : 0
+        enabled: idleRoot.timerWidgetCount > 0 ? 1 : 0
         source: Qt.resolvedUrl("icons/timericon.svg")
 
         MouseArea {
             anchors.fill: parent
             onClicked: {
+                Mycroft.MycroftController.sendRequest("ovos.gui.show.active.timers", {})
             }
         }
     }
