@@ -27,17 +27,20 @@ Mycroft.CardDelegate {
     property string exampleEntry
     property var timerWidgetData: sessionData.timer_widget
     property int timerWidgetCount: 0
+    property var alarmWidgetData: sessionData.alarm_widget
+    property int alarmWidgetCount: 0
     signal exampleEntryUpdate(string exampleEntry)
 
     onTimerWidgetDataChanged: {
         timerWidgetCount = timerWidgetData.count
     }
 
+    onAlarmWidgetDataChanged: {
+        alarmWidgetCount = alarmWidgetData.count
+    }
+
     controlBar: Local.AppsBar {
         id: appBar
-        anchors {
-            bottom: parent.bottom
-        }
         parentItem: idleRoot
         appsModel: sessionData.applications_model
         z: 100
@@ -199,6 +202,8 @@ Mycroft.CardDelegate {
         MouseArea {
             anchors.fill: parent
             onClicked: {
+                controlBarItem.close()
+                Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                 if(mainView.currentIndex == 0) {
                     mainView.currentIndex = 1
                 } else if (mainView.currentIndex == 1) {
@@ -228,11 +233,13 @@ Mycroft.CardDelegate {
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
                 radius: Mycroft.Units.gridUnit
+                visible: controlBarItem.opened ? 0 : 1
         }
 
         MouseArea {
             anchors.fill: parent
             onClicked: {
+                Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                 controlBarItem.open()
             }
         }
@@ -262,6 +269,8 @@ Mycroft.CardDelegate {
         MouseArea {
             anchors.fill: parent
             onClicked: {
+                controlBarItem.close()
+                Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                 if(mainView.currentIndex == 1) {
                     mainView.currentIndex = 0
                 } else if (mainView.currentIndex == 2) {
@@ -394,6 +403,7 @@ Mycroft.CardDelegate {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
+                        Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                         Mycroft.MycroftController.sendRequest("ovos.notification.api.storage.clear", {})
                     }
                 }

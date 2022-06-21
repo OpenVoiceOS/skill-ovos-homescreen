@@ -7,123 +7,171 @@ import Mycroft 1.0 as Mycroft
 
 Item {
     id: appBarRoot
-    Kirigami.Theme.inherit: false
-    Kirigami.Theme.colorSet: Kirigami.Theme.View
-    clip: true
     implicitWidth: parentItem.width
     implicitHeight: parentItem.height
-    opacity: opened
-
+    opacity: opened ? 1 : 0
+    enabled: opened ? 1 : 0
     property bool opened: false
-    property bool enabled: true
     property var parentItem
     property var appsModel
-    property bool horizontalMode: appBarRoot.width > appBarRoot.height ? 1 : 0
-
-    function close() {
-        appBarRoot.opened = false
-    }
 
     function open() {
-        appBarRoot.opened = true
+        opened = true
     }
 
-    Behavior on opacity {
-        OpacityAnimator {
-            duration: Kirigami.Units.longDuration
-            easing.type: Easing.InOutCubic
+    function close() {
+        opened = false
+    }
+
+    Keys.onEscapePressed: {
+        opened = false
+    }
+
+    Image {
+        id: backgroundImagePointer
+        source: parentItem.skillBackgroundSource
+        fillMode: Image.PreserveAspectCrop
+        anchors.fill: parent
+        opacity: 0
+        enabled: false
+        visible: false
+    }
+
+    Control {
+        id: appBarArea
+        width: appBarRoot.opened ? (appBarRoot.parentItem.horizontalMode ? parent.width * 0.6 : parent.width * 0.8) : 0
+        height: appBarRoot.opened ? (appBarRoot.parentItem.horizontalMode ? parent.height * 0.6 : parent.height * 0.5) : 0
+        x: appBarRoot.opened ? ((parent.width - width) / 2) : 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 32
+        opacity: appBarRoot.opened ? 1 : 0
+        padding: 8
+        z: enabled ? 3 : -2
+
+        Behavior on opacity {
+            OpacityAnimator {
+                duration: Kirigami.Units.longDuration
+                easing.type: Easing.InOutCubic
+            }
         }
-    }
 
-    Item {
-        width: parent.width
-        height: parent.height
-        y: opened ? 0 : parent.height
+        background: Rectangle {
+            radius: 6
+            color: Qt.rgba(Kirigami.Theme.backgroundColor.r, Kirigami.Theme.backgroundColor.g, Kirigami.Theme.backgroundColor.b, 1.0)
 
-        Rectangle {
-            width:parent.width
-            height: parent.height * 0.7
-            anchors.top: parent.top
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: 2
+                radius: 5
+                color: "transparent"
+                border.width: 2
+                border.color: Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.8)
+            }
+
             FastBlur {
                 id: dblur
                 anchors.fill: parent
-                source: idleRoot
-                radius: 64
-            }
-            color: Qt.rgba(0, 0, 0, 0.4)
-
-            Item {
-                width: Mycroft.Units.gridUnit * 12
-                height: Mycroft.Units.gridUnit * 4
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-                visible: opened
-                enabled: opened
-                z: 2
+                anchors.margins: 6
+                source: backgroundImagePointer
+                radius: 84
 
                 Rectangle {
-                        id: bottomAreaHandler
-                        width: horizontalMode ? Mycroft.Units.gridUnit * 3.5 : Mycroft.Units.gridUnit * 2.5
-                        height: Mycroft.Units.gridUnit * 0.5
-                        anchors.bottom: parent.bottom
-                        anchors.bottomMargin: Mycroft.Units.gridUnit * 1.5
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        color: Kirigami.Theme.highlightColor
-                        radius: Mycroft.Units.gridUnit
-                }
-
-                MouseArea {
                     anchors.fill: parent
-                    onClicked: {
-                        appBarRoot.close()
-                    }
+                    color: Qt.darker(Qt.rgba(Kirigami.Theme.backgroundColor.r, Kirigami.Theme.backgroundColor.g, Kirigami.Theme.backgroundColor.b, 0.5), 1.25)
                 }
             }
         }
 
-        Item {
-            width: parent.width
-            height: parent.height * 0.3
-            anchors.bottom: parent.bottom
+        contentItem: Item {
 
-            Rectangle {
-                id: contentBar
-                anchors.right: parent.right
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                width: parent.width
-                height: parent.height
-                color: Qt.lighter(Kirigami.Theme.backgroundColor, 1.25)
-
-                Rectangle {
-                    id: appsBarHeader
-                    anchors.top: parent.top
-                    width: parent.width
-                    height: 5
-                    color: Kirigami.Theme.highlightColor
-                }
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 2
 
                 Item {
-                    width: parent.width
-                    anchors.top: appsBarHeader.bottom
-                    anchors.bottom: parent.bottom
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 32
 
-                    GridView {
-                        anchors.fill: parent
-                        anchors.margins: Mycroft.Units.gridUnit
+                    Rectangle {
+                        id: launcherAreaHandler
+                        width: appBarRoot.parentItem.horizontalMode ? Mycroft.Units.gridUnit * 3 : Mycroft.Units.gridUnit * 2
+                        height: Mycroft.Units.gridUnit * 0.5
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 8
+                        color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
+                        radius: Mycroft.Units.gridUnit
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
+                                appBarRoot.close()
+                            }
+
+                            onPressed: {
+                                launcherAreaHandler.color = Kirigami.Theme.highlightColor
+                            }
+
+                            onReleased:  {
+                                launcherAreaHandler.color = Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
+                            }
+                        }
+                    }
+
+                    Kirigami.Icon {
+                        id: micListenIcon
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: parent.height
+                        width: height
+                        source: Qt.resolvedUrl("icons/mic-start.svg")
+                        color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                appBarRoot.close()
+                                Mycroft.MycroftController.sendRequest("mycroft.mic.listen", {})
+                                Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/start-listening.wav"))
+                            }
+
+                            onPressed: {
+                                micListenIcon.color = Kirigami.Theme.highlightColor
+                            }
+
+                            onReleased:  {
+                                micListenIcon.color = Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
+                            }
+                        }
+                    }
+                }
+
+                Kirigami.Separator {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 1
+                    color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
+                }
+
+                GridView {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
                         id: repeaterAppsModel
                         clip: true
-                        cellWidth:  width / 3
-                        cellHeight: root.horizontalMode ? height : (count > 3 ? height / 2 : height)
-
+                        cellWidth: width / 3
+                        cellHeight: height / 2
                         model: appsModel
 
+                        ScrollBar.vertical: ScrollBar {
+                        active: repeaterAppsModel.count > 6
+                        snapMode: ScrollBar.SnapOnRelease
+                        policy: ScrollBar.AsNeeded
+                        }
+
                         delegate: AppEntry {
-                            metricHeight: 12
                             implicitWidth: repeaterAppsModel.cellWidth
                             implicitHeight: repeaterAppsModel.cellHeight
                         }
-                    }
                 }
             }
         }
