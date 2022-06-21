@@ -64,13 +64,14 @@ Row {
         id: alarmWigBtn
         width: widgetsRow.verticalMode ? parent.height * 0.5 : parent.height
         height: width
-        visible: false
-        enabled: false
+        visible: idleRoot.alarmWidgetCount > 0 ? 1 : 0
+        enabled: idleRoot.alarmWidgetCount > 0 ? 1 : 0
         source: Qt.resolvedUrl("icons/alarmicon.svg")
 
         MouseArea {
             anchors.fill: parent
             onClicked: {
+                Mycroft.MycroftController.sendRequest("ovos.gui.show.active.alarms", {})
             }
         }
     }

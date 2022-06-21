@@ -24,6 +24,7 @@ Item {
                         controlBarItem.open()
                     }
                     if(direction == "left") {
+                        controlBarItem.close()
                         triggerGuiEvent("homescreen.swipe.change.wallpaper", {})
                     }
                     if(direction == "down") {
