@@ -8,6 +8,8 @@ from os import path, listdir, environ
 from mycroft_bus_client import Message
 from ovos_utils.log import LOG
 from ovos_utils.skills import get_skills_folder
+from ovos_utils.xdg_utils import xdg_config_home
+from json_database import JsonStorage
 
 from mycroft.skills.core import resting_screen_handler, intent_file_handler, MycroftSkill
 from mycroft.skills.skill_loader import load_skill_module
@@ -35,6 +37,9 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         # A variable to turn on/off the example text
         self.examples_enabled = True
+
+        # Display Configuration Variables
+        self.wallpaper_rotation_enabled = False
 
     def initialize(self):
         self.weather_api = None
@@ -85,6 +90,10 @@ class OVOSHomescreenSkill(MycroftSkill):
                        self.handle_alarm_widget_manager)
         self.add_event("ovos.widgets.alarm.remove",
                        self.handle_alarm_widget_manager)
+        
+        # Handler For Wallpaper Rotation Event
+        self.bus.on("speaker.extension.display.wallpaper.rotation.changed",
+                    self.check_wallpaper_rotation_config)
 
         if not self.file_system.exists("wallpapers"):
             os.mkdir(path.join(self.file_system.path, "wallpapers"))
@@ -110,6 +119,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.gui['notification'] = {}
         self.gui['timer_widget'] = {}
         self.gui['alarm_widget'] = {}
+        self.gui['wallpaper_rotation_enabled'] = self.wallpaper_rotation_enabled
         self.gui["notification_model"] = {
             "storedmodel": self.notifications_storage_model,
             "count": len(self.notifications_storage_model),
@@ -191,6 +201,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             loc_wallpaper_collection = filenames
 
         self.wallpaper_collection = def_wallpaper_collection + loc_wallpaper_collection
+        self.check_wallpaper_rotation_config()
 
     @intent_file_handler("change.wallpaper.intent")
     def change_wallpaper(self, _):
@@ -242,6 +253,13 @@ class OVOSHomescreenSkill(MycroftSkill):
             return self.def_wallpaper_folder
         elif path.exists(file_loc_check):
             return self.loc_wallpaper_folder
+        
+    def check_wallpaper_rotation_config(self, message=None):
+        display_config_path_local = path.join(xdg_config_home(), "OvosDisplay.conf")
+        if path.exists(display_config_path_local):
+            display_configuration = JsonStorage(display_config_path_local)
+            self.wallpaper_rotation_enabled = display_configuration.get("wallpaper_rotation", False)
+            self.gui['wallpaper_rotation_enabled'] = self.wallpaper_rotation_enabled
 
     #####################################################################
     # Manage notifications widget

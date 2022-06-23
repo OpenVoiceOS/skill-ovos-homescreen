@@ -29,6 +29,7 @@ Mycroft.CardDelegate {
     property int timerWidgetCount: 0
     property var alarmWidgetData: sessionData.alarm_widget
     property int alarmWidgetCount: 0
+    property bool wallpaperRotationEnabled: sessionData.wallpaper_rotation_enabled ? Boolean(sessionData.wallpaper_rotation_enabled) : false
     signal exampleEntryUpdate(string exampleEntry)
 
     onTimerWidgetDataChanged: {
@@ -159,6 +160,9 @@ Mycroft.CardDelegate {
         onTriggered: {
             runEntryChangeA()
             setExampleText()
+            if (idleRoot.wallpaperRotationEnabled) {
+                triggerGuiEvent("homescreen.swipe.change.wallpaper", {})
+            }
         }
     }
 
