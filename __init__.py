@@ -346,7 +346,7 @@ class OVOSHomescreenSkill(MycroftSkill):
     # Build Voice Applications Model
     
     def find_icon_full_path(self, icon_name):
-        localuser = environ['USER']
+        localuser = environ.get('USER')
         folder_search_paths = ["/usr/share/icons/", "/usr/local/share/icons/",
                      f"/home/{localuser}/.local/share/icons/"]
         for folder_search_path in folder_search_paths:
