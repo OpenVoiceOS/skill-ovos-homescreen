@@ -415,15 +415,16 @@ class OVOSHomescreenSkill(MycroftSkill):
 
     def build_voice_applications_model(self):
         voiceApplicationsList = []
-        localuser = environ['USER']
+        localuser = environ.get('USER')
         file_list = ["/usr/share/applications/", "/usr/local/share/applications/",
                      f"/home/{localuser}/.local/share/applications/"]
         for file_path in file_list:
-            files = listdir(file_path)
-            for file in files:
-                app_dict = self.parse_desktop_file(file_path + file)
-                if app_dict is not None:
-                    voiceApplicationsList.append(app_dict)
+            if os.path.isdir(file_path):
+                files = listdir(file_path)
+                for file in files:
+                    app_dict = self.parse_desktop_file(file_path + file)
+                    if app_dict is not None:
+                        voiceApplicationsList.append(app_dict)
 
         try:
             sort_on = "name"
