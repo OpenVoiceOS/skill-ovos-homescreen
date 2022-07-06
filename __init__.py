@@ -121,7 +121,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             os.mkdir(path.join(self.file_system.path, "wallpapers"))
             
         # Handler For Weather Response
-        self.bus.on("homescreen.weather.update.response", self.update_weather_response)
+        self.bus.on("skill-ovos-weather.openvoiceos.weather.response", self.update_weather_response)
 
         self.collect_wallpapers()
         self._load_skill_apis()
@@ -201,7 +201,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         """
         Loads or updates weather via the weather_api.
         """
-        self.bus.emit(Message("homescreen.weather.update.request"))
+        self.bus.emit(Message("skill-ovos-weather.openvoiceos.weather.request"))
 
     def update_weather_response(self, message=None):
         """
