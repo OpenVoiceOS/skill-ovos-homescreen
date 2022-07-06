@@ -11,6 +11,7 @@ Control {
     Kirigami.Theme.colorSet: Kirigami.Theme.View
 
     property bool horizontalMode: nightTimeOverlayRoot.width > nightTimeOverlayRoot.height ? 1 : 0
+    property var time_string: sessionData.time_string ? sessionData.time_string.replace(":", "꞉") : ""
 
     background: Rectangle {
         width: idleRoot.width
@@ -35,7 +36,7 @@ Control {
             minimumPixelSize: 20
             font.pixelSize: parent.height
             color: "#cdcdcd"
-            text: sessionData.time_string.replace(":", "꞉")
+            text: nightTimeOverlayRoot.time_string
         }
     }
 }

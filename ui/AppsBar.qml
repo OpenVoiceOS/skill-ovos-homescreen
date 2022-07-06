@@ -29,7 +29,7 @@ Item {
 
     Image {
         id: backgroundImagePointer
-        source: parentItem.skillBackgroundSource
+        source: parentItem.skillBackgroundSource ? parentItem.skillBackgroundSource : Qt.resolvedUrl("wallpapers/default.jpg")
         fillMode: Image.PreserveAspectCrop
         anchors.fill: parent
         opacity: 0
@@ -156,6 +156,9 @@ Item {
                 GridView {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+                        visible: appBarRoot.opened ? 1 : 0 
+                        enabled: appBarRoot.opened ? 1 : 0
+
                         id: repeaterAppsModel
                         clip: true
                         cellWidth: width / 3

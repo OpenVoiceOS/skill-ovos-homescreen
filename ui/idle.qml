@@ -11,33 +11,45 @@ Mycroft.CardDelegate {
     skillBackgroundColorOverlay: "transparent"
     cardBackgroundOverlayColor: "transparent"
     cardRadius: 0
-    skillBackgroundSource: Qt.resolvedUrl(sessionData.wallpaper_path + sessionData.selected_wallpaper)
+    skillBackgroundSource: sessionData.wallpaper_path && sessionData.selected_wallpaper ? Qt.resolvedUrl(sessionData.wallpaper_path + sessionData.selected_wallpaper) : Qt.resolvedUrl("wallpapers/default.jpg")
 
     property bool horizontalMode: idleRoot.width > idleRoot.height ? 1 : 0
     readonly property color primaryBorderColor: Qt.rgba(1, 0, 0, 0.9)
     readonly property color secondaryBorderColor: Qt.rgba(1, 1, 1, 0.7)
     property var notificationModel: sessionData.notification_model
-    property var textModel: sessionData.skill_examples.examples
+    property var textModel: sessionData.skill_examples ? sessionData.skill_examples.examples : []
     property color shadowColor: Qt.rgba(0, 0, 0, 0.7)
     property bool rtlMode: sessionData.rtl_mode ? Boolean(sessionData.rtl_mode) : false
     property bool examplesEnabled: sessionData.skill_info_enabled ? Boolean(sessionData.skill_info_enabled) : true
     property bool weatherEnabled: sessionData.weather_api_enabled ? Boolean(sessionData.weather_api_enabled) : false
     property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
-    property var timeString: sessionData.time_string
+    property var timeString: sessionData.time_string ? sessionData.time_string : "00:00"
     property string exampleEntry
-    property var timerWidgetData: sessionData.timer_widget
+    property var timerWidgetData: sessionData.timer_widget ? sessionData.timer_widget : {}
     property int timerWidgetCount: 0
-    property var alarmWidgetData: sessionData.alarm_widget
+    property var alarmWidgetData: sessionData.alarm_widget ? sessionData.alarm_widget : {}
     property int alarmWidgetCount: 0
     property bool wallpaperRotationEnabled: sessionData.wallpaper_rotation_enabled ? Boolean(sessionData.wallpaper_rotation_enabled) : false
     signal exampleEntryUpdate(string exampleEntry)
 
     onTimerWidgetDataChanged: {
-        timerWidgetCount = timerWidgetData.count
+        if(timerWidgetData) {
+            if(timerWidgetData.count) {
+                timerWidgetCount = timerWidgetData.count
+            } else {
+                timerWidgetCount = 0
+            }
+        }
     }
 
     onAlarmWidgetDataChanged: {
-        alarmWidgetCount = alarmWidgetData.count
+        if(alarmWidgetData) {
+            if(alarmWidgetData.count) {
+                alarmWidgetCount = alarmWidgetData.count
+            } else {
+                alarmWidgetCount = 0
+            }
+        }
     }
 
     controlBar: Local.AppsBar {
@@ -75,26 +87,22 @@ Mycroft.CardDelegate {
         }
     }
 
-    onRtlModeChanged: {
-        console.log("RTL MODE:")
-        console.log(idleRoot.rtlMode)
-    }
-
     onNotificationModelChanged: {
-        if(notificationModel.count > 0) {
-            notificationsStorageView.model = sessionData.notification_model.storedmodel
-        } else {
-            notificationsStorageView.model = sessionData.notification_model.storedmodel
-            notificationsStorageView.forceLayout()
-            if(notificationsStorageViewBox.opened) {
-                notificationsStorageViewBox.close()
+        if(notificationModel){
+            if(notificationModel.count > 0) {
+                notificationsStorageView.model = sessionData.notification_model.storedmodel
+            } else {
+                notificationsStorageView.model = sessionData.notification_model.storedmodel
+                notificationsStorageView.forceLayout()
+                if(notificationsStorageViewBox.opened) {
+                    notificationsStorageViewBox.close()
+                }
             }
         }
     }
 
     onTextModelChanged: {
-        console.log("TextModelChanged")
-        exampleEntry = idleRoot.textModel[0]
+        exampleEntry = idleRoot.textModel[0] ? idleRoot.textModel[0] : ""
         exampleEntryUpdate(exampleEntry)
         textTimer.running = true
     }
@@ -106,7 +114,6 @@ Mycroft.CardDelegate {
     }
 
     function getWeatherImagery(weathercode) {
-        console.log(weathercode);
         switch(weathercode) {
         case 0:
             return "icons/sun.svg";
@@ -212,7 +219,6 @@ Mycroft.CardDelegate {
                     mainView.currentIndex = 1
                 } else if (mainView.currentIndex == 1) {
                     mainView.currentIndex = 2
-                    boxesView.layoutGrid()
                 }
             }
         }

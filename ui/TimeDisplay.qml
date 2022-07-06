@@ -9,6 +9,7 @@ Rectangle {
     id: timeDisplay
     color: "transparent"
     property bool verticalMode: false
+    property var time_string: sessionData.time_string ? sessionData.time_string.replace(":", "꞉") : ""
 
     Label {
         id: time
@@ -22,7 +23,7 @@ Rectangle {
         minimumPixelSize: timeDisplay.verticalMode ? parent.height / 2 : parent.height
         font.pixelSize: parent.height
         color: "white"
-        text: sessionData.time_string.replace(":", "꞉")
+        text: timeDisplay.time_string
         layer.enabled: true
         layer.effect: DropShadow {
             verticalOffset: 4

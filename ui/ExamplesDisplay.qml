@@ -37,7 +37,7 @@ Rectangle {
                 id: exampleLabelIcon
                 visible: idleRoot.examplesEnabled
                 source: Qt.resolvedUrl("icons/mic-min.svg")
-                anchors.right: examplesDisplay.verticalMode ? parent.right : null
+                anchors.right: examplesDisplay.verticalMode ? parent.right : undefined
                 width: parent.height * 0.70
                 height: parent.height
             }
