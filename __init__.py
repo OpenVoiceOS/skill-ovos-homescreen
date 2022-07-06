@@ -108,6 +108,8 @@ class OVOSHomescreenSkill(MycroftSkill):
         # Handler Registration For Dashboard
         self.add_event("ovos.homescreen.dashboard.add.card",
                        self.add_dashboard_card)
+        self.add_event("ovos.homescreen.dashboard.generate.card",
+                       self.generate_dashboard_card)
         self.gui.register_handler("ovos.homescreen.dashboard.generate.card",
                        self.generate_dashboard_card)
         self.gui.register_handler("ovos.homescreen.dashboard.remove.card",
