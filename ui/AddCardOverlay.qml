@@ -186,7 +186,7 @@ Rectangle {
 
                         Label {
                             anchors.centerIn: parent
-                            text: "Action"
+                            text: "Utterance"
                             color: Kirigami.Theme.textColor
                         }
                     }
