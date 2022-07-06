@@ -20,12 +20,11 @@ Control {
         radius: 6
     }
 
-    contentItem: ColumnLayout {
+    contentItem: Column {
 
         Item {
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignTop
-            Layout.preferredHeight: parent.height / 2
+            width: parent.width
+            height: parent.height / 2
 
             Image {
                 width: parent.width < parent.height ? parent.width : parent.height
@@ -37,8 +36,8 @@ Control {
         }
 
         Label {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            width: parent.width
+            height: parent.height / 2
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: Kirigami.Theme.textColor

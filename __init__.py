@@ -1,19 +1,32 @@
+# Copyright 2022, OpenVoiceOS.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import datetime
 import os
-import time
-import requests
-import json
+from os import environ, listdir, path
 
-from os import path, listdir, environ
+import requests
+from json_database import JsonStorage
+from mycroft.skills.api import SkillApi
+from mycroft.skills.core import (MycroftSkill, intent_file_handler,
+                                 resting_screen_handler)
+from mycroft.skills.skill_loader import load_skill_module
 from mycroft_bus_client import Message
 from ovos_utils.log import LOG
-from ovos_utils.skills import get_skills_folder
 from ovos_utils.xdg_utils import xdg_config_home
-from json_database import JsonStorage
-
-from mycroft.skills.core import resting_screen_handler, intent_file_handler, MycroftSkill
-from mycroft.skills.skill_loader import load_skill_module
-from mycroft.skills.api import SkillApi
+from .skill import (DashboardHandler,
+                    CardGenerator)
 
 
 class OVOSHomescreenSkill(MycroftSkill):
@@ -26,12 +39,10 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.selected_wallpaper = None  # Get from config after __init__ is done
         self.wallpaper_collection = []
         self.rtlMode = None  # Get from config after __init__ is done
-
+        
         # Populate skill IDs to use for data sources
-        self.weather_skill = None  # Get from config after __init__ is done
         self.datetime_skill = None  # Get from config after __init__ is done
         self.skill_info_skill = None  # Get from config after __init__ is done
-        self.weather_api = None
         self.datetime_api = None
         self.skill_info_api = None
 
@@ -40,17 +51,20 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         # Display Configuration Variables
         self.wallpaper_rotation_enabled = False
+        self.dashboard_handler = None
 
     def initialize(self):
-        self.weather_api = None
+        self.dashboard_handler = DashboardHandler(self.file_system.path,
+                                                  path.dirname(__file__))
+        self.card_generator = CardGenerator(self.file_system.path, self.bus,
+                                            path.dirname(__file__))
         self.datetime_api = None
         self.skill_info_api = None
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.selected_wallpaper = self.settings.get(
             "wallpaper") or "default.jpg"
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
-        self.weather_skill = self.settings.get(
-            "weather_skill") or "skill-ovos-weather.openvoiceos"
+
         self.datetime_skill = self.settings.get(
             "datetime_skill") or "skill-date-time.openvoiceos"
         self.examples_enabled = 1 if self.settings.get(
@@ -90,13 +104,24 @@ class OVOSHomescreenSkill(MycroftSkill):
                        self.handle_alarm_widget_manager)
         self.add_event("ovos.widgets.alarm.remove",
                        self.handle_alarm_widget_manager)
-        
+
+        # Handler Registration For Dashboard
+        self.add_event("ovos.homescreen.dashboard.add.card",
+                       self.add_dashboard_card)
+        self.gui.register_handler("ovos.homescreen.dashboard.generate.card",
+                       self.generate_dashboard_card)
+        self.gui.register_handler("ovos.homescreen.dashboard.remove.card",
+                       self.remove_dashboard_card)
+
         # Handler For Wallpaper Rotation Event
         self.bus.on("speaker.extension.display.wallpaper.rotation.changed",
                     self.check_wallpaper_rotation_config)
 
         if not self.file_system.exists("wallpapers"):
             os.mkdir(path.join(self.file_system.path, "wallpapers"))
+            
+        # Handler For Weather Response
+        self.bus.on("homescreen.weather.update.response", self.update_weather_response)
 
         self.collect_wallpapers()
         self._load_skill_apis()
@@ -125,6 +150,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             "count": len(self.notifications_storage_model),
         }
         self.gui["applications_model"] = self.build_voice_applications_model()
+        self.gui["dashboard_model"] = self.get_dashboard_cards()
 
         try:
             self.update_dt()
@@ -175,11 +201,14 @@ class OVOSHomescreenSkill(MycroftSkill):
         """
         Loads or updates weather via the weather_api.
         """
-        if not self.weather_api:
-            LOG.warning("Requested update before weather API loaded")
-            self._load_skill_apis()
-        if self.weather_api:
-            current_weather_report = self.weather_api.get_current_weather_homescreen()
+        self.bus.emit(Message("homescreen.weather.update.request"))
+
+    def update_weather_response(self, message=None):
+        """
+        Weather Update Response
+        """
+        current_weather_report = message.data.get("report")
+        if current_weather_report:
             self.gui["weather_api_enabled"] = True
             self.gui["weather_code"] = current_weather_report.get(
                 "weather_code")
@@ -187,7 +216,6 @@ class OVOSHomescreenSkill(MycroftSkill):
                 "weather_temp")
         else:
             self.gui["weather_api_enabled"] = False
-            LOG.warning("No weather_api, skipping update")
 
     #####################################################################
     # Wallpaper Manager
@@ -292,12 +320,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         """
         Loads weather, date/time, and examples skill APIs
         """
-        try:
-            if not self.weather_api:
-                self.weather_api = SkillApi.get(self.weather_skill)
-        except Exception as e:
-            LOG.error(f"Failed To Import Weather Skill: {e}")
-
+        
         try:
             if not self.skill_info_api:
                 self.skill_info_api = SkillApi.get(
@@ -446,6 +469,49 @@ class OVOSHomescreenSkill(MycroftSkill):
     def handle_alarm_widget_manager(self, message):
         alarmWidget = message.data.get("widget", {})
         self.gui['alarm_widget'] = alarmWidget
+
+    ######################################################################
+    # Handle Dashboard
+
+    def generate_dashboard_card(self, message=None):
+        """
+        Generate a custom dashboard card from the UI
+        """
+        if message is None:
+            return
+        card = message.data.get("card", {})
+        self.card_generator.generate(card)
+
+    def add_dashboard_card(self, message=None):
+        """
+        Adds a card to the dashboard from external source
+        """
+        if message is not None:
+            card = message.data.get("card", {})
+            self.dashboard_handler.add_item(card)
+
+        self.gui['dashboard_model'] = self.get_dashboard_cards()
+
+    def remove_dashboard_card(self, message=None):
+        """
+        Removes a card from the dashboard from external source
+        """
+        if message is not None:
+            self.log.info(f"Removing card: {message.data.get('card_id', {})}")
+            card_id = message.data.get("card_id", None)
+            self.dashboard_handler.remove_item(card_id)
+
+        self.gui['dashboard_model'] = self.get_dashboard_cards()
+
+    def get_dashboard_cards(self, message=None):
+        """
+        Returns the current dashboard cards
+        """
+        # Dump the model to a stringified JSON object
+        cards = self.dashboard_handler.get_collection()
+        collection = {"collection": cards}
+        return collection
+
 
 def create_skill():
     return OVOSHomescreenSkill()

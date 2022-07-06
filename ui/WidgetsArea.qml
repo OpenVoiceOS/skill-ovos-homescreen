@@ -13,8 +13,8 @@ Row {
         id: notificationWigBtn
         width: widgetsRow.verticalMode ? parent.height * 0.5 : parent.height
         height: width
-        visible: idleRoot.notificationModel.count > 0
-        enabled: idleRoot.notificationModel.count > 0
+        visible: idleRoot.notificationModel ? (idleRoot.notificationModel.count > 0 ? 1 : 0) : 0
+        enabled: idleRoot.notificationModel ? (idleRoot.notificationModel.count > 0 ? 1 : 0) : 0
         source: Qt.resolvedUrl("icons/notificationicon.svg")
 
         MouseArea {
@@ -38,7 +38,7 @@ Row {
             Label {
                 color: "white"
                 anchors.centerIn: parent
-                text: idleRoot.notificationModel.count
+                text: idleRoot.notificationModel ? idleRoot.notificationModel.count : 0
             }
         }
     }
