@@ -32,6 +32,15 @@ Mycroft.CardDelegate {
     property bool wallpaperRotationEnabled: sessionData.wallpaper_rotation_enabled ? Boolean(sessionData.wallpaper_rotation_enabled) : false
     signal exampleEntryUpdate(string exampleEntry)
 
+    Connections {
+        target: Mycroft.MycroftController
+        onIntentRecevied: {
+            if (type == "phal.brightness.control.auto.night.mode.enabled") {
+                mainView.currentIndex = 0
+            }
+        }
+    }
+
     onTimerWidgetDataChanged: {
         if(timerWidgetData) {
             if(timerWidgetData.count) {
