@@ -17,7 +17,7 @@ setup(
     author_email='aix.m@outlook.com',
     license='Apache-2.0',
     package_dir={"ovos_skill_homescreen": ""},
-    package_data={'ovos_skill_homescreen': ["vocab/*", "ui/*"]},
+    package_data={'ovos_skill_homescreen': ["vocab/*", "ui/*", "skill/*"]},
     packages=['ovos_skill_homescreen'],
     include_package_data=True,
     install_requires=["astral==1.4", "arrow==0.12.0"],
