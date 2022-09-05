@@ -7,7 +7,7 @@ import Mycroft 1.0 as Mycroft
 
 Rectangle {
     id: examplesDisplay
-    visible: idleRoot.examplesEnabled
+    visible: sessionData.skill_info_enabled
     property bool verticalMode: false
     color: "transparent"
 

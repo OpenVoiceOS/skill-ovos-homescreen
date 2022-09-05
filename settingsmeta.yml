@@ -20,3 +20,8 @@ skillMetadata:
           type: text
           label: Wallpaper
           value: default.jpg
+        - name: examples_enabled
+          type: bool
+          label: Enable Examples
+          value: true
+
