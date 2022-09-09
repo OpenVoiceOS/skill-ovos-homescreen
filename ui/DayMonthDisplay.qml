@@ -17,9 +17,6 @@ Rectangle {
                 return sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + " " +  longShortMonth + ", " + sessionData.year_string
                 break
             case "MDY":
-                return longShortMonth + " " + sessionData.weekday_string.substring(0,3) + " " + sessionData.day_string + ", " + sessionData.year_string
-                break
-            case "MDY-us":
                 return sessionData.weekday_string.substring(0,3) + " " + longShortMonth + " " + sessionData.day_string + ", " + sessionData.year_string
                 break
             case "YMD":
