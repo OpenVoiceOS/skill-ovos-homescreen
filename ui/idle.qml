@@ -25,38 +25,44 @@ Mycroft.CardDelegate {
     property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
     property var timeString: sessionData.time_string ? sessionData.time_string : "00:00"
     property string exampleEntry
-    property var timerWidgetData: sessionData.timer_widget ? sessionData.timer_widget : {}
-    property int timerWidgetCount: 0
-    property var alarmWidgetData: sessionData.alarm_widget ? sessionData.alarm_widget : {}
-    property int alarmWidgetCount: 0
     property bool wallpaperRotationEnabled: sessionData.wallpaper_rotation_enabled ? Boolean(sessionData.wallpaper_rotation_enabled) : false
+    property var timerWidgetData
+    property int timerWidgetCount: 0
+    property var alarmWidgetData
+    property int alarmWidgetCount: 0
+
     signal exampleEntryUpdate(string exampleEntry)
+
+    onGuiEvent: {
+        switch (eventName) {
+            case "ovos.timer.widget.manager.update":
+                timerWidgetData = data
+                if(timerWidgetData) {
+                    if(timerWidgetData.count) {
+                        timerWidgetCount = timerWidgetData.count
+                    } else {
+                        timerWidgetCount = 0
+                    }
+                }
+                break;
+            case "ovos.alarm.widget.manager.update":
+                alarmWidgetData = data
+                if(alarmWidgetData) {
+                    if(alarmWidgetData.count) {
+                        alarmWidgetCount = alarmWidgetData.count
+                    } else {
+                        alarmWidgetCount = 0
+                    }
+                }
+                break;
+        }
+    }
 
     Connections {
         target: Mycroft.MycroftController
         onIntentRecevied: {
             if (type == "phal.brightness.control.auto.night.mode.enabled") {
                 mainView.currentIndex = 0
-            }
-        }
-    }
-
-    onTimerWidgetDataChanged: {
-        if(timerWidgetData) {
-            if(timerWidgetData.count) {
-                timerWidgetCount = timerWidgetData.count
-            } else {
-                timerWidgetCount = 0
-            }
-        }
-    }
-
-    onAlarmWidgetDataChanged: {
-        if(alarmWidgetData) {
-            if(alarmWidgetData.count) {
-                alarmWidgetCount = alarmWidgetData.count
-            } else {
-                alarmWidgetCount = 0
             }
         }
     }
