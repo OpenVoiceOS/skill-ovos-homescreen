@@ -144,8 +144,6 @@ class OVOSHomescreenSkill(MycroftSkill):
             self.selected_wallpaper)
         self.gui['selected_wallpaper'] = self.selected_wallpaper
         self.gui['notification'] = {}
-        self.gui['timer_widget'] = {}
-        self.gui['alarm_widget'] = {}
         self.gui['wallpaper_rotation_enabled'] = self.wallpaper_rotation_enabled
         self.gui["notification_model"] = {
             "storedmodel": self.notifications_storage_model,
@@ -466,11 +464,11 @@ class OVOSHomescreenSkill(MycroftSkill):
 
     def handle_timer_widget_manager(self, message):
         timerWidget = message.data.get("widget", {})
-        self.gui['timer_widget'] = timerWidget
+        self.gui.send_event("ovos.timer.widget.manager.update", timerWidget)
         
     def handle_alarm_widget_manager(self, message):
         alarmWidget = message.data.get("widget", {})
-        self.gui['alarm_widget'] = alarmWidget
+        self.gui.send_event("ovos.alarm.widget.manager.update", alarmWidget)
 
     ######################################################################
     # Handle Dashboard
