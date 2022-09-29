@@ -2,9 +2,7 @@
 from setuptools import setup
 
 # skill_id=package_name:SkillClass
-PLUGIN_ENTRY_POINT = 'mycroft-homescreen.mycroftai=ovos_skill_homescreen:OVOSHomescreenSkill'
-# in this case the skill_id is defined to purposefully replace the mycroft version of the skill,
-# or rather to be replaced by it in case it is present. all skill directories take precedence over plugin skills
+PLUGIN_ENTRY_POINT = 'ovos-skill-homescreen.openvoiceos=ovos_skill_homescreen:OVOSHomescreenSkill'
 
 
 setup(
