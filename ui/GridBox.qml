@@ -30,7 +30,7 @@ Item {
         parent: gridBoxRoot
         showCloseButton: false
         property var cardId
-        title: "Edit Card"
+        title: qsTr("Edit Card")
 
         onSheetOpenChanged: {
             if (!sheetOpen) {
@@ -49,7 +49,7 @@ Item {
                     id: cardHoldRemoveButton
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    text: "Remove"
+                    text: qsTr("Remove")
 
                     background: Rectangle {
                         color: cardHoldRemoveButton.pressed ? Kirigami.Theme.backgroundColor : Kirigami.Theme.highlightColor
@@ -67,7 +67,7 @@ Item {
                     id: cardHoldCloseButton
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    text: "Cancel"
+                    text: qsTr("Cancel")
 
                     background: Rectangle {
                         color: cardHoldCloseButton.pressed ? Kirigami.Theme.backgroundColor : Kirigami.Theme.highlightColor

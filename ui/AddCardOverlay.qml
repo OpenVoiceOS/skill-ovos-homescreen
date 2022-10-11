@@ -60,7 +60,7 @@ Rectangle {
         Kirigami.Heading {
             id: addCardOverlayHeaderArea
             level: 2
-            text: "Add Card"
+            text: qsTr("Add Card")
             color: Kirigami.Theme.textColor
             anchors.top: parent.top
             anchors.topMargin: Mycroft.Units.gridUnit / 2
@@ -103,7 +103,7 @@ Rectangle {
 
                         Text {                        
                             anchors.centerIn: parent
-                            text: "Header"
+                            text: qsTr("Header")
                             color: Kirigami.Theme.textColor
                         }
                     }
@@ -124,7 +124,7 @@ Rectangle {
                             Text {
                                 anchors.centerIn: parent
                                 visible: !headerTextField.focus && headerTextField.text == "" ? 1 : 0
-                                text: "Card Header Text"
+                                text: qsTr("Card Header Text")
                                 color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
                             }
                         }
@@ -144,7 +144,7 @@ Rectangle {
 
                         Label {
                             anchors.centerIn: parent
-                            text: "Description"
+                            text: qsTr("Description")
                             color: Kirigami.Theme.textColor
                         }
                     }
@@ -165,7 +165,7 @@ Rectangle {
                             Text {
                                 anchors.centerIn: parent
                                 visible: !descriptionTextField.focus && descriptionTextField.text == "" ? 1 : 0
-                                text: "Card Description Text"
+                                text: qsTr("Card Description Text")
                                 color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
                             }
                         }
@@ -186,7 +186,7 @@ Rectangle {
 
                         Label {
                             anchors.centerIn: parent
-                            text: "Utterance"
+                            text: qsTr("Utterance")
                             color: Kirigami.Theme.textColor
                         }
                     }
@@ -208,7 +208,7 @@ Rectangle {
                             Text {
                                 anchors.centerIn: parent
                                 visible: !actionTextField.focus && actionTextField.text == "" ? 1 : 0
-                                text: "Card Action Text"
+                                text: qsTr("Card Action Text")
                                 color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
                             }
                         }
@@ -229,7 +229,7 @@ Rectangle {
 
                         Label {
                             anchors.centerIn: parent
-                            text: "Icon"
+                            text: qsTr("Icon")
                             color: Kirigami.Theme.textColor
                         }
                     }
@@ -299,7 +299,7 @@ Rectangle {
                 Layout.fillHeight: true
                 Layout.fillWidth: true 
                 icon.name: "list-add"
-                text: "Add"
+                text: qsTr("Add")
 
                 background: Rectangle {
                     color: Kirigami.Theme.highlightColor
@@ -323,7 +323,7 @@ Rectangle {
                 Layout.fillHeight: true
                 Layout.fillWidth: true 
                 icon.name: "window-close-symbolic"
-                text: "Cancel"
+                text: qsTr("Cancel")
 
                 background: Rectangle {
                     color: Kirigami.Theme.highlightColor
