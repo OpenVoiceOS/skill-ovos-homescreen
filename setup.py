@@ -8,7 +8,7 @@ PYPI_NAME = "ovos-skill-homescreen"  # pip install PYPI_NAME
 
 
 # below derived from github url to ensure standard skill_id
-SKILL_NAME, SKILL_AUTHOR = URL.split(".com/")[-1].split("/")
+SKILL_AUTHOR, SKILL_NAME = URL.split(".com/")[-1].split("/")
 SKILL_PKG = SKILL_NAME.lower().replace('-', '_')
 PLUGIN_ENTRY_POINT = f'{SKILL_NAME.lower()}.{SKILL_AUTHOR.lower()}={SKILL_PKG}:{SKILL_CLAZZ}'
 # skill_id=package_name:SkillClass
@@ -35,7 +35,6 @@ def find_resource_files():
                     package_data.append(
                         path.join(directory.replace(base_dir, "").lstrip('/'),
                                   '*'))
-    # print(package_data)
     return package_data
 
 
@@ -51,7 +50,6 @@ with open("./version.py", "r", encoding="utf-8") as v:
                 version = line.split("'")[1]
 
 setup(
-    # this is the package name that goes on pip
     name=PYPI_NAME,
     version=version,
     description='OVOS skill plugin',
