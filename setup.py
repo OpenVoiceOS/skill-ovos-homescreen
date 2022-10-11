@@ -2,11 +2,12 @@
 from setuptools import setup
 from os import path, walk
 
-
-SKILL_NAME = "ovos-skill-homescreen"
+# from github to ensure standard skill_id
+SKILL_NAME = "skill-ovos-homescreen"
+SKILL_AUTHOR = "OpenVoiceOS"
 SKILL_PKG = SKILL_NAME.replace('-', '_')
 # skill_id=package_name:SkillClass
-PLUGIN_ENTRY_POINT = f'{SKILL_NAME}.openvoiceos={SKILL_PKG}:OVOSHomescreenSkill'
+PLUGIN_ENTRY_POINT = f'{SKILL_NAME}.{SKILL_AUTHOR.lower()}={SKILL_PKG}:OVOSHomescreenSkill'
 
 
 def get_requirements(requirements_filename: str):
@@ -49,15 +50,15 @@ setup(
     # this is the package name that goes on pip
     name='ovos-skill-homescreen',
     version=version,
-    description='OVOS homescreen skill plugin',
+    description='OVOS skill plugin',
     long_description=long_description,
-    url='https://github.com/OpenVoiceOS/skill-ovos-homescreen',
+    url=f'https://github.com/{SKILL_AUTHOR}/{SKILL_NAME}',
     author='Aix',
     author_email='aix.m@outlook.com',
     license='Apache-2.0',
-    package_dir={"ovos_skill_homescreen": ""},
-    package_data={'ovos_skill_homescreen': find_resource_files()},
-    packages=['ovos_skill_homescreen'],
+    package_dir={SKILL_PKG: ""},
+    package_data={SKILL_PKG: find_resource_files()},
+    packages=[SKILL_PKG],
     include_package_data=True,
     install_requires=get_requirements("requirements.txt"),
     keywords='ovos skill plugin',

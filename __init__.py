@@ -21,7 +21,6 @@ from json_database import JsonStorage
 from mycroft.skills.api import SkillApi
 from mycroft.skills.core import (MycroftSkill, intent_file_handler,
                                  resting_screen_handler)
-from mycroft.skills.skill_loader import load_skill_module
 from mycroft_bus_client import Message
 from ovos_utils.log import LOG
 from ovos_utils.xdg_utils import xdg_config_home
@@ -323,8 +322,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         
         try:
             if not self.skill_info_api:
-                self.skill_info_api = SkillApi.get(
-                    self.skill_info_skill) or None
+                self.skill_info_api = SkillApi.get(self.skill_info_skill) or None
         except Exception as e:
             LOG.error(f"Failed To Import OVOS Info Skill: {e}")
 
@@ -334,20 +332,6 @@ class OVOSHomescreenSkill(MycroftSkill):
                 self.datetime_api = SkillApi.get(self.datetime_skill)
         except Exception as e:
             LOG.error(f"Failed to import DateTime Skill: {e}")
-
-        # TODO: Depreciate this
-        if not self.datetime_api:
-            try:
-                root_dir = self.root_dir.rsplit("/", 1)[0]
-                time_date_path = str(root_dir) + \
-                    f"/{self.datetime_skill}/__init__.py"
-                time_date_id = "datetimeskill"
-                datetimeskill = load_skill_module(time_date_path, time_date_id)
-                from datetimeskill import TimeSkill
-
-                self.datetime_api = TimeSkill()
-            except Exception as e:
-                LOG.error(f"Failed To Import DateTime Skill: {e}")
 
     def _split_month_string(self, month_date: str) -> list:
         """
