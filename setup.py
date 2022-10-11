@@ -2,12 +2,16 @@
 from setuptools import setup
 from os import path, walk
 
-# from github to ensure standard skill_id
-SKILL_NAME = "skill-ovos-homescreen"
-SKILL_AUTHOR = "OpenVoiceOS"
-SKILL_PKG = SKILL_NAME.replace('-', '_')
+URL = "https://github.com/OpenVoiceOS/skill-ovos-homescreen"
+SKILL_CLAZZ = "OVOSHomescreenSkill  # needs to match __init__.py class name
+PYPI_NAME = "ovos-skill-setup"  # pip install PYPI_NAME
+
+
+# below derived from github url to ensure standard skill_id
+SKILL_NAME, SKILL_AUTHOR = URL.split(".com/")[-1].split("/")
+SKILL_PKG = SKILL_NAME.lower().replace('-', '_')
+PLUGIN_ENTRY_POINT = f'{SKILL_NAME.lower()}.{SKILL_AUTHOR.lower()}={SKILL_PKG}:{SKILL_CLAZZ}'
 # skill_id=package_name:SkillClass
-PLUGIN_ENTRY_POINT = f'{SKILL_NAME}.{SKILL_AUTHOR.lower()}={SKILL_PKG}:OVOSHomescreenSkill'
 
 
 def get_requirements(requirements_filename: str):
@@ -48,11 +52,11 @@ with open("./version.py", "r", encoding="utf-8") as v:
 
 setup(
     # this is the package name that goes on pip
-    name='ovos-skill-homescreen',
+    name=PYPI_NAME,
     version=version,
     description='OVOS skill plugin',
     long_description=long_description,
-    url=f'https://github.com/{SKILL_AUTHOR}/{SKILL_NAME}',
+    url=URL,
     author='Aix',
     author_email='aix.m@outlook.com',
     license='Apache-2.0',
