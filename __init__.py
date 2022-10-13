@@ -65,7 +65,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
 
         self.datetime_skill = self.settings.get(
-            "datetime_skill") or "skill-date-time.openvoiceos"
+            "datetime_skill") or "skill-ovos-date-time.openvoiceos"
         self.examples_enabled = 1 if self.settings.get(
             "examples_enabled", True) else 0
         if self.examples_enabled:
