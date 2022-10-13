@@ -395,7 +395,7 @@ Mycroft.CardDelegate {
                     anchors.left: parent.left
                     anchors.leftMargin: Kirigami.Units.largeSpacing
                     anchors.verticalCenter: parent.verticalCenter
-                    text: "Notifications"
+                    text: qsTr("Notifications")
                     color: "#ffffff"
                 }
             }
@@ -420,7 +420,7 @@ Mycroft.CardDelegate {
                         level: 3
                         width: parent.width
                         Layout.fillWidth: true
-                        text: "Clear"
+                        text: qsTr("Clear")
                         color: "#ffffff"
                     }
                 }

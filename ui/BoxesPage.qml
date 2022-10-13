@@ -26,7 +26,7 @@ Control {
         Kirigami.Heading {
             id: boxesOverlayHeader
             level: 1
-            text: "Quick Access"
+            text: qsTr("Quick Access")
             color: Kirigami.Theme.textColor
             anchors.top: parent.top
             anchors.topMargin: Mycroft.Units.gridUnit / 2
@@ -129,7 +129,7 @@ Control {
 
             Label {
                 id: boxesOverlayFooterLabel
-                text: "Double-tap card to perform card action"
+                text: qsTr("Double-tap card to perform card action")
                 color: Kirigami.Theme.textColor
                 Layout.fillWidth: true
                 Layout.fillHeight: true
