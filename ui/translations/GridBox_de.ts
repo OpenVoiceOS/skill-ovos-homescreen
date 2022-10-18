@@ -16,7 +16,7 @@
         <message>
             <location filename="../GridBox.qml" line="70"/>
             <source>Cancel</source>
-            <translation>Absagen</translation>
+            <translation>Abbrechen</translation>
         </message>
     </context>
 </TS>

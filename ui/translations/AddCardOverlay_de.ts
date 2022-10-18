@@ -11,12 +11,12 @@
         <message>
             <location filename="../AddCardOverlay.qml" line="106"/>
             <source>Header</source>
-            <translation>Header</translation>
+            <translation>Kopfzeile</translation>
         </message>
         <message>
             <location filename="../AddCardOverlay.qml" line="127"/>
             <source>Card Header Text</source>
-            <translation>Kartenkopfzeilentext</translation>
+            <translation>Kopfzeilentext</translation>
         </message>
         <message>
             <location filename="../AddCardOverlay.qml" line="147"/>
@@ -26,17 +26,17 @@
         <message>
             <location filename="../AddCardOverlay.qml" line="168"/>
             <source>Card Description Text</source>
-            <translation>Kartenbeschreibungstext</translation>
+            <translation>Beschreibungstext</translation>
         </message>
         <message>
             <location filename="../AddCardOverlay.qml" line="189"/>
             <source>Utterance</source>
-            <translation>Äußerung</translation>
+            <translation>Sprachausgabe</translation>
         </message>
         <message>
             <location filename="../AddCardOverlay.qml" line="211"/>
             <source>Card Action Text</source>
-            <translation>Kartenaktionstext</translation>
+            <translation>Text bei Aktion</translation>
         </message>
         <message>
             <location filename="../AddCardOverlay.qml" line="232"/>
@@ -51,7 +51,7 @@
         <message>
             <location filename="../AddCardOverlay.qml" line="326"/>
             <source>Cancel</source>
-            <translation>Absagen</translation>
+            <translation>Abbrechen</translation>
         </message>
     </context>
 </TS>
