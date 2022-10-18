@@ -11,7 +11,7 @@
         <message>
             <location filename="../BoxesPage.qml" line="132"/>
             <source>Double-tap card to perform card action</source>
-            <translation>Tippe zweimal auf die Kart</translation>
+            <translation>Zur Ausführung zweimal tippen</translation>
         </message>
     </context>
 </TS>

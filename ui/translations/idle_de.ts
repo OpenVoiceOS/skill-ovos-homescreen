@@ -11,7 +11,7 @@
         <message>
             <location filename="../idle.qml" line="423"/>
             <source>Clear</source>
-            <translation>Klar</translation>
+            <translation>Speicher löschen</translation>
         </message>
     </context>
 </TS>
