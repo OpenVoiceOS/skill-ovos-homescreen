@@ -163,13 +163,16 @@ Mycroft.CardDelegate {
             textTimer.runEntryChangeB()
             var index = idleRoot.textModel.indexOf(exampleEntry);
             var nextItem;
-            if(index >= 0) {
+            if(index >= 0 && index < idleRoot.textModel.length - 1) {
                 nextItem = idleRoot.textModel[index + 1]
-                idleRoot.exampleEntry = nextItem
-                exampleEntryUpdate(exampleEntry)
+            } else {
+                nextItem = idleRoot.textModel[0]
             }
+            idleRoot.exampleEntry = nextItem;
+            exampleEntryUpdate(exampleEntry);
         }, 500);
     }
+
 
     Timer {
         id: textTimer
