@@ -51,6 +51,10 @@ class OVOSHomescreenSkill(MycroftSkill):
         # Display Configuration Variables
         self.wallpaper_rotation_enabled = False
         self.dashboard_handler = None
+        
+        # Media State Tracking For Widget
+        # Needed for setting qml button state
+        self.media_widget_player_state = None
 
     def initialize(self):
         self.dashboard_handler = DashboardHandler(self.file_system.path,
@@ -123,6 +127,12 @@ class OVOSHomescreenSkill(MycroftSkill):
             
         # Handler For Weather Response
         self.bus.on("skill-ovos-weather.openvoiceos.weather.response", self.update_weather_response)
+
+        # Handler For OCP Player State Tracking
+        self.bus.on("gui.player.media.service.sync.status",
+                    self.handle_media_player_state_update)
+        self.bus.on("ovos.common_play.track_info.response",
+                    self.handle_media_player_widget_update)
 
         self.collect_wallpapers()
         self._load_skill_apis()
@@ -449,10 +459,47 @@ class OVOSHomescreenSkill(MycroftSkill):
     def handle_timer_widget_manager(self, message):
         timerWidget = message.data.get("widget", {})
         self.gui.send_event("ovos.timer.widget.manager.update", timerWidget)
-        
+
     def handle_alarm_widget_manager(self, message):
         alarmWidget = message.data.get("widget", {})
         self.gui.send_event("ovos.alarm.widget.manager.update", alarmWidget)
+
+    #### Media Player Widget UI Handling - Replaces Examples UI Bar ####
+    def handle_media_player_state_update(self, message):
+        """
+        Handles OCP State Updates
+        """
+        player_state = message.data.get("state")
+        if player_state == 1:
+            self.bus.emit(Message("ovos.common_play.track_info"))
+            self.media_widget_player_state = "playing"
+            self.gui.send_event("ovos.media.widget.manager.update", {
+                "enabled": True,
+                "widget": {},
+                "state": "playing"
+            })
+        elif player_state == 0:
+            self.media_widget_player_state = "stopped"
+            self.gui.send_event("ovos.media.widget.manager.update", {
+                "enabled": False,
+                "widget": {},
+                "state": "stopped"
+            })
+        elif player_state == 2:
+            self.bus.emit(Message("ovos.common_play.track_info"))
+            self.media_widget_player_state = "paused"
+            self.gui.send_event("ovos.media.widget.manager.update", {
+                "enabled": True,
+                "widget": {},
+                "state": "paused"
+            })
+
+    def handle_media_player_widget_update(self, message=None):
+        self.gui.send_event("ovos.media.widget.manager.update", {
+            "enabled": True,
+            "widget": message.data,
+            "state": self.media_widget_player_state
+        })
 
     ######################################################################
     # Handle Dashboard
@@ -495,6 +542,8 @@ class OVOSHomescreenSkill(MycroftSkill):
         cards = self.dashboard_handler.get_collection()
         collection = {"collection": cards}
         return collection
+    
+
 
 
 def create_skill():
