@@ -41,6 +41,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         # Populate skill IDs to use for data sources
         self.datetime_skill = None  # Get from config after __init__ is done
+        self.skill_info_skill = None # Get from config after __init__ is done
         self.datetime_api = None
         self.skill_info_api = None
 
@@ -70,6 +71,9 @@ class OVOSHomescreenSkill(MycroftSkill):
             "datetime_skill") or "skill-ovos-date-time.openvoiceos"
         self.examples_enabled = 1 if self.settings.get(
             "examples_enabled", True) else 0
+        if self.examples_enabled:
+            self.skill_info_skill = self.settings.get(
+                "examples_skill") or "ovos-skills-info.openvoiceos"
 
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
@@ -171,8 +175,13 @@ class OVOSHomescreenSkill(MycroftSkill):
         """
         Loads or updates skill examples via the skill_info_api.
         """
-        skill_examples = get_skills_examples(randomize=True)
-        self.gui['skill_examples'] = {"examples": skill_examples}
+        if self.skill_info_api:
+            self.gui['skill_examples'] = {
+                "examples": self.skill_info_api.skill_info_examples()}
+        else:
+            skill_examples = get_skills_examples(randomize=True)
+            self.gui['skill_examples'] = {"examples": skill_examples}
+
         self.gui['skill_info_enabled'] = self.examples_enabled
 
     def update_dt(self):
