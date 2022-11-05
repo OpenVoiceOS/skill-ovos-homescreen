@@ -73,7 +73,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             "examples_enabled", True) else 0
         if self.examples_enabled:
             self.skill_info_skill = self.settings.get(
-                "examples_skill") or "ovos-skills-info.openvoiceos"
+                "examples_skill")
 
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
