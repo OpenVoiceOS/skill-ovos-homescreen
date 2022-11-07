@@ -52,11 +52,11 @@ ColumnLayout {
         Layout.minimumHeight: Mycroft.Units.gridUnit
     }
 
-    ExamplesDisplay {
+    BottomWidgetsArea {
         Layout.fillWidth: true
+        Layout.fillHeight: true
         Layout.leftMargin: Mycroft.Units.gridUnit * 2
         Layout.rightMargin: Mycroft.Units.gridUnit * 2
-        Layout.fillHeight: true
         Layout.alignment: Qt.AlignHCenter
         verticalMode: true
     }

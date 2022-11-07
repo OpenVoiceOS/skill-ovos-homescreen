@@ -11,7 +11,7 @@ url = f"https://github.com/OpenVoiceOS/ovos-skill-homescreen@{branch}"
 class TestOSM(unittest.TestCase):
     @classmethod
     def setUpClass(self):
-        self.skill_id = "ovos-skill-homescreen.OpenVoiceOS"
+        self.skill_id = "skill-ovos-homescreen.openvoiceos"
 
     def test_osm_install(self):
         skill = SkillEntry.from_github_url(url)

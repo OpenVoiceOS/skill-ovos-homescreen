@@ -30,6 +30,9 @@ Mycroft.CardDelegate {
     property int timerWidgetCount: 0
     property var alarmWidgetData
     property int alarmWidgetCount: 0
+    property bool mediaWidgetEnabled: false
+    property var mediaWidgetData
+    property var mediaWidgetState
 
     signal exampleEntryUpdate(string exampleEntry)
 
@@ -54,6 +57,11 @@ Mycroft.CardDelegate {
                         alarmWidgetCount = 0
                     }
                 }
+                break;
+            case "ovos.media.widget.manager.update":
+                mediaWidgetEnabled = Boolean(data.enabled)
+                mediaWidgetData = data.widget
+                mediaWidgetState = data.state
                 break;
         }
     }
