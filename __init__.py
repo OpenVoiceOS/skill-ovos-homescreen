@@ -179,7 +179,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             self.gui['skill_examples'] = {
                 "examples": self.skill_info_api.skill_info_examples()}
         else:
-            skill_examples = get_skills_examples(randomize=True)
+            skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
             self.gui['skill_examples'] = {"examples": skill_examples}
 
         self.gui['skill_info_enabled'] = self.examples_enabled

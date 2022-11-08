@@ -20,8 +20,15 @@ skillMetadata:
           type: text
           label: Wallpaper
           value: default.jpg
+    - name: Examples
+      fields:
         - name: examples_enabled
           type: bool
           label: Enable Examples
           value: true
+        - name: randomize_examples
+          type: bool
+          label: Randomize Example Entries
+          value: true
+
 
