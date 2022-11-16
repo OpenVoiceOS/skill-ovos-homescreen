@@ -134,6 +134,10 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.bus.on("ovos.common_play.track_info.response",
                     self.handle_media_player_widget_update)
 
+        # Handle Screenshot Response
+        self.bus.on("ovos.display.screenshot.get.response",
+                    self.screenshot_taken)
+
         self.collect_wallpapers()
         self._load_skill_apis()
 
@@ -542,9 +546,19 @@ class OVOSHomescreenSkill(MycroftSkill):
         cards = self.dashboard_handler.get_collection()
         collection = {"collection": cards}
         return collection
-    
 
+    ######################################################################
+    # Handle Screenshot
 
+    @intent_file_handler("take.screenshot.intent")
+    def take_screenshot(self, message):
+        folder_path = os.path.expanduser('~') + "/Pictures"
+        self.bus.emit(Message("ovos.display.screenshot.get", {"folderpath": folder_path}))
+
+    def screenshot_taken(self, message):
+        result = message.data.get("result")
+        display_message = f"Screenshot saved to {result}"
+        self.gui.show_notification(display_message)
 
 def create_skill():
     return OVOSHomescreenSkill()
