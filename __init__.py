@@ -560,9 +560,13 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         if not folder_path:
             folder_path = os.path.expanduser('~') + "/Pictures"
-
+    
         if not os.path.exists(folder_path):
-            folder_path = "/tmp"
+            try:
+                os.makedirs(folder_path, exist_ok=True)
+            except OSError as e:
+                LOG.error("Could not create screenshot folder: " + str(e))
+                folder_path = "/tmp"
 
         self.bus.emit(Message("ovos.display.screenshot.get", {"folderpath": folder_path}))
 
