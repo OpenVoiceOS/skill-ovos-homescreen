@@ -24,4 +24,7 @@ skillMetadata:
           type: bool
           label: Enable Examples
           value: true
-
+        - name: examples_prefix
+          type: bool
+          label: Prefix examples with 'Ask Me'
+          value: true

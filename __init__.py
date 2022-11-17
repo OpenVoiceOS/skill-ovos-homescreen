@@ -72,6 +72,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             "datetime_skill") or "skill-ovos-date-time.openvoiceos"
         self.examples_enabled = 1 if self.settings.get(
             "examples_enabled", True) else 0
+
         if self.examples_enabled:
             self.skill_info_skill = self.settings.get(
                 "examples_skill") or "ovos-skills-info.openvoiceos"
@@ -188,6 +189,8 @@ class OVOSHomescreenSkill(MycroftSkill):
         else:
             LOG.warning("No skill_info_api, skipping update")
         self.gui['skill_info_enabled'] = self.examples_enabled
+        self.gui['skill_info_prefix'] = self.settings.get("examples_prefix",
+                                                          True)
 
     def update_dt(self):
         """
