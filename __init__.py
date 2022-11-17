@@ -41,7 +41,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         # Populate skill IDs to use for data sources
         self.datetime_skill = None  # Get from config after __init__ is done
-        self.skill_info_skill = None # Get from config after __init__ is done
+        self.skill_info_skill = None  # Get from config after __init__ is done
         self.datetime_api = None
         self.skill_info_api = None
 
@@ -72,8 +72,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.examples_enabled = 1 if self.settings.get(
             "examples_enabled", True) else 0
         if self.examples_enabled:
-            self.skill_info_skill = self.settings.get(
-                "examples_skill")
+            self.skill_info_skill = self.settings.get("examples_skill")
 
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
@@ -330,6 +329,13 @@ class OVOSHomescreenSkill(MycroftSkill):
                 self.datetime_api = SkillApi.get(self.datetime_skill)
         except Exception as e:
             LOG.error(f"Failed to import DateTime Skill: {e}")
+
+        # Import Skill Info Skill if configured (default OSM)
+        if not self.skill_info_api and self.skill_info_skill:
+            try:
+                self.skill_info_api = SkillApi.get(self.skill_info_skill)
+            except Exception as e:
+                LOG.error(f"Failed to import Info Skill: {e}")
 
     def _split_month_string(self, month_date: str) -> list:
         """
