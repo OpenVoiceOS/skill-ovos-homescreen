@@ -63,7 +63,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
                 font.weight: Font.DemiBold
-                text: '<i>“' + (examplesDisplay.examplesPrefix ? qsTr("Ask Me") + " " : " ")  + idleRoot.exampleEntry + '“</i>'
+                text: idleRoot.examplesPrefix ? '<i>“' + qsTr("Ask Me") + " "  + idleRoot.exampleEntry + '“</i>' : idleRoot.exampleEntry
                 color: "white"
                 layer.enabled: true
                 layer.effect: DropShadow {
