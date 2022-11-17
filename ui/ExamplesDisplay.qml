@@ -8,6 +8,7 @@ import Mycroft 1.0 as Mycroft
 Rectangle {
     id: examplesDisplay
     property bool verticalMode: false
+    property bool examplesPrefix: true
     color: "transparent"
 
     Connections {
@@ -62,7 +63,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
                 font.weight: Font.DemiBold
-                text: '<i>“' + (idleRoot.examplesPrefix ? qsTr("Ask Me") : "") + " " + idleRoot.exampleEntry + '“</i>'
+                text: '<i>“' + (examplesDisplay.examplesPrefix ? qsTr("Ask Me") + " " : " ")  + idleRoot.exampleEntry + '“</i>'
                 color: "white"
                 layer.enabled: true
                 layer.effect: DropShadow {

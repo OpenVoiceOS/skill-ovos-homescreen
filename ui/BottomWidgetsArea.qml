@@ -10,6 +10,7 @@ Item {
     id: bottomWidgetsAreaRootItem
     property bool verticalMode: false
     property bool examplesDisplayEnabled: sessionData.skill_info_enabled ?  sessionData.skill_info_enabled : 1
+    property bool examplesPrefixEnabled: sessionData.examples_info_prefix ? sessionData.examples_info_prefix : 1
     property bool mediaWidgetDisplayEnabled: idleRoot.mediaWidgetEnabled
 
     onMediaWidgetDisplayEnabledChanged: {
@@ -25,6 +26,7 @@ Item {
         visible: bottomWidgetsAreaRootItem.examplesDisplayEnabled && !mediaWidgetDisplay.enabled
         enabled: bottomWidgetsAreaRootItem.examplesDisplayEnabled && !mediaWidgetDisplay.enabled
         verticalMode: bottomWidgetsAreaRootItem.verticalMode
+        examplesPrefix: bottomWidgetsAreaRootItem.examplesPrefixEnabled
     }
 
     MediaWidgetDisplay {
