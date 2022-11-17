@@ -557,8 +557,13 @@ class OVOSHomescreenSkill(MycroftSkill):
     @intent_file_handler("take.screenshot.intent")
     def take_screenshot(self, message):
         folder_path = self.screenshot_folder
+
         if not folder_path:
             folder_path = os.path.expanduser('~') + "/Pictures"
+
+        if not os.path.exists(folder_path):
+            folder_path = "/tmp"
+
         self.bus.emit(Message("ovos.display.screenshot.get", {"folderpath": folder_path}))
 
     def screenshot_taken(self, message):
