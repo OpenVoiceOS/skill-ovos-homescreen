@@ -47,7 +47,6 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         # A variable to turn on/off the example text
         self.examples_enabled = True
-        self.examples_prefix = True
 
         # Display Configuration Variables
         self.wallpaper_rotation_enabled = False
@@ -73,8 +72,6 @@ class OVOSHomescreenSkill(MycroftSkill):
             "datetime_skill") or "skill-ovos-date-time.openvoiceos"
         self.examples_enabled = 1 if self.settings.get(
             "examples_enabled", True) else 0
-
-        self.examples_prefix = self.settings.get("examples_prefix", True)
 
         if self.examples_enabled:
             self.skill_info_skill = self.settings.get(
@@ -192,8 +189,8 @@ class OVOSHomescreenSkill(MycroftSkill):
         else:
             LOG.warning("No skill_info_api, skipping update")
         self.gui['skill_info_enabled'] = self.examples_enabled
-        LOG.debug(f'prefix={self.examples_prefix}')
-        self.gui['skill_info_prefix'] = self.examples_prefix
+        self.gui['skill_info_prefix'] = self.settings.get("examples_prefix",
+                                                          True)
 
     def update_dt(self):
         """
