@@ -74,8 +74,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.examples_enabled = 1 if self.settings.get(
             "examples_enabled", True) else 0
 
-        self.examples_prefix = 1 if self.settings.get(
-            "examples_prefix", True) else 0
+        self.examples_prefix = self.settings.get("examples_prefix", True)
 
         if self.examples_enabled:
             self.skill_info_skill = self.settings.get(
