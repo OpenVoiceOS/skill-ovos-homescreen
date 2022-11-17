@@ -6,7 +6,7 @@ from shutil import rmtree
 from ovos_skills_manager import SkillEntry
 
 branch = "dev"
-url = f"https://github.com/OpenVoiceOS/ovos-skill-homescreen@{branch}"
+url = f"https://github.com/OpenVoiceOS/skill-ovos-homescreen@{branch}"
 
 class TestOSM(unittest.TestCase):
     @classmethod
