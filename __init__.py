@@ -14,6 +14,7 @@
 
 import datetime
 import os
+import tempfile
 from os import environ, listdir, path
 
 import requests
@@ -71,6 +72,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             "datetime_skill") or "skill-ovos-date-time.openvoiceos"
         self.examples_enabled = 1 if self.settings.get(
             "examples_enabled", True) else 0
+
         if self.examples_enabled:
             self.skill_info_skill = self.settings.get("examples_skill")
 
@@ -132,6 +134,10 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.bus.on("ovos.common_play.track_info.response",
                     self.handle_media_player_widget_update)
 
+        # Handle Screenshot Response
+        self.bus.on("ovos.display.screenshot.get.response",
+                    self.screenshot_taken)
+
         self.collect_wallpapers()
         self._load_skill_apis()
 
@@ -182,6 +188,8 @@ class OVOSHomescreenSkill(MycroftSkill):
             self.gui['skill_examples'] = {"examples": skill_examples}
 
         self.gui['skill_info_enabled'] = self.examples_enabled
+        self.gui['skill_info_prefix'] = self.settings.get("examples_prefix",
+                                                          True)
 
     def update_dt(self):
         """
@@ -537,6 +545,29 @@ class OVOSHomescreenSkill(MycroftSkill):
         collection = {"collection": cards}
         return collection
 
+    ######################################################################
+    # Handle Screenshot
+
+    @intent_file_handler("take.screenshot.intent")
+    def take_screenshot(self, message):
+        folder_path = self.settings.get("screenshot_folder", "")
+
+        if not folder_path:
+            folder_path = os.path.expanduser('~') + "/Pictures"
+    
+        if not os.path.exists(folder_path):
+            try:
+                os.makedirs(folder_path, exist_ok=True)
+            except OSError as e:
+                LOG.error("Could not create screenshot folder: " + str(e))
+                folder_path = tempfile.gettempdir()
+
+        self.bus.emit(Message("ovos.display.screenshot.get", {"folderpath": folder_path}))
+
+    def screenshot_taken(self, message):
+        result = message.data.get("result")
+        display_message = f"Screenshot saved to {result}"
+        self.gui.show_notification(display_message)
 
 def create_skill():
     return OVOSHomescreenSkill()

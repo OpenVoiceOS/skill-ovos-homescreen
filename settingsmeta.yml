@@ -30,5 +30,7 @@ skillMetadata:
           type: bool
           label: Randomize Example Entries
           value: true
-
-
+        - name: examples_prefix
+          type: bool
+          label: Prefix examples with 'Ask Me'
+          value: true
