@@ -14,6 +14,7 @@
 
 import datetime
 import os
+import tempfile
 from os import environ, listdir, path
 
 import requests
@@ -56,9 +57,6 @@ class OVOSHomescreenSkill(MycroftSkill):
         # Needed for setting qml button state
         self.media_widget_player_state = None
 
-        # Screenshot Folder
-        self.screenshot_folder = None
-
     def initialize(self):
         self.dashboard_handler = DashboardHandler(self.file_system.path,
                                                   path.dirname(__file__))
@@ -78,7 +76,6 @@ class OVOSHomescreenSkill(MycroftSkill):
         if self.examples_enabled:
             self.skill_info_skill = self.settings.get(
                 "examples_skill") or "ovos-skills-info.openvoiceos"
-        self.screenshot_folder = self.settings.get("screenshot_folder", "")
 
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
@@ -556,7 +553,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
     @intent_file_handler("take.screenshot.intent")
     def take_screenshot(self, message):
-        folder_path = self.screenshot_folder
+        folder_path = self.settings.get("screenshot_folder", "")
 
         if not folder_path:
             folder_path = os.path.expanduser('~') + "/Pictures"
@@ -566,7 +563,7 @@ class OVOSHomescreenSkill(MycroftSkill):
                 os.makedirs(folder_path, exist_ok=True)
             except OSError as e:
                 LOG.error("Could not create screenshot folder: " + str(e))
-                folder_path = "/tmp"
+                folder_path = tempfile.gettempdir()
 
         self.bus.emit(Message("ovos.display.screenshot.get", {"folderpath": folder_path}))
 
