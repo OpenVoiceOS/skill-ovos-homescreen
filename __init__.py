@@ -27,7 +27,7 @@ from ovos_utils.log import LOG
 from ovos_utils.xdg_utils import xdg_config_home
 from .skill import (DashboardHandler,
                     CardGenerator)
-
+from ovos_skills_manager.utils import get_skills_examples
 
 class OVOSHomescreenSkill(MycroftSkill):
     # The constructor of the skill, which calls MycroftSkill's constructor
@@ -39,7 +39,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.selected_wallpaper = None  # Get from config after __init__ is done
         self.wallpaper_collection = []
         self.rtlMode = None  # Get from config after __init__ is done
-        
+
         # Populate skill IDs to use for data sources
         self.datetime_skill = None  # Get from config after __init__ is done
         self.skill_info_skill = None  # Get from config after __init__ is done
@@ -52,7 +52,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         # Display Configuration Variables
         self.wallpaper_rotation_enabled = False
         self.dashboard_handler = None
-        
+
         # Media State Tracking For Widget
         # Needed for setting qml button state
         self.media_widget_player_state = None
@@ -63,7 +63,6 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.card_generator = CardGenerator(self.file_system.path, self.bus,
                                             path.dirname(__file__))
         self.datetime_api = None
-        self.skill_info_api = None
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.selected_wallpaper = self.settings.get(
             "wallpaper") or "default.jpg"
@@ -75,8 +74,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             "examples_enabled", True) else 0
 
         if self.examples_enabled:
-            self.skill_info_skill = self.settings.get(
-                "examples_skill") or "ovos-skills-info.openvoiceos"
+            self.skill_info_skill = self.settings.get("examples_skill")
 
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
@@ -126,7 +124,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         if not self.file_system.exists("wallpapers"):
             os.mkdir(path.join(self.file_system.path, "wallpapers"))
-            
+
         # Handler For Weather Response
         self.bus.on("skill-ovos-weather.openvoiceos.weather.response", self.update_weather_response)
 
@@ -182,17 +180,13 @@ class OVOSHomescreenSkill(MycroftSkill):
         """
         Loads or updates skill examples via the skill_info_api.
         """
-        if not self.skill_info_api:
-            if not self.examples_enabled:
-                LOG.warning("Examples are disabled in settings")
-            else:
-                LOG.warning("Requested update before skill_info API loaded")
-                self._load_skill_apis()
         if self.skill_info_api:
             self.gui['skill_examples'] = {
                 "examples": self.skill_info_api.skill_info_examples()}
         else:
-            LOG.warning("No skill_info_api, skipping update")
+            skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
+            self.gui['skill_examples'] = {"examples": skill_examples}
+
         self.gui['skill_info_enabled'] = self.examples_enabled
         self.gui['skill_info_prefix'] = self.settings.get("examples_prefix",
                                                           True)
@@ -298,7 +292,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             return self.def_wallpaper_folder
         elif path.exists(file_loc_check):
             return self.loc_wallpaper_folder
-        
+
     def check_wallpaper_rotation_config(self, message=None):
         display_config_path_local = path.join(xdg_config_home(), "OvosDisplay.conf")
         if path.exists(display_config_path_local):
@@ -337,19 +331,19 @@ class OVOSHomescreenSkill(MycroftSkill):
         """
         Loads weather, date/time, and examples skill APIs
         """
-        
-        try:
-            if not self.skill_info_api:
-                self.skill_info_api = SkillApi.get(self.skill_info_skill) or None
-        except Exception as e:
-            LOG.error(f"Failed To Import OVOS Info Skill: {e}")
-
         # Import Date Time Skill As Date Time Provider
         try:
             if not self.datetime_api:
                 self.datetime_api = SkillApi.get(self.datetime_skill)
         except Exception as e:
             LOG.error(f"Failed to import DateTime Skill: {e}")
+
+        # Import Skill Info Skill if configured (default OSM)
+        if not self.skill_info_api and self.skill_info_skill:
+            try:
+                self.skill_info_api = SkillApi.get(self.skill_info_skill)
+            except Exception as e:
+                LOG.error(f"Failed to import Info Skill: {e}")
 
     def _split_month_string(self, month_date: str) -> list:
         """
@@ -369,7 +363,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
     #####################################################################
     # Build Voice Applications Model
-    
+
     def find_icon_full_path(self, icon_name):
         localuser = environ.get('USER')
         folder_search_paths = ["/usr/share/icons/", "/usr/local/share/icons/",
@@ -395,7 +389,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
                 with open(file_path, "r") as f:
                     file_contents = f.read()
-                    
+
                     name_start = file_contents.find("Name=")
                     name_end = file_contents.find("\n", name_start)
                     name = file_contents[name_start + 5:name_end]
@@ -423,7 +417,7 @@ class OVOSHomescreenSkill(MycroftSkill):
                                                11:categories_end]
 
                     categories_list = categories.split(";")
-                    
+
                     if "VoiceApp" in categories_list:
                         app_entry = {
                             "name": name,
