@@ -28,6 +28,7 @@ from ovos_utils.xdg_utils import xdg_config_home
 from .skill import (DashboardHandler,
                     CardGenerator)
 from ovos_skills_manager.utils import get_skills_examples
+from lingua_franca.format import get_date_strings
 
 class OVOSHomescreenSkill(MycroftSkill):
     # The constructor of the skill, which calls MycroftSkill's constructor
@@ -69,7 +70,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
 
         self.datetime_skill = self.settings.get(
-            "datetime_skill") or "skill-ovos-date-time.openvoiceos"
+            "datetime_skill")
         self.examples_enabled = 1 if self.settings.get(
             "examples_enabled", True) else 0
 
@@ -195,18 +196,28 @@ class OVOSHomescreenSkill(MycroftSkill):
         """
         Loads or updates date/time via the datetime_api.
         """
-        if not self.datetime_api:
-            LOG.warning("Requested update before datetime API loaded")
-            self._load_skill_apis()
-        if self.datetime_api:
-            self.gui["time_string"] = self.datetime_api.get_display_current_time()
-            self.gui["date_string"] = self.datetime_api.get_display_date()
-            self.gui["weekday_string"] = self.datetime_api.get_weekday()
-            self.gui['day_string'], self.gui["month_string"] = self._split_month_string(
-                self.datetime_api.get_month_date())
-            self.gui["year_string"] = self.datetime_api.get_year()
+        if self.datetime_skill:
+            if not self.datetime_api:
+                LOG.warning("Requested update before datetime API loaded")
+                self._load_skill_apis()
+            if self.datetime_api:
+                self.gui["time_string"] = self.datetime_api.get_display_current_time()
+                self.gui["date_string"] = self.datetime_api.get_display_date()
+                self.gui["weekday_string"] = self.datetime_api.get_weekday()
+                self.gui['day_string'], self.gui["month_string"] = self._split_month_string(
+                    self.datetime_api.get_month_date())
+                self.gui["year_string"] = self.datetime_api.get_year()
+            else:
+                LOG.warning("No datetime_api, skipping update")
         else:
-            LOG.warning("No datetime_api, skipping update")
+            date_string_object = get_date_strings(date_format=self.config_core.get("date_format", "MDY"), 
+                                                  lang=self.lang)
+            self.gui["time_string"] = date_string_object.get("time_string")
+            self.gui["date_string"] = date_string_object.get("date_string")
+            self.gui["weekday_string"] = date_string_object.get("weekday_string")
+            self.gui["day_string"] = date_string_object.get("day_string")
+            self.gui["month_string"] = date_string_object.get("month_string")
+            self.gui["year_string"] = date_string_object.get("year_string")
 
     def update_weather(self):
         """
@@ -333,8 +344,9 @@ class OVOSHomescreenSkill(MycroftSkill):
         """
         # Import Date Time Skill As Date Time Provider
         try:
-            if not self.datetime_api:
-                self.datetime_api = SkillApi.get(self.datetime_skill)
+            if self.datetime_skill:
+                if not self.datetime_api:
+                    self.datetime_api = SkillApi.get(self.datetime_skill)
         except Exception as e:
             LOG.error(f"Failed to import DateTime Skill: {e}")
 
