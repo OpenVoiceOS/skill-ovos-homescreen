@@ -57,6 +57,9 @@ class OVOSHomescreenSkill(MycroftSkill):
         # Needed for setting qml button state
         self.media_widget_player_state = None
 
+        # Offline / Online State
+        self.system_offline = None
+
     def initialize(self):
         self.dashboard_handler = DashboardHandler(self.file_system.path,
                                                   path.dirname(__file__))
@@ -134,6 +137,10 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.bus.on("ovos.common_play.track_info.response",
                     self.handle_media_player_widget_update)
 
+        # Handler For Offline Widget
+        self.bus.on('mycroft.internet.connected', self.on_internet_connected)
+        self.bus.on("enclosure.notify.no_internet", self.on_no_internet)
+
         # Handle Screenshot Response
         self.bus.on("ovos.display.screenshot.get.response",
                     self.screenshot_taken)
@@ -162,6 +169,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             "storedmodel": self.notifications_storage_model,
             "count": len(self.notifications_storage_model),
         }
+        self.gui["offline_state"] = self.system_offline
         self.gui["applications_model"] = self.build_voice_applications_model()
         self.gui["dashboard_model"] = self.get_dashboard_cards()
 
@@ -227,6 +235,14 @@ class OVOSHomescreenSkill(MycroftSkill):
                 "weather_temp")
         else:
             self.gui["weather_api_enabled"] = False
+
+    def on_internet_connected(self, message):
+        self.system_offline = False
+        self.gui["offline_state"] = self.system_offline
+
+    def on_no_internet(self, message):
+        self.system_offline = True
+        self.gui["offline_state"] = self.system_offline
 
     #####################################################################
     # Wallpaper Manager
