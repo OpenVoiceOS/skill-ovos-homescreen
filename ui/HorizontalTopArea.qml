@@ -22,6 +22,5 @@ Rectangle {
         anchors.rightMargin: Mycroft.Units.gridUnit * 0.50
         width: parent.width * 0.30
         height: parent.height
-        visible: idleRoot.weatherEnabled
     }
 }

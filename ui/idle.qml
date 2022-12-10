@@ -34,6 +34,7 @@ Mycroft.CardDelegate {
     property bool mediaWidgetEnabled: false
     property var mediaWidgetData
     property var mediaWidgetState
+    property bool systemOffline: sessionData.offline_state ? Boolean(sessionData.offline_state) : false
 
     signal exampleEntryUpdate(string exampleEntry)
 

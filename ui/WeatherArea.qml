@@ -15,9 +15,51 @@ Rectangle {
         anchors.margins: Mycroft.Units.gridUnit / 2
 
         Rectangle {
+            Layout.preferredWidth: offlineModeIconLayerOne.implicitWidth + Mycroft.Units.gridUnit * 3
+            Layout.fillHeight: true
+            Layout.alignment: weatherItemBox.verticalMode ? Qt.AlignHCenter : Qt.AlignRight
+            color: "transparent"
+            visible: idleRoot.systemOffline
+
+            Kirigami.Icon {
+                id: offlineModeIconLayerOne
+                width: parent.height * 0.80
+                height: width
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                visible: true
+                source: Qt.resolvedUrl("icons/offline_layer_one.svg")
+
+                ColorOverlay {
+                    anchors.fill: offlineModeIconLayerOne
+                    source: offlineModeIconLayerOne
+                    color: Kirigami.Theme.textColor
+                }
+            }
+
+            Kirigami.Icon {
+                id: offlineModeIconLayerTwo
+                width: parent.height * 0.80
+                height: width
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                visible: true
+                source: Qt.resolvedUrl("icons/offline_layer_two.svg")
+
+                ColorOverlay {
+                    anchors.fill: offlineModeIconLayerTwo
+                    source: offlineModeIconLayerTwo
+                    color: Kirigami.Theme.highlightColor
+                }
+            }
+        }
+
+        Rectangle {
             color: "transparent"
             Layout.fillWidth: true
             Layout.fillHeight: true
+            visible: idleRoot.weatherEnabled
+            enabled: idleRoot.weatherEnabled
 
             Kirigami.Icon {
                 id: weatherItemIcon
@@ -43,6 +85,8 @@ Rectangle {
             color: "transparent"
             Layout.fillWidth: true
             Layout.fillHeight: true
+            visible: idleRoot.weatherEnabled
+            enabled: idleRoot.weatherEnabled
 
             Text {
                 id: weatherItem
