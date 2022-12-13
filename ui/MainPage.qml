@@ -7,6 +7,7 @@ import Mycroft 1.0 as Mycroft
 
 Item {
     id: mainPageControl
+    property bool dropDownMenuHintPersistence: sessionData.persistent_menu_hint ? sessionData.persistent_menu_hint : false
 
     Control {
         anchors.fill: parent
@@ -40,13 +41,13 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: Mycroft.Units.gridUnit * 2.5
                 height: Mycroft.Units.gridUnit * 2.5
-                opacity: 0
+                opacity: mainPageControl.dropDownMenuHintPersistence ? 0.5 : 0
                 source:  Qt.resolvedUrl("icons/down.svg")
                 color: "white"
 
                 SequentialAnimation {
                     id: downArrowMenuHintAnim
-                    running: idleRoot.visible ? 1 : 0
+                    running: idleRoot.visible && !mainPageControl.dropDownMenuHintPersistence ? 1 : 0
 
                     PropertyAnimation {
                         target: downArrowMenuHint
