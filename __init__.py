@@ -172,6 +172,8 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.gui["offline_state"] = self.system_offline
         self.gui["applications_model"] = self.build_voice_applications_model()
         self.gui["dashboard_model"] = self.get_dashboard_cards()
+        self.gui["persistent_menu_hint"] = \
+            self.settings.get("persistent_menu_hint", False)
 
         try:
             self.update_dt()
