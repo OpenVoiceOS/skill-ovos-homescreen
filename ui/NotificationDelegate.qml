@@ -38,6 +38,7 @@ Rectangle {
                     anchors.fill: parent
                     onClicked: {
                         Mycroft.MycroftController.sendRequest(modelData.action, modelData.callback_data)
+                        notificationsStorageViewBox.close()
                     }
                 }
             }
@@ -61,7 +62,8 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        Mycroft.MycroftController.sendRequest(modelData.action, {})
+                        Mycroft.MycroftController.sendRequest(modelData.action, modelData.callback_data)
+                        notificationsStorageViewBox.close()
                     }
                 }
             }
