@@ -136,6 +136,9 @@ Mycroft.CardDelegate {
         if(visible && idleRoot.textModel){
             textTimer.running = true
         }
+        if(visible) {
+            Mycroft.MycroftController.sendRequest("ovos.homescreen.displayed", {})
+        }
     }
 
     function getWeatherImagery(weathercode) {
