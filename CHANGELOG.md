@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- Fix variable name typo in remove\_alpha script [\#69](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/69) ([NeonDaniel](https://github.com/NeonDaniel))
 - Fix typo in remove\_alpha script [\#68](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/68) ([NeonDaniel](https://github.com/NeonDaniel))
 
 ## [V0.0.1a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.1a1) (2023-01-25)
