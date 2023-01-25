@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/HEAD)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/f9dae1d42d27be1a58fb1b95c49268a7773e9d0a...HEAD)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.1a1...HEAD)
+
+**Merged pull requests:**
+
+- Fix typo in remove\_alpha script [\#68](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/68) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [V0.0.1a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.1a1) (2023-01-25)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/f9dae1d42d27be1a58fb1b95c49268a7773e9d0a...V0.0.1a1)
 
 **Implemented enhancements:**
 
