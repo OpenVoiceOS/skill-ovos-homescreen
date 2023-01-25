@@ -4,7 +4,7 @@ from os.path import join, dirname
 
 version_file = join(dirname(dirname(__file__)), "version.py")
 
-alpha_var_name = "OVOS_VERSION_ALPHA"
+alpha_var_name = "VERSION_ALPHA"
 
 for line in fileinput.input(version_file, inplace=True):
     if line.startswith(alpha_var_name):
