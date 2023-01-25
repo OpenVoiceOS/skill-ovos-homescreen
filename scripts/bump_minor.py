@@ -2,10 +2,10 @@ import fileinput
 from os.path import join, dirname
 
 
-version_file = join(dirname(dirname(__file__)), "mycroft", "version.py")
-version_var_name = "OVOS_VERSION_MINOR"
-build_var_name = "OVOS_VERSION_BUILD"
-alpha_var_name = "OVOS_VERSION_ALPHA"
+version_file = join(dirname(dirname(__file__)), "version.py")
+version_var_name = "VERSION_MINOR"
+build_var_name = "VERSION_BUILD"
+alpha_var_name = "VERSION_ALPHA"
 
 with open(version_file, "r", encoding="utf-8") as v:
     for line in v.readlines():
