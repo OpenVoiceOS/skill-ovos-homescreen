@@ -249,7 +249,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
     def on_no_internet(self, message):
         self.system_connectivity = "offline"
-        self.gui["offline_state"] = self.system_connectivity
+        self.gui["system_connectivity"] = self.system_connectivity
 
     #####################################################################
     # Wallpaper Manager
