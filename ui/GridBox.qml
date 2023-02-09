@@ -1,10 +1,15 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Layouts 1.12
-import QtQml.Models 2.12
-import QtQuick.Window 2.12
+/*
+    SPDX-FileCopyrightText: 2023 Aditya Mehra <aix.m@outlook.com>
+    SPDX-License-Identifier: Apache-2.0
+*/
+
+import QtQuick.Layouts 1.15
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQml.Models 2.15
+import QtQuick.Window 2.15
+import org.kde.kirigami 2.19 as Kirigami
 import Mycroft 1.0 as Mycroft
-import org.kde.kirigami 2.11 as Kirigami
 import "code/dashmodel.js" as DashboardJS
 
 Item {
@@ -56,7 +61,7 @@ Item {
                         radius: 6
                     }
 
-                    onClicked: {
+                    onClicked: (mouse)=> {
                         Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                         triggerGuiEvent("ovos.homescreen.dashboard.remove.card", {"card_id": cardHoldOverlay.cardId})
                         DashboardJS.remove_item_by_id(cardHoldOverlay.cardId)
@@ -74,7 +79,7 @@ Item {
                         radius: 6
                     }
 
-                    onClicked: {
+                    onClicked: (mouse)=> {
                         Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                         cardHoldOverlay.close()
                     }
@@ -143,20 +148,20 @@ Item {
                             }
                         }
 
-                        onDoubleClicked: {
+                        onDoubleClicked: (mouse)=> {
                             delegateClickAnimation.start()
                             Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                             Mycroft.MycroftController.sendText(contentItem.action)
                         }
 
-                        onPressAndHold: {
+                        onPressAndHold: (mouse)=> {
                             held = true
                             cardHoldOverlay.cardId = modelData.id
                             cardHoldOverlay.open()
                             delegateContentItem.opacity = 0.5
                         }
 
-                        onReleased: {
+                        onReleased: (mouse)=> {
                             if (held === true) {
                                 held = false
                                 delegateContentItem.opacity = 1

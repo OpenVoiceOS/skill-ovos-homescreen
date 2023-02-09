@@ -1,8 +1,14 @@
-import QtQuick.Layouts 1.4
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import org.kde.kirigami 2.11 as Kirigami
-import QtGraphicalEffects 1.0
+/*
+    SPDX-FileCopyrightText: 2023 Aditya Mehra <aix.m@outlook.com>
+    SPDX-License-Identifier: Apache-2.0
+*/
+
+import QtQuick.Layouts 1.15
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Window 2.15
+import org.kde.kirigami 2.19 as Kirigami
+import Qt5Compat.GraphicalEffects
 import Mycroft 1.0 as Mycroft
 
 Item {
@@ -23,7 +29,7 @@ Item {
         opened = false
     }
 
-    Keys.onEscapePressed: {
+    Keys.onEscapePressed: (event)=> {
         opened = false
     }
 
@@ -104,16 +110,16 @@ Item {
 
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: {
+                            onClicked: (mouse)=> {
                                 Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                                 appBarRoot.close()
                             }
 
-                            onPressed: {
+                            onPressed: (mouse)=> {
                                 launcherAreaHandler.color = Kirigami.Theme.highlightColor
                             }
 
-                            onReleased:  {
+                            onReleased: (mouse)=> {
                                 launcherAreaHandler.color = Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
                             }
                         }
@@ -130,17 +136,17 @@ Item {
 
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: {
+                            onClicked: (mouse)=> {
                                 appBarRoot.close()
                                 Mycroft.MycroftController.sendRequest("mycroft.mic.listen", {})
                                 Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/start-listening.wav"))
                             }
 
-                            onPressed: {
+                            onPressed: (mouse)=> {
                                 micListenIcon.color = Kirigami.Theme.highlightColor
                             }
 
-                            onReleased:  {
+                            onReleased: (mouse)=> {
                                 micListenIcon.color = Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
                             }
                         }
@@ -154,27 +160,27 @@ Item {
                 }
 
                 GridView {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        visible: appBarRoot.opened ? 1 : 0 
-                        enabled: appBarRoot.opened ? 1 : 0
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    visible: appBarRoot.opened ? 1 : 0 
+                    enabled: appBarRoot.opened ? 1 : 0
 
-                        id: repeaterAppsModel
-                        clip: true
-                        cellWidth: width / 3
-                        cellHeight: height / 2
-                        model: appsModel
+                    id: repeaterAppsModel
+                    clip: true
+                    cellWidth: width / 3
+                    cellHeight: height / 2
+                    model: appsModel
 
-                        ScrollBar.vertical: ScrollBar {
+                    ScrollBar.vertical: ScrollBar {
                         active: repeaterAppsModel.count > 6
                         snapMode: ScrollBar.SnapOnRelease
                         policy: ScrollBar.AsNeeded
-                        }
+                    }
 
-                        delegate: AppEntry {
-                            implicitWidth: repeaterAppsModel.cellWidth
-                            implicitHeight: repeaterAppsModel.cellHeight
-                        }
+                    delegate: AppEntry {
+                        implicitWidth: repeaterAppsModel.cellWidth
+                        implicitHeight: repeaterAppsModel.cellHeight
+                    }
                 }
             }
         }

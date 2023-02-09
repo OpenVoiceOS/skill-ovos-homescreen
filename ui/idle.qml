@@ -1,9 +1,14 @@
-import QtQuick.Layouts 1.4
-import QtQuick 2.9
-import QtQuick.Controls 2.12
-import org.kde.kirigami 2.11 as Kirigami
-import QtGraphicalEffects 1.0
+/*
+    SPDX-FileCopyrightText: 2023 Aditya Mehra <aix.m@outlook.com>
+    SPDX-License-Identifier: Apache-2.0
+*/
+
+import QtQuick.Layouts 1.15
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import org.kde.kirigami 2.19 as Kirigami
 import Mycroft 1.0 as Mycroft
+import Qt5Compat.GraphicalEffects
 import "." as Local
 
 Mycroft.CardDelegate {
@@ -70,7 +75,7 @@ Mycroft.CardDelegate {
 
     Connections {
         target: Mycroft.MycroftController
-        onIntentRecevied: {
+        funtion onIntentRecevied(type, data) {
             if (type == "phal.brightness.control.auto.night.mode.enabled") {
                 mainView.currentIndex = 0
             }
@@ -186,7 +191,6 @@ Mycroft.CardDelegate {
         }, 500);
     }
 
-
     Timer {
         id: textTimer
         interval: 30000
@@ -243,7 +247,7 @@ Mycroft.CardDelegate {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: {
+            onClicked: (mouse)=> {
                 controlBarItem.close()
                 Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                 if(mainView.currentIndex == 0) {
@@ -266,20 +270,20 @@ Mycroft.CardDelegate {
         z: 2
 
         Rectangle {
-                id: bottomAreaHandler
-                width: horizontalMode ? Mycroft.Units.gridUnit * 3.5 : Mycroft.Units.gridUnit * 2.5
-                height: Mycroft.Units.gridUnit * 0.5
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: Mycroft.Units.gridUnit * 0.5
-                anchors.horizontalCenter: parent.horizontalCenter
-                color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
-                radius: Mycroft.Units.gridUnit
-                visible: controlBarItem.opened ? 0 : 1
+            id: bottomAreaHandler
+            width: horizontalMode ? Mycroft.Units.gridUnit * 3.5 : Mycroft.Units.gridUnit * 2.5
+            height: Mycroft.Units.gridUnit * 0.5
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: Mycroft.Units.gridUnit * 0.5
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
+            radius: Mycroft.Units.gridUnit
+            visible: controlBarItem.opened ? 0 : 1
         }
 
         MouseArea {
             anchors.fill: parent
-            onClicked: {
+            onClicked: (mouse)=> {
                 Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                 controlBarItem.open()
             }
@@ -309,7 +313,7 @@ Mycroft.CardDelegate {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: {
+            onClicked: (mouse)=> {
                 controlBarItem.close()
                 Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                 if(mainView.currentIndex == 1) {
@@ -393,7 +397,7 @@ Mycroft.CardDelegate {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: {
+                    onClicked: (mouse)=> {
                         notificationsStorageViewBox.close()
                     }
                 }
@@ -443,7 +447,7 @@ Mycroft.CardDelegate {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: {
+                    onClicked: (mouse)=> {
                         Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                         Mycroft.MycroftController.sendRequest("ovos.notification.api.storage.clear", {})
                     }

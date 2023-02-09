@@ -1,4 +1,9 @@
-import QtQuick 2.9
+/*
+    SPDX-FileCopyrightText: 2023 Aditya Mehra <aix.m@outlook.com>
+    SPDX-License-Identifier: Apache-2.0
+*/
+
+import QtQuick 2.15
 
 MouseArea {
     id: mouseSwipeArea
@@ -14,7 +19,7 @@ MouseArea {
 
     signal swipe(string direction)
 
-    onPressed: {
+    onPressed: (mouse)=> {
         startX = mouse.x
         startY = mouse.y
         prevX = mouse.x
@@ -24,7 +29,7 @@ MouseArea {
         tracing = true
     }
 
-    onPositionChanged: {
+    onPositionChanged: (mouse)=> {
         if ( !tracing ) return
         var currVelX = (mouse.x-prevX)
         var currVelY = (mouse.y-prevY)

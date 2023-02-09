@@ -1,8 +1,13 @@
-import QtQuick.Layouts 1.4
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import org.kde.kirigami 2.11 as Kirigami
-import QtGraphicalEffects 1.0
+/*
+    SPDX-FileCopyrightText: 2023 Aditya Mehra <aix.m@outlook.com>
+    SPDX-License-Identifier: Apache-2.0
+*/
+
+import QtQuick.Layouts 1.15
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import org.kde.kirigami 2.19 as Kirigami
+import Qt5Compat.GraphicalEffects
 import Mycroft 1.0 as Mycroft
 
 Rectangle {
@@ -39,7 +44,7 @@ Rectangle {
         iconSelector.selectedIcon = ""
     }
 
-    Keys.onEscapePressed: {
+    Keys.onEscapePressed: (event)=> {
         opened = false
     }
 
@@ -265,7 +270,7 @@ Rectangle {
 
                                     MouseArea {
                                         anchors.fill: parent
-                                        onClicked: {
+                                        onClicked: (mouse)=> {
                                             Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                                             iconSelector.selectedIcon = model.iconName
                                         }
@@ -306,7 +311,7 @@ Rectangle {
                     radius: 6
                 }
 
-                onClicked: {
+                onClicked: (mouse)=> {
                     var card = {
                         header: headerTextField.text,
                         description: descriptionTextField.text,
@@ -330,7 +335,7 @@ Rectangle {
                     radius: 6
                 }
 
-                onClicked: {
+                onClicked: (mouse)=> {
                     Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
                     close()
                 }
