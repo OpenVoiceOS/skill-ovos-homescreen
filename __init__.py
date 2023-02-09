@@ -28,6 +28,9 @@ from ovos_utils.xdg_utils import xdg_config_home
 from .skill import (DashboardHandler,
                     CardGenerator)
 from ovos_skills_manager.utils import get_skills_examples
+from ovos_utils.process_utils import RuntimeRequirements
+from ovos_utils import classproperty
+
 
 class OVOSHomescreenSkill(MycroftSkill):
     # The constructor of the skill, which calls MycroftSkill's constructor
@@ -59,6 +62,18 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         # Offline / Online State
         self.system_offline = None
+
+    @classproperty
+    def runtime_requirements(self):
+        return RuntimeRequirements(internet_before_load=False,
+                                   network_before_load=False,
+                                   gui_before_load=True,
+                                   requires_internet=False,
+                                   requires_network=False,
+                                   requires_gui=True,
+                                   no_internet_fallback=True,
+                                   no_network_fallback=True,
+                                   no_gui_fallback=False)
 
     def initialize(self):
         self.dashboard_handler = DashboardHandler(self.file_system.path,
