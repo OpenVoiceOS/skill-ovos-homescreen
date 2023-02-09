@@ -1,3 +1,4 @@
 requests>=2.26.0
-ovos_utils>=0.0.6
+ovos-utils~=0.0, >=0.0.28a4
+ovos_workshop~=0.0, >=0.0.11a4
 ovos-skills-manager>=0.0.12a1
