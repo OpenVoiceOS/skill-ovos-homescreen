@@ -43,6 +43,10 @@ Mycroft.CardDelegate {
 
     signal exampleEntryUpdate(string exampleEntry)
 
+    Keys.onDownPressed: (event)=> {
+        bottomAreaHandler.forceActiveFocus()
+    }
+
     onGuiEvent: {
         switch (eventName) {
             case "ovos.timer.widget.manager.update":
@@ -241,6 +245,8 @@ Mycroft.CardDelegate {
             anchors.rightMargin: Mycroft.Units.gridUnit * 0.5
             anchors.verticalCenter: parent.verticalCenter
             color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
+            border.color: rightAreaHandler.activeFocus ? "red" : "transparent"
+            border.width: rightAreaHandler.activeFocus ? 2 : 0
             radius: Mycroft.Units.gridUnit
             z: 2
         }
@@ -277,8 +283,12 @@ Mycroft.CardDelegate {
             anchors.bottomMargin: Mycroft.Units.gridUnit * 0.5
             anchors.horizontalCenter: parent.horizontalCenter
             color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
+            border.color: bottomAreaHandler.activeFocus ? "red" : "transparent"
+            border.width: bottomAreaHandler.activeFocus ? 2 : 0
             radius: Mycroft.Units.gridUnit
             visible: controlBarItem.opened ? 0 : 1
+            KeyNavigation.left: leftAreaHandler
+            KeyNavigation.right: rightAreaHandler
         }
 
         MouseArea {
@@ -307,8 +317,12 @@ Mycroft.CardDelegate {
             anchors.left: parent.left
             anchors.leftMargin: Mycroft.Units.gridUnit * 0.5
             anchors.verticalCenter: parent.verticalCenter
+            border.color: leftAreaHandler.activeFocus ? "red" : "transparent"
+            border.width: leftAreaHandler.activeFocus ? 2 : 0
             color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
             radius: Mycroft.Units.gridUnit
+            KeyNavigation.right: rightAreaHandler
+            KeyNavigation.bottom: bottomAreaHandler
         }
 
         MouseArea {

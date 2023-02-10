@@ -68,7 +68,7 @@ Rectangle {
 
             Kirigami.Icon {
                 id: weatherItemIcon
-                source: Qt.resolvedUrl(getWeatherImagery(sessionData.weather_code))
+                source: sessionData.weather_code ? Qt.resolvedUrl(getWeatherImagery(sessionData.weather_code)) : ""
                 width: parent.height * 0.90
                 height: width
                 anchors.right: parent.right
