@@ -249,6 +249,8 @@ Mycroft.CardDelegate {
             border.width: rightAreaHandler.activeFocus ? 2 : 0
             radius: Mycroft.Units.gridUnit
             z: 2
+            KeyNavigation.left: leftAreaHandler
+            KeyNavigation.down: bottomAreaHandler
         }
 
         MouseArea {
@@ -322,7 +324,7 @@ Mycroft.CardDelegate {
             color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
             radius: Mycroft.Units.gridUnit
             KeyNavigation.right: rightAreaHandler
-            KeyNavigation.bottom: bottomAreaHandler
+            KeyNavigation.down: bottomAreaHandler
         }
 
         MouseArea {
