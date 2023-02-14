@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/HEAD)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.1...HEAD)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a1...HEAD)
+
+**Implemented enhancements:**
+
+- use nice\_date changes from lingua franca [\#59](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/59) ([AIIX](https://github.com/AIIX))
+
+## [V0.0.2a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a1) (2023-02-09)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.1...V0.0.2a1)
 
 **Merged pull requests:**
 
