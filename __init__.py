@@ -62,7 +62,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.media_widget_player_state = None
 
         # Offline / Online State
-        self.system_offline = None
+        self.system_connectivity = None
 
     @classproperty
     def runtime_requirements(self):
@@ -154,7 +154,8 @@ class OVOSHomescreenSkill(MycroftSkill):
                     self.handle_media_player_widget_update)
 
         # Handler For Offline Widget
-        self.bus.on('mycroft.internet.connected', self.on_internet_connected)
+        self.bus.on("mycroft.network.connected", self.on_network_connected)
+        self.bus.on("mycroft.internet.connected", self.on_internet_connected)
         self.bus.on("enclosure.notify.no_internet", self.on_no_internet)
 
         # Handle Screenshot Response
@@ -264,13 +265,17 @@ class OVOSHomescreenSkill(MycroftSkill):
         else:
             self.gui["weather_api_enabled"] = False
 
+    def on_network_connected(self, message):
+        self.system_connectivity = "network"
+        self.gui["system_connectivity"] = self.system_connectivity
+
     def on_internet_connected(self, message):
-        self.system_offline = False
-        self.gui["offline_state"] = self.system_offline
+        self.system_connectivity = "online"
+        self.gui["system_connectivity"] = self.system_connectivity
 
     def on_no_internet(self, message):
-        self.system_offline = True
-        self.gui["offline_state"] = self.system_offline
+        self.system_connectivity = "offline"
+        self.gui["system_connectivity"] = self.system_connectivity
 
     #####################################################################
     # Wallpaper Manager
