@@ -34,6 +34,7 @@ Mycroft.CardDelegate {
     property bool mediaWidgetEnabled: false
     property var mediaWidgetData
     property var mediaWidgetState
+    property bool systemOffline: sessionData.offline_state ? Boolean(sessionData.offline_state) : false
 
     signal exampleEntryUpdate(string exampleEntry)
 
@@ -134,6 +135,9 @@ Mycroft.CardDelegate {
     onVisibleChanged: {
         if(visible && idleRoot.textModel){
             textTimer.running = true
+        }
+        if(visible) {
+            Mycroft.MycroftController.sendRequest("ovos.homescreen.displayed", {})
         }
     }
 

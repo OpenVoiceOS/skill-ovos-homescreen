@@ -25,7 +25,6 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
         height: parent.height / 2
-        visible: idleRoot.weatherEnabled
         verticalMode: true
     }
 }

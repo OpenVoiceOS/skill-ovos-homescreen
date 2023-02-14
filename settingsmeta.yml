@@ -20,6 +20,10 @@ skillMetadata:
           type: text
           label: Wallpaper
           value: default.jpg
+        - name: persistent_menu_hint
+          type: bool
+          label: Permanent Pull-Down Menu Hint
+          value: false
     - name: Examples
       fields:
         - name: examples_enabled
