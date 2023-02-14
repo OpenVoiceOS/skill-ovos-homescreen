@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/HEAD)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a1...HEAD)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a2...HEAD)
+
+**Merged pull requests:**
+
+- fix connectivity icon on homescreen and add distinctive states [\#70](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/70) ([AIIX](https://github.com/AIIX))
+
+## [V0.0.2a2](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a2) (2023-02-14)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a1...V0.0.2a2)
 
 **Implemented enhancements:**
 
