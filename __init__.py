@@ -186,7 +186,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             "storedmodel": self.notifications_storage_model,
             "count": len(self.notifications_storage_model),
         }
-        self.gui["offline_state"] = self.system_offline
+        self.gui["system_connectivity"] = "offline"
         self.gui["applications_model"] = self.build_voice_applications_model()
         self.gui["dashboard_model"] = self.get_dashboard_cards()
         self.gui["persistent_menu_hint"] = \
