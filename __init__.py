@@ -12,25 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
-import os
-import tempfile
 from os import environ, listdir, path
 
+import datetime
+import os
 import requests
+import tempfile
 from json_database import JsonStorage
+from lingua_franca.format import get_date_strings
 from mycroft.skills.api import SkillApi
 from mycroft.skills.core import (MycroftSkill, intent_file_handler,
                                  resting_screen_handler)
 from mycroft_bus_client import Message
-from ovos_utils.log import LOG
-from ovos_utils.xdg_utils import xdg_config_home
-from .skill import (DashboardHandler,
-                    CardGenerator)
 from ovos_skills_manager.utils import get_skills_examples
-from ovos_utils.process_utils import RuntimeRequirements
 from ovos_utils import classproperty
-from lingua_franca.format import get_date_strings
+from ovos_utils.log import LOG
+from ovos_utils.process_utils import RuntimeRequirements
+from ovos_utils.xdg_utils import xdg_config_home
+
+from .skill import (DashboardHandler, CardGenerator)
 
 
 class OVOSHomescreenSkill(MycroftSkill):
@@ -45,8 +45,8 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.rtlMode = None  # Get from config after __init__ is done
 
         # Populate skill IDs to use for data sources
-        self.datetime_skill = None  # Get from config after __init__ is done
-        self.skill_info_skill = None  # Get from config after __init__ is done
+        self.datetime_skill_id = None  # Get from config after __init__ is done
+        self.examples_skill_id = None  # Get from config after __init__ is done
         self.datetime_api = None
         self.skill_info_api = None
 
@@ -87,13 +87,12 @@ class OVOSHomescreenSkill(MycroftSkill):
             "wallpaper") or "default.jpg"
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
 
-        self.datetime_skill = self.settings.get(
-            "datetime_skill")
+        self.datetime_skill_id = self.settings.get("datetime_skill_id")
         self.examples_enabled = 1 if self.settings.get(
             "examples_enabled", True) else 0
 
         if self.examples_enabled:
-            self.skill_info_skill = self.settings.get("examples_skill")
+            self.examples_skill_id = self.settings.get("examples_skill")
 
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
@@ -133,9 +132,9 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.add_event("ovos.homescreen.dashboard.generate.card",
                        self.generate_dashboard_card)
         self.gui.register_handler("ovos.homescreen.dashboard.generate.card",
-                       self.generate_dashboard_card)
+                                  self.generate_dashboard_card)
         self.gui.register_handler("ovos.homescreen.dashboard.remove.card",
-                       self.remove_dashboard_card)
+                                  self.remove_dashboard_card)
 
         # Handler For Wallpaper Rotation Event
         self.bus.on("speaker.extension.display.wallpaper.rotation.changed",
@@ -174,11 +173,10 @@ class OVOSHomescreenSkill(MycroftSkill):
     # Homescreen Registration & Handling
 
     @resting_screen_handler("OVOSHomescreen")
-    def handle_idle(self, _):
+    def handle_idle(self, message):
         self._load_skill_apis()
-        LOG.debug('Activating Time/Date resting page')
-        self.gui['wallpaper_path'] = self.check_wallpaper_path(
-            self.selected_wallpaper)
+        LOG.debug('Activating OVOSHomescreen')
+        self.gui['wallpaper_path'] = self.check_wallpaper_path(self.selected_wallpaper)
         self.gui['selected_wallpaper'] = self.selected_wallpaper
         self.gui['notification'] = {}
         self.gui['wallpaper_rotation_enabled'] = self.wallpaper_rotation_enabled
@@ -189,8 +187,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.gui["system_connectivity"] = "offline"
         self.gui["applications_model"] = self.build_voice_applications_model()
         self.gui["dashboard_model"] = self.get_dashboard_cards()
-        self.gui["persistent_menu_hint"] = \
-            self.settings.get("persistent_menu_hint", False)
+        self.gui["persistent_menu_hint"] = self.settings.get("persistent_menu_hint", False)
 
         try:
             self.update_dt()
@@ -208,8 +205,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         Loads or updates skill examples via the skill_info_api.
         """
         if self.skill_info_api:
-            self.gui['skill_examples'] = {
-                "examples": self.skill_info_api.skill_info_examples()}
+            self.gui['skill_examples'] = {"examples": self.skill_info_api.skill_info_examples()}
         else:
             skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
             self.gui['skill_examples'] = {"examples": skill_examples}
@@ -222,28 +218,32 @@ class OVOSHomescreenSkill(MycroftSkill):
         """
         Loads or updates date/time via the datetime_api.
         """
-        if self.datetime_skill:
-            if not self.datetime_api:
-                LOG.warning("Requested update before datetime API loaded")
-                self._load_skill_apis()
-            if self.datetime_api:
-                self.gui["time_string"] = self.datetime_api.get_display_current_time()
-                self.gui["date_string"] = self.datetime_api.get_display_date()
-                self.gui["weekday_string"] = self.datetime_api.get_weekday()
-                self.gui['day_string'], self.gui["month_string"] = self._split_month_string(
-                    self.datetime_api.get_month_date())
-                self.gui["year_string"] = self.datetime_api.get_year()
-            else:
-                LOG.warning("No datetime_api, skipping update")
+        if not self.datetime_api and self.datetime_skill_id:
+            LOG.debug("Requested update before datetime API loaded")
+            self._load_skill_apis()
+        if self.datetime_api:
+            time_string = self.datetime_api.get_display_current_time()
+            date_string = self.datetime_api.get_display_date()
+            weekday_string = self.datetime_api.get_weekday()
+            day_string, month_string = self._split_month_string(self.datetime_api.get_month_date())
+            year_string = self.datetime_api.get_year()
         else:
-            date_string_object = get_date_strings(date_format=self.config_core.get("date_format", "MDY"), 
+            # use LF directly
+            date_string_object = get_date_strings(date_format=self.config_core.get("date_format", "MDY"),
                                                   lang=self.lang)
-            self.gui["time_string"] = date_string_object.get("time_string")
-            self.gui["date_string"] = date_string_object.get("date_string")
-            self.gui["weekday_string"] = date_string_object.get("weekday_string")
-            self.gui["day_string"] = date_string_object.get("day_string")
-            self.gui["month_string"] = date_string_object.get("month_string")
-            self.gui["year_string"] = date_string_object.get("year_string")
+            time_string = date_string_object.get("time_string")
+            date_string = date_string_object.get("date_string")
+            weekday_string = date_string_object.get("weekday_string")
+            day_string = date_string_object.get("day_string")
+            month_string = date_string_object.get("month_string")
+            year_string = date_string_object.get("year_string")
+
+        self.gui["time_string"] = time_string
+        self.gui["date_string"] = date_string
+        self.gui["weekday_string"] = weekday_string
+        self.gui['day_string'] = day_string
+        self.gui["month_string"] = month_string
+        self.gui["year_string"] = year_string
 
     def update_weather(self):
         """
@@ -258,10 +258,8 @@ class OVOSHomescreenSkill(MycroftSkill):
         current_weather_report = message.data.get("report")
         if current_weather_report:
             self.gui["weather_api_enabled"] = True
-            self.gui["weather_code"] = current_weather_report.get(
-                "weather_code")
-            self.gui["weather_temp"] = current_weather_report.get(
-                "weather_temp")
+            self.gui["weather_code"] = current_weather_report.get("weather_code")
+            self.gui["weather_temp"] = current_weather_report.get("weather_temp")
         else:
             self.gui["weather_api_enabled"] = False
 
@@ -278,7 +276,8 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.gui["system_connectivity"] = self.system_connectivity
 
     #####################################################################
-    # Wallpaper Manager
+    # Wallpaper Manager - TODO PHAL plugin with configurable sources and platform support
+    # eg. https://github.com/OpenJarbas/wallpaper_changer
 
     def collect_wallpapers(self):
         def_wallpaper_collection, loc_wallpaper_collection = None, None
@@ -292,7 +291,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.check_wallpaper_rotation_config()
 
     @intent_file_handler("change.wallpaper.intent")
-    def change_wallpaper(self, _):
+    def change_wallpaper(self, message):
         # Get Current Wallpaper idx
         current_idx = self.get_wallpaper_idx(self.selected_wallpaper)
         collection_length = len(self.wallpaper_collection) - 1
@@ -366,32 +365,27 @@ class OVOSHomescreenSkill(MycroftSkill):
 
     #####################################################################
     # Misc
-
-    def stop(self):
-        pass
-
     def shutdown(self):
         self.cancel_all_repeating_events()
 
-    def handle_mycroft_ready(self, _):
+    def handle_mycroft_ready(self, message):
         self._load_skill_apis()
 
     def _load_skill_apis(self):
         """
         Loads weather, date/time, and examples skill APIs
         """
-        # Import Date Time Skill As Date Time Provider
+        # Import Date Time Skill As Date Time Provider if configured (default LF)
         try:
-            if self.datetime_skill:
-                if not self.datetime_api:
-                    self.datetime_api = SkillApi.get(self.datetime_skill)
+            if not self.datetime_api and self.datetime_skill_id:
+                self.datetime_api = SkillApi.get(self.datetime_skill_id)
         except Exception as e:
             LOG.error(f"Failed to import DateTime Skill: {e}")
 
         # Import Skill Info Skill if configured (default OSM)
-        if not self.skill_info_api and self.skill_info_skill:
+        if not self.skill_info_api and self.examples_skill_id:
             try:
-                self.skill_info_api = SkillApi.get(self.skill_info_skill)
+                self.skill_info_api = SkillApi.get(self.examples_skill_id)
             except Exception as e:
                 LOG.error(f"Failed to import Info Skill: {e}")
 
@@ -417,7 +411,7 @@ class OVOSHomescreenSkill(MycroftSkill):
     def find_icon_full_path(self, icon_name):
         localuser = environ.get('USER')
         folder_search_paths = ["/usr/share/icons/", "/usr/local/share/icons/",
-                     f"/home/{localuser}/.local/share/icons/"]
+                               f"/home/{localuser}/.local/share/icons/"]
         for folder_search_path in folder_search_paths:
             # SVG extension
             icon_full_path = folder_search_path + icon_name + ".svg"
@@ -604,7 +598,7 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         if not folder_path:
             folder_path = os.path.expanduser('~') + "/Pictures"
-    
+
         if not os.path.exists(folder_path):
             try:
                 os.makedirs(folder_path, exist_ok=True)
@@ -618,6 +612,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         result = message.data.get("result")
         display_message = f"Screenshot saved to {result}"
         self.gui.show_notification(display_message)
+
 
 def create_skill():
     return OVOSHomescreenSkill()
