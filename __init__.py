@@ -237,6 +237,7 @@ class OVOSHomescreenSkill(MycroftSkill):
                 LOG.warning("No datetime_api, skipping update")
         else:
             date_string_object = get_date_strings(date_format=self.config_core.get("date_format", "MDY"), 
+                                                  time_format=self.config_core.get("time_format", "full),
                                                   lang=self.lang)
             self.gui["time_string"] = date_string_object.get("time_string")
             self.gui["date_string"] = date_string_object.get("date_string")
