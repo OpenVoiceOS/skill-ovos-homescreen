@@ -16,9 +16,7 @@ from os import environ, listdir, path
 
 import datetime
 import os
-import requests
 import tempfile
-from json_database import JsonStorage
 from lingua_franca.format import get_date_strings
 from mycroft.skills.api import SkillApi
 from mycroft.skills.core import (MycroftSkill, intent_file_handler,
@@ -28,7 +26,6 @@ from ovos_skills_manager.utils import get_skills_examples
 from ovos_utils import classproperty
 from ovos_utils.log import LOG
 from ovos_utils.process_utils import RuntimeRequirements
-from ovos_utils.xdg_utils import xdg_config_home
 
 from .skill import (DashboardHandler, CardGenerator)
 
@@ -40,7 +37,9 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.notifications_storage_model = []
         self.def_wallpaper_folder = path.dirname(__file__) + '/ui/wallpapers/'
         self.loc_wallpaper_folder = None
-        self.selected_wallpaper = None  # Get from config after __init__ is done
+        self.selected_wallpaper_path = None
+        self.selected_wallpaper = None
+        self.default_provider_set = False
         self.wallpaper_collection = []
         self.rtlMode = None  # Get from config after __init__ is done
 
@@ -54,7 +53,6 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.examples_enabled = True
 
         # Display Configuration Variables
-        self.wallpaper_rotation_enabled = False
         self.dashboard_handler = None
 
         # Media State Tracking For Widget
@@ -83,8 +81,6 @@ class OVOSHomescreenSkill(MycroftSkill):
                                             path.dirname(__file__))
         self.datetime_api = None
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
-        self.selected_wallpaper = self.settings.get(
-            "wallpaper") or "default.jpg"
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
 
         self.datetime_skill_id = self.settings.get("datetime_skill_id")
@@ -136,10 +132,6 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.gui.register_handler("ovos.homescreen.dashboard.remove.card",
                                   self.remove_dashboard_card)
 
-        # Handler For Wallpaper Rotation Event
-        self.bus.on("speaker.extension.display.wallpaper.rotation.changed",
-                    self.check_wallpaper_rotation_config)
-
         if not self.file_system.exists("wallpapers"):
             os.mkdir(path.join(self.file_system.path, "wallpapers"))
 
@@ -167,6 +159,23 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.schedule_repeating_event(self.update_weather, callback_time, 900)
         self.schedule_repeating_event(self.update_examples, callback_time, 900)
 
+        self.bus.on("ovos.wallpaper.manager.loaded",
+                    self.register_homescreen_wallpaper_provider)
+        
+        self.bus.on(f"{self.skill_id}.get.wallpaper.collection",
+                    self.supply_wallpaper_collection)
+        
+        self.bus.on("ovos.wallpaper.manager.setup.default.provider.response",
+                    self.handle_default_provider_response)
+        
+        # We can't depend on loading order, so send a registration request
+        # Regardless on startup
+        self.register_homescreen_wallpaper_provider()
+
+        # Get / Set the default wallpaper
+        # self.selected_wallpaper = self.settings.get(
+        #     "wallpaper") or "default.jpg"
+
         self.bus.emit(Message("mycroft.device.show.idle"))
 
     #####################################################################
@@ -176,10 +185,9 @@ class OVOSHomescreenSkill(MycroftSkill):
     def handle_idle(self, message):
         self._load_skill_apis()
         LOG.debug('Activating OVOSHomescreen')
-        self.gui['wallpaper_path'] = self.check_wallpaper_path(self.selected_wallpaper)
+        self.gui['wallpaper_path'] = self.selected_wallpaper_path
         self.gui['selected_wallpaper'] = self.selected_wallpaper
         self.gui['notification'] = {}
-        self.gui['wallpaper_rotation_enabled'] = self.wallpaper_rotation_enabled
         self.gui["notification_model"] = {
             "storedmodel": self.notifications_storage_model,
             "count": len(self.notifications_storage_model),
@@ -276,37 +284,53 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.gui["system_connectivity"] = self.system_connectivity
 
     #####################################################################
-    # Wallpaper Manager - TODO PHAL plugin with configurable sources and platform support
-    # eg. https://github.com/OpenJarbas/wallpaper_changer
+    # Homescreen Wallpaper Provider and Consumer Handling
+    # Follows OVOS PHAL Wallpaper Manager API
 
     def collect_wallpapers(self):
         def_wallpaper_collection, loc_wallpaper_collection = None, None
         for dirname, dirnames, filenames in os.walk(self.def_wallpaper_folder):
             def_wallpaper_collection = filenames
+            def_wallpaper_collection = [os.path.join(dirname, wallpaper) for wallpaper in def_wallpaper_collection]
 
         for dirname, dirnames, filenames in os.walk(self.loc_wallpaper_folder):
             loc_wallpaper_collection = filenames
+            loc_wallpaper_collection = [os.path.join(dirname, wallpaper) for wallpaper in loc_wallpaper_collection]
 
         self.wallpaper_collection = def_wallpaper_collection + loc_wallpaper_collection
-        self.check_wallpaper_rotation_config()
+        
+    def register_homescreen_wallpaper_provider(self, message=None):
+        self.bus.emit(Message("ovos.wallpaper.manager.register.provider", {
+            "provider_name": self.skill_id,
+            "provider_display_name": "OVOSHomescreen"
+        }))
+
+    def supply_wallpaper_collection(self, message):
+        self.bus.emit(Message("ovos.wallpaper.manager.collect.collection.response", {
+            "provider_name": self.skill_id,
+            "wallpaper_collection": self.wallpaper_collection
+        }))
+        # We need to call this here as we know wallpaper collection is ready
+        if not self.default_provider_set:
+            self.setup_default_provider()
+        
+    def setup_default_provider(self):
+        self.bus.emit(Message("ovos.wallpaper.manager.setup.default.provider", {
+            "provider_name": self.skill_id,
+            "default_wallpaper_name": self.settings.get("wallpaper", "default.jpg")
+        }))
+    
+    def handle_default_provider_response(self, message):
+        self.default_provider_set = True
+        url = message.data.get("url")
+        self.selected_wallpaper_path = self.extract_wallpaper_info(url)[0] 
+        self.selected_wallpaper = self.extract_wallpaper_info(url)[1]
+        self.gui['wallpaper_path'] = self.selected_wallpaper_path
+        self.gui['selected_wallpaper'] = self.selected_wallpaper
 
     @intent_file_handler("change.wallpaper.intent")
-    def change_wallpaper(self, message):
-        # Get Current Wallpaper idx
-        current_idx = self.get_wallpaper_idx(self.selected_wallpaper)
-        collection_length = len(self.wallpaper_collection) - 1
-        if not current_idx == collection_length:
-            fidx = current_idx + 1
-            self.selected_wallpaper = self.wallpaper_collection[fidx]
-            self.settings["wallpaper"] = self.wallpaper_collection[fidx]
-
-        else:
-            self.selected_wallpaper = self.wallpaper_collection[0]
-            self.settings["wallpaper"] = self.wallpaper_collection[0]
-
-        self.gui['wallpaper_path'] = self.check_wallpaper_path(
-            self.selected_wallpaper)
-        self.gui['selected_wallpaper'] = self.selected_wallpaper
+    def change_wallpaper(self, _):
+        self.bus.emit(Message("ovos.wallpaper.manager.change.wallpaper"))
 
     def get_wallpaper_idx(self, filename):
         try:
@@ -316,37 +340,17 @@ class OVOSHomescreenSkill(MycroftSkill):
             return None
 
     def handle_set_wallpaper(self, message):
-        image_url = message.data.get("url", "")
-        now = datetime.datetime.now()
-        setname = "wallpaper-" + now.strftime("%H%M%S") + ".jpg"
-        if image_url:
-            print(image_url)
-            response = requests.get(image_url)
-            with self.file_system.open(path.join("wallpapers", setname), "wb") as my_file:
-                my_file.write(response.content)
-                my_file.close()
-            self.collect_wallpapers()
-            cidx = self.get_wallpaper_idx(setname)
-            self.selected_wallpaper = self.wallpaper_collection[cidx]
-            self.settings["wallpaper"] = self.wallpaper_collection[cidx]
+        url = message.data.get("url")
+        self.selected_wallpaper_path = self.extract_wallpaper_info(url)[0] 
+        self.selected_wallpaper = self.extract_wallpaper_info(url)[1]
+        self.gui['wallpaper_path'] = self.selected_wallpaper_path
+        self.gui['selected_wallpaper'] = self.selected_wallpaper
 
-            self.gui['wallpaper_path'] = self.check_wallpaper_path(setname)
-            self.gui['selected_wallpaper'] = self.selected_wallpaper
-
-    def check_wallpaper_path(self, wallpaper):
-        file_def_check = self.def_wallpaper_folder + wallpaper
-        file_loc_check = self.loc_wallpaper_folder + wallpaper
-        if path.exists(file_def_check):
-            return self.def_wallpaper_folder
-        elif path.exists(file_loc_check):
-            return self.loc_wallpaper_folder
-
-    def check_wallpaper_rotation_config(self, message=None):
-        display_config_path_local = path.join(xdg_config_home(), "OvosDisplay.conf")
-        if path.exists(display_config_path_local):
-            display_configuration = JsonStorage(display_config_path_local)
-            self.wallpaper_rotation_enabled = display_configuration.get("wallpaper_rotation", False)
-            self.gui['wallpaper_rotation_enabled'] = self.wallpaper_rotation_enabled
+    def extract_wallpaper_info(self, wallpaper):
+        wallpaper_split = wallpaper.rsplit('/', 1)
+        wallpaper_path = wallpaper_split[0] + "/"
+        wallpaper_filename = wallpaper_split[1]
+        return wallpaper_path, wallpaper_filename
 
     #####################################################################
     # Manage notifications widget
