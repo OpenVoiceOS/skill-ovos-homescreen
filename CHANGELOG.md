@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/HEAD)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a4...HEAD)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a5...HEAD)
+
+**Merged pull requests:**
+
+- move wallpaper management to phal plugin, become a consumer/provider [\#74](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/74) ([AIIX](https://github.com/AIIX))
+
+## [V0.0.2a5](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a5) (2023-02-20)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a4...V0.0.2a5)
 
 **Merged pull requests:**
 
