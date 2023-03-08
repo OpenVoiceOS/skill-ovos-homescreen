@@ -1,9 +1,9 @@
-import QtQuick.Layouts 1.4
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import org.kde.kirigami 2.11 as Kirigami
-import QtGraphicalEffects 1.0
-import Mycroft 1.0 as Mycroft
+/*
+    SPDX-FileCopyrightText: 2023 Aditya Mehra <aix.m@outlook.com>
+    SPDX-License-Identifier: Apache-2.0
+*/
+
+import QtQuick 2.15
 import "../delegates" as Delegates
 
 Delegates.BoxSimpleDelegate {

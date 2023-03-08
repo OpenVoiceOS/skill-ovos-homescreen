@@ -1,9 +1,14 @@
-import QtQuick.Layouts 1.4
-import QtQuick 2.9
-import QtQuick.Controls 2.12
-import org.kde.kirigami 2.11 as Kirigami
-import QtGraphicalEffects 1.0
+/*
+    SPDX-FileCopyrightText: 2023 Aditya Mehra <aix.m@outlook.com>
+    SPDX-License-Identifier: Apache-2.0
+*/
+
+import QtQuick.Layouts 1.15
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import org.kde.kirigami 2.19 as Kirigami
 import Mycroft 1.0 as Mycroft
+import Qt5Compat.GraphicalEffects
 
 Rectangle {
     color: "transparent"
@@ -19,7 +24,7 @@ Rectangle {
             Layout.fillHeight: true
             Layout.alignment: weatherItemBox.verticalMode ? Qt.AlignHCenter : Qt.AlignRight
             color: "transparent"
-            visible: idleRoot.systemConnectivity == "offline" || idleRoot.systemConnectivity == "network" ? 1 : 0
+            visible: idleRoot.systemOffline
 
             Kirigami.Icon {
                 id: offlineModeIconLayerOne
@@ -28,14 +33,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 visible: true
-                source: switch(idleRoot.systemConnectivity) {
-                    case "offline":
-                        return Qt.resolvedUrl("icons/offline_layer_one.svg");
-                        break;
-                    case "network":
-                        return Qt.resolvedUrl("icons/no-internet.svg");
-                        break;
-                }
+                source: Qt.resolvedUrl("icons/offline_layer_one.svg")
 
                 ColorOverlay {
                     anchors.fill: offlineModeIconLayerOne
@@ -70,7 +68,7 @@ Rectangle {
 
             Kirigami.Icon {
                 id: weatherItemIcon
-                source: Qt.resolvedUrl(getWeatherImagery(sessionData.weather_code))
+                source: sessionData.weather_code ? Qt.resolvedUrl(getWeatherImagery(sessionData.weather_code)) : ""
                 width: parent.height * 0.90
                 height: width
                 anchors.right: parent.right

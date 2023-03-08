@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
-<TS language="it_IT" version="2.1">
+<TS version="2.1" language="it_IT">
     <context>
         <name>GridBox</name>
         <message>
-            <location filename="../GridBox.qml" line="33"/>
+            <location filename="../GridBox.qml" line="38"/>
             <source>Edit Card</source>
-            <translation>Modifica scheda</translation>
+            <translation>Modifica carta</translation>
         </message>
         <message>
-            <location filename="../GridBox.qml" line="52"/>
+            <location filename="../GridBox.qml" line="57"/>
             <source>Remove</source>
             <translation>Rimuovere</translation>
         </message>
         <message>
-            <location filename="../GridBox.qml" line="70"/>
+            <location filename="../GridBox.qml" line="75"/>
             <source>Cancel</source>
             <translation>Annulla</translation>
         </message>

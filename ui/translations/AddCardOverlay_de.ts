@@ -1,57 +1,57 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
-<TS language="de_DE" version="2.1">
+<TS version="2.1" language="de_DE">
     <context>
         <name>AddCardOverlay</name>
         <message>
-            <location filename="../AddCardOverlay.qml" line="63"/>
+            <location filename="../AddCardOverlay.qml" line="68"/>
             <source>Add Card</source>
             <translation>Karte hinzufügen</translation>
         </message>
         <message>
-            <location filename="../AddCardOverlay.qml" line="106"/>
+            <location filename="../AddCardOverlay.qml" line="111"/>
             <source>Header</source>
-            <translation>Kopfzeile</translation>
+            <translation>Header</translation>
         </message>
         <message>
-            <location filename="../AddCardOverlay.qml" line="127"/>
+            <location filename="../AddCardOverlay.qml" line="132"/>
             <source>Card Header Text</source>
-            <translation>Kopfzeilentext</translation>
+            <translation>Kartenkopftext</translation>
         </message>
         <message>
-            <location filename="../AddCardOverlay.qml" line="147"/>
+            <location filename="../AddCardOverlay.qml" line="152"/>
             <source>Description</source>
             <translation>Beschreibung</translation>
         </message>
         <message>
-            <location filename="../AddCardOverlay.qml" line="168"/>
+            <location filename="../AddCardOverlay.qml" line="173"/>
             <source>Card Description Text</source>
-            <translation>Beschreibungstext</translation>
+            <translation>Kartenbeschreibungstext</translation>
         </message>
         <message>
-            <location filename="../AddCardOverlay.qml" line="189"/>
+            <location filename="../AddCardOverlay.qml" line="194"/>
             <source>Utterance</source>
-            <translation>Sprachausgabe</translation>
+            <translation>Äußerung</translation>
         </message>
         <message>
-            <location filename="../AddCardOverlay.qml" line="211"/>
+            <location filename="../AddCardOverlay.qml" line="216"/>
             <source>Card Action Text</source>
-            <translation>Text bei Aktion</translation>
+            <translation>Kartenaktionstext</translation>
         </message>
         <message>
-            <location filename="../AddCardOverlay.qml" line="232"/>
+            <location filename="../AddCardOverlay.qml" line="237"/>
             <source>Icon</source>
             <translation>Symbol</translation>
         </message>
         <message>
-            <location filename="../AddCardOverlay.qml" line="302"/>
+            <location filename="../AddCardOverlay.qml" line="307"/>
             <source>Add</source>
             <translation>Hinzufügen</translation>
         </message>
         <message>
-            <location filename="../AddCardOverlay.qml" line="326"/>
+            <location filename="../AddCardOverlay.qml" line="331"/>
             <source>Cancel</source>
-            <translation>Abbrechen</translation>
+            <translation>Stornieren</translation>
         </message>
     </context>
 </TS>
