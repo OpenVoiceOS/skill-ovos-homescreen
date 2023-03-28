@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/HEAD)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a5...HEAD)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a6...HEAD)
+
+**Merged pull requests:**
+
+- fix notifications storage model being empty on show homescreen [\#77](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/77) ([AIIX](https://github.com/AIIX))
+
+## [V0.0.2a6](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a6) (2023-02-24)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a5...V0.0.2a6)
 
 **Merged pull requests:**
 
