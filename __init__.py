@@ -188,10 +188,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
         self.gui['selected_wallpaper'] = self.selected_wallpaper
         self.gui['notification'] = {}
-        self.gui["notification_model"] = {
-            "storedmodel": self.notifications_storage_model,
-            "count": len(self.notifications_storage_model),
-        }
+        self.gui["notification_model"] = self.notifications_storage_model
         self.gui["system_connectivity"] = "offline"
         self.gui["applications_model"] = self.build_voice_applications_model()
         self.gui["dashboard_model"] = self.get_dashboard_cards()
@@ -364,8 +361,8 @@ class OVOSHomescreenSkill(MycroftSkill):
 
     def handle_notification_storage_model_update(self, message):
         # Receives updated storage model and forwards it to widget
-        notification_model = message.data.get("notification_model", "")
-        self.gui["notification_model"] = notification_model
+        self.notifications_storage_model = message.data.get("notification_model", "")
+        self.gui["notification_model"] = self.notifications_storage_model
 
     #####################################################################
     # Misc
