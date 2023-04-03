@@ -83,7 +83,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
 
-        self.datetime_skill_id = self.settings.get("datetime_skill_id")
+        self.datetime_skill_id = self.settings.get("datetime_skill")
         self.examples_enabled = 1 if self.settings.get(
             "examples_enabled", True) else 0
 
