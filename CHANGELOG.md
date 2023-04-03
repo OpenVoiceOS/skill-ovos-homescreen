@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/HEAD)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a6...HEAD)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a7...HEAD)
+
+**Merged pull requests:**
+
+- removed depreciated weather\_skill from settingsmeta.yml [\#62](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/62) ([builderjer](https://github.com/builderjer))
+
+## [V0.0.2a7](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a7) (2023-03-28)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a6...V0.0.2a7)
 
 **Merged pull requests:**
 
