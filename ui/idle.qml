@@ -26,7 +26,6 @@ Mycroft.CardDelegate {
     property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
     property var timeString: sessionData.time_string ? sessionData.time_string : "00:00"
     property string exampleEntry
-    property bool wallpaperRotationEnabled: sessionData.wallpaper_rotation_enabled ? Boolean(sessionData.wallpaper_rotation_enabled) : false
     property var timerWidgetData
     property int timerWidgetCount: 0
     property var alarmWidgetData
@@ -198,9 +197,6 @@ Mycroft.CardDelegate {
         onTriggered: {
             runEntryChangeA()
             setExampleText()
-            if (idleRoot.wallpaperRotationEnabled) {
-                triggerGuiEvent("homescreen.swipe.change.wallpaper", {})
-            }
         }
     }
 

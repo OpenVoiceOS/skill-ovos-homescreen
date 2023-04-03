@@ -2,10 +2,6 @@ skillMetadata:
   sections:
     - name: Skill Data Sources
       fields:
-        - name: weather_skill
-          type: text
-          label: Weather
-          value: skill-weather.openvoiceos
         - name: datetime_skill
           type: text
           label: Date and Time
