@@ -233,8 +233,8 @@ class OVOSHomescreenSkill(MycroftSkill):
             day_string, month_string = self._split_month_string(self.datetime_api.get_month_date())
             year_string = self.datetime_api.get_year()
         else:
-            # use LF directly
-            date_string_object = get_date_strings(date_format=self.config_core.get("date_format", "MDY"),
+            date_string_object = get_date_strings(date_format=self.config_core.get("date_format", "MDY"), 
+                                                  time_format=self.config_core.get("time_format", "full"),
                                                   lang=self.lang)
             time_string = date_string_object.get("time_string")
             date_string = date_string_object.get("date_string")
