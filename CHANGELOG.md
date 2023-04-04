@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/HEAD)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a8...HEAD)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a9...HEAD)
+
+**Merged pull requests:**
+
+- Fix breaking settings reference from \#72 [\#79](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/79) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [V0.0.2a9](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a9) (2023-04-04)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a8...V0.0.2a9)
 
 **Merged pull requests:**
 
