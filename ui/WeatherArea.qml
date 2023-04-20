@@ -19,7 +19,7 @@ Rectangle {
             Layout.fillHeight: true
             Layout.alignment: weatherItemBox.verticalMode ? Qt.AlignHCenter : Qt.AlignRight
             color: "transparent"
-            visible: idleRoot.systemOffline
+            visible: idleRoot.systemConnectivity == "offline" || idleRoot.systemConnectivity == "network" ? 1 : 0
 
             Kirigami.Icon {
                 id: offlineModeIconLayerOne
@@ -28,7 +28,14 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 visible: true
-                source: Qt.resolvedUrl("icons/offline_layer_one.svg")
+                source: switch(idleRoot.systemConnectivity) {
+                    case "offline":
+                        return Qt.resolvedUrl("icons/offline_layer_one.svg");
+                        break;
+                    case "network":
+                        return Qt.resolvedUrl("icons/no-internet.svg");
+                        break;
+                }
 
                 ColorOverlay {
                     anchors.fill: offlineModeIconLayerOne

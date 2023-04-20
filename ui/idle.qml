@@ -26,7 +26,6 @@ Mycroft.CardDelegate {
     property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
     property var timeString: sessionData.time_string ? sessionData.time_string : "00:00"
     property string exampleEntry
-    property bool wallpaperRotationEnabled: sessionData.wallpaper_rotation_enabled ? Boolean(sessionData.wallpaper_rotation_enabled) : false
     property var timerWidgetData
     property int timerWidgetCount: 0
     property var alarmWidgetData
@@ -34,7 +33,7 @@ Mycroft.CardDelegate {
     property bool mediaWidgetEnabled: false
     property var mediaWidgetData
     property var mediaWidgetState
-    property bool systemOffline: sessionData.offline_state ? Boolean(sessionData.offline_state) : false
+    property bool systemConnectivity: sessionData.system_connectivity ? sessionData.system_connectivity : "offline"
 
     signal exampleEntryUpdate(string exampleEntry)
 
@@ -198,9 +197,6 @@ Mycroft.CardDelegate {
         onTriggered: {
             runEntryChangeA()
             setExampleText()
-            if (idleRoot.wallpaperRotationEnabled) {
-                triggerGuiEvent("homescreen.swipe.change.wallpaper", {})
-            }
         }
     }
 
