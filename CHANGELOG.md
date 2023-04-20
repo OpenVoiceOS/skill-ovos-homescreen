@@ -1,8 +1,8 @@
 # Changelog
 
-## [0.0.2a12](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.2a12) (2023-04-20)
+## [V0.0.2a12](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a12) (2023-04-20)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a11...0.0.2a12)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a11...V0.0.2a12)
 
 **Merged pull requests:**
 
