@@ -6,12 +6,12 @@
         <message>
             <location filename="../BoxesPage.qml" line="29"/>
             <source>Quick Access</source>
-            <translation>Accesso veloce</translation>
+            <translation>Accesso rapido</translation>
         </message>
         <message>
             <location filename="../BoxesPage.qml" line="132"/>
             <source>Double-tap card to perform card action</source>
-            <translation>Tocca due volte la carta per eseguire l'azione della carta</translation>
+            <translation>Tocca due volte il blocco per lanciare l'azione</translation>
         </message>
     </context>
 </TS>
