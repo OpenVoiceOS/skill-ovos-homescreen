@@ -6,7 +6,7 @@
         <message>
             <location filename="../AddCardOverlay.qml" line="63"/>
             <source>Add Card</source>
-            <translation>Aggiungi carta</translation>
+            <translation>Aggiungi blocco</translation>
         </message>
         <message>
             <location filename="../AddCardOverlay.qml" line="106"/>
@@ -16,7 +16,7 @@
         <message>
             <location filename="../AddCardOverlay.qml" line="127"/>
             <source>Card Header Text</source>
-            <translation>Testo dell'intestazione della carta</translation>
+            <translation>Testo dell'intestazione del blocco</translation>
         </message>
         <message>
             <location filename="../AddCardOverlay.qml" line="147"/>
@@ -26,7 +26,7 @@
         <message>
             <location filename="../AddCardOverlay.qml" line="168"/>
             <source>Card Description Text</source>
-            <translation>Testo di descrizione della carta</translation>
+            <translation>Descrizione del blocco</translation>
         </message>
         <message>
             <location filename="../AddCardOverlay.qml" line="189"/>
@@ -36,7 +36,7 @@
         <message>
             <location filename="../AddCardOverlay.qml" line="211"/>
             <source>Card Action Text</source>
-            <translation>Testo dell'azione della carta</translation>
+            <translation>Funzione del blocco</translation>
         </message>
         <message>
             <location filename="../AddCardOverlay.qml" line="232"/>
