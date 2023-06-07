@@ -216,8 +216,7 @@ class OVOSHomescreenSkill(MycroftSkill):
             self.gui['skill_examples'] = {"examples": skill_examples}
 
         self.gui['skill_info_enabled'] = self.examples_enabled
-        self.gui['skill_info_prefix'] = self.settings.get("examples_prefix",
-                                                          True)
+        self.gui['skill_info_prefix'] = self.settings.get("examples_prefix", False)
 
     def update_dt(self):
         """
