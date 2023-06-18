@@ -18,7 +18,7 @@ import datetime
 import os
 import tempfile
 from lingua_franca.format import get_date_strings
-from mycroft.skills.api import SkillApi
+from ovos_utils.skills.api import SkillApi
 from ovos_workshop.skills.ovos import OVOSSkill
 from ovos_workshop.decorators import intent_file_handler, resting_screen_handler
 from ovos_bus_client import Message
