@@ -19,9 +19,9 @@ import os
 import tempfile
 from lingua_franca.format import get_date_strings
 from mycroft.skills.api import SkillApi
-from mycroft.skills.core import (MycroftSkill, intent_file_handler,
-                                 resting_screen_handler)
-from mycroft_bus_client import Message
+from ovos_workshop.skills.ovos import OVOSSkill
+from ovos_workshop.decorators import intent_file_handler, resting_screen_handler
+from ovos_bus_client import Message
 from ovos_skills_manager.utils import get_skills_examples
 from ovos_utils import classproperty
 from ovos_utils.log import LOG
@@ -30,10 +30,8 @@ from ovos_utils.process_utils import RuntimeRequirements
 from .skill import (DashboardHandler, CardGenerator)
 
 
-class OVOSHomescreenSkill(MycroftSkill):
-    # The constructor of the skill, which calls MycroftSkill's constructor
-    def __init__(self):
-        super(OVOSHomescreenSkill, self).__init__(name="OVOSHomescreen")
+class OVOSHomescreenSkill(OVOSSkill):
+    def __init__(self, *args, **kwargs):
         self.notifications_storage_model = []
         self.def_wallpaper_folder = path.dirname(__file__) + '/ui/wallpapers/'
         self.loc_wallpaper_folder = None
@@ -50,7 +48,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.skill_info_api = None
 
         # A variable to turn on/off the example text
-        self.examples_enabled = True
+        self.examples_enabled = False
 
         # Display Configuration Variables
         self.dashboard_handler = None
@@ -61,6 +59,8 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         # Offline / Online State
         self.system_connectivity = None
+
+        super().__init__(*args, **kwargs)
 
     @classproperty
     def runtime_requirements(self):
@@ -613,6 +613,3 @@ class OVOSHomescreenSkill(MycroftSkill):
         display_message = f"Screenshot saved to {result}"
         self.gui.show_notification(display_message)
 
-
-def create_skill():
-    return OVOSHomescreenSkill()
