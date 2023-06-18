@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import datetime
-from mycroft_bus_client import Message
+from ovos_bus_client import Message
 
 
 class CardGenerator:
