@@ -20,7 +20,7 @@ import tempfile
 from lingua_franca.format import get_date_strings
 from ovos_utils.skills.api import SkillApi
 from ovos_workshop.skills.ovos import OVOSSkill
-from ovos_workshop.decorators import intent_file_handler, resting_screen_handler
+from ovos_workshop.decorators import intent_handler, resting_screen_handler
 from ovos_bus_client import Message
 from ovos_skills_manager.utils import get_skills_examples
 from ovos_utils import classproperty
@@ -324,7 +324,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
         self.gui['selected_wallpaper'] = self.selected_wallpaper
 
-    @intent_file_handler("change.wallpaper.intent")
+    @intent_handler("change.wallpaper.intent")
     def change_wallpaper(self, _):
         self.bus.emit(Message("ovos.wallpaper.manager.change.wallpaper"))
 
@@ -592,7 +592,7 @@ class OVOSHomescreenSkill(OVOSSkill):
     ######################################################################
     # Handle Screenshot
 
-    @intent_file_handler("take.screenshot.intent")
+    @intent_handler("take.screenshot.intent")
     def take_screenshot(self, message):
         folder_path = self.settings.get("screenshot_folder", "")
 
