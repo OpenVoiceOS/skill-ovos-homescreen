@@ -22,7 +22,6 @@ from ovos_utils.skills.api import SkillApi
 from ovos_workshop.skills.ovos import OVOSSkill
 from ovos_workshop.decorators import intent_handler, resting_screen_handler
 from ovos_bus_client import Message
-from ovos_skills_manager.utils import get_skills_examples
 from ovos_utils import classproperty
 from ovos_utils.log import LOG
 from ovos_utils.process_utils import RuntimeRequirements
@@ -212,8 +211,12 @@ class OVOSHomescreenSkill(OVOSSkill):
         if self.skill_info_api:
             self.gui['skill_examples'] = {"examples": self.skill_info_api.skill_info_examples()}
         else:
-            skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
-            self.gui['skill_examples'] = {"examples": skill_examples}
+            try:
+                from ovos_skills_manager.utils import get_skills_examples
+                skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
+                self.gui['skill_examples'] = {"examples": skill_examples}
+            except ImportError:
+                self.examples_enabled = False
 
         self.gui['skill_info_enabled'] = self.examples_enabled
         self.gui['skill_info_prefix'] = self.settings.get("examples_prefix", False)
