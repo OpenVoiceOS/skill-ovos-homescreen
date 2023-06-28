@@ -18,11 +18,10 @@ import datetime
 import os
 import tempfile
 from lingua_franca.format import get_date_strings
-from mycroft.skills.api import SkillApi
-from mycroft.skills.core import (MycroftSkill, intent_file_handler,
-                                 resting_screen_handler)
-from mycroft_bus_client import Message
-from ovos_skills_manager.utils import get_skills_examples
+from ovos_utils.skills.api import SkillApi
+from ovos_workshop.skills.ovos import OVOSSkill
+from ovos_workshop.decorators import intent_handler, resting_screen_handler
+from ovos_bus_client import Message
 from ovos_utils import classproperty
 from ovos_utils.log import LOG
 from ovos_utils.process_utils import RuntimeRequirements
@@ -30,10 +29,8 @@ from ovos_utils.process_utils import RuntimeRequirements
 from .skill import (DashboardHandler, CardGenerator)
 
 
-class OVOSHomescreenSkill(MycroftSkill):
-    # The constructor of the skill, which calls MycroftSkill's constructor
-    def __init__(self):
-        super(OVOSHomescreenSkill, self).__init__(name="OVOSHomescreen")
+class OVOSHomescreenSkill(OVOSSkill):
+    def __init__(self, *args, **kwargs):
         self.notifications_storage_model = []
         self.def_wallpaper_folder = path.dirname(__file__) + '/ui/wallpapers/'
         self.loc_wallpaper_folder = None
@@ -44,13 +41,8 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.rtlMode = None  # Get from config after __init__ is done
 
         # Populate skill IDs to use for data sources
-        self.datetime_skill_id = None  # Get from config after __init__ is done
-        self.examples_skill_id = None  # Get from config after __init__ is done
         self.datetime_api = None
         self.skill_info_api = None
-
-        # A variable to turn on/off the example text
-        self.examples_enabled = True
 
         # Display Configuration Variables
         self.dashboard_handler = None
@@ -61,6 +53,8 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         # Offline / Online State
         self.system_connectivity = None
+
+        super().__init__(*args, **kwargs)
 
     @classproperty
     def runtime_requirements(self):
@@ -79,16 +73,8 @@ class OVOSHomescreenSkill(MycroftSkill):
                                                   path.dirname(__file__))
         self.card_generator = CardGenerator(self.file_system.path, self.bus,
                                             path.dirname(__file__))
-        self.datetime_api = None
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
-
-        self.datetime_skill_id = self.settings.get("datetime_skill")
-        self.examples_enabled = 1 if self.settings.get(
-            "examples_enabled", True) else 0
-
-        if self.examples_enabled:
-            self.examples_skill_id = self.settings.get("examples_skill")
 
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
@@ -178,9 +164,24 @@ class OVOSHomescreenSkill(MycroftSkill):
 
         self.bus.emit(Message("mycroft.device.show.idle"))
 
+    @property
+    def examples_enabled(self):
+        # A variable to turn on/off the example text
+        return self.settings.get("examples_enabled", 
+                                 self.settings.get("examples_skill") is not None)
+
+    @property
+    def examples_skill_id(self):
+        if not self.examples_enabled:
+            return None
+        return self.settings.get("examples_skill")
+
+    @property
+    def datetime_skill_id(self):
+        return self.settings.get("datetime_skill")
+        
     #####################################################################
     # Homescreen Registration & Handling
-
     @resting_screen_handler("OVOSHomescreen")
     def handle_idle(self, message):
         self._load_skill_apis()
@@ -212,8 +213,12 @@ class OVOSHomescreenSkill(MycroftSkill):
         if self.skill_info_api:
             self.gui['skill_examples'] = {"examples": self.skill_info_api.skill_info_examples()}
         else:
-            skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
-            self.gui['skill_examples'] = {"examples": skill_examples}
+            try:
+                from ovos_skills_manager.utils import get_skills_examples
+                skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
+                self.gui['skill_examples'] = {"examples": skill_examples}
+            except ImportError:
+                self.settings["examples_enabled"] = False
 
         self.gui['skill_info_enabled'] = self.examples_enabled
         self.gui['skill_info_prefix'] = self.settings.get("examples_prefix", False)
@@ -324,7 +329,7 @@ class OVOSHomescreenSkill(MycroftSkill):
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
         self.gui['selected_wallpaper'] = self.selected_wallpaper
 
-    @intent_file_handler("change.wallpaper.intent")
+    @intent_handler("change.wallpaper.intent")
     def change_wallpaper(self, _):
         self.bus.emit(Message("ovos.wallpaper.manager.change.wallpaper"))
 
@@ -592,7 +597,7 @@ class OVOSHomescreenSkill(MycroftSkill):
     ######################################################################
     # Handle Screenshot
 
-    @intent_file_handler("take.screenshot.intent")
+    @intent_handler("take.screenshot.intent")
     def take_screenshot(self, message):
         folder_path = self.settings.get("screenshot_folder", "")
 
@@ -613,6 +618,3 @@ class OVOSHomescreenSkill(MycroftSkill):
         display_message = f"Screenshot saved to {result}"
         self.gui.show_notification(display_message)
 
-
-def create_skill():
-    return OVOSHomescreenSkill()
