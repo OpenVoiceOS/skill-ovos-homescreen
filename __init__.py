@@ -41,13 +41,8 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.rtlMode = None  # Get from config after __init__ is done
 
         # Populate skill IDs to use for data sources
-        self.datetime_skill_id = None  # Get from config after __init__ is done
-        self.examples_skill_id = None  # Get from config after __init__ is done
         self.datetime_api = None
         self.skill_info_api = None
-
-        # A variable to turn on/off the example text
-        self.examples_enabled = False
 
         # Display Configuration Variables
         self.dashboard_handler = None
@@ -78,16 +73,8 @@ class OVOSHomescreenSkill(OVOSSkill):
                                                   path.dirname(__file__))
         self.card_generator = CardGenerator(self.file_system.path, self.bus,
                                             path.dirname(__file__))
-        self.datetime_api = None
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
-
-        self.datetime_skill_id = self.settings.get("datetime_skill")
-        self.examples_enabled = 1 if self.settings.get(
-            "examples_enabled", True) else 0
-
-        if self.examples_enabled:
-            self.examples_skill_id = self.settings.get("examples_skill")
 
         now = datetime.datetime.now()
         callback_time = datetime.datetime(
@@ -177,9 +164,24 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         self.bus.emit(Message("mycroft.device.show.idle"))
 
+    @property
+    def examples_enabled(self):
+        # A variable to turn on/off the example text
+        return self.settings.get("examples_enabled", 
+                                 self.settings.get("examples_skill") is not None)
+
+    @property
+    def examples_skill_id(self):
+        if not self.examples_enabled:
+            return None
+        return self.settings.get("examples_skill")
+
+    @property
+    def datetime_skill_id(self):
+        return self.settings.get("datetime_skill")
+        
     #####################################################################
     # Homescreen Registration & Handling
-
     @resting_screen_handler("OVOSHomescreen")
     def handle_idle(self, message):
         self._load_skill_apis()
@@ -216,7 +218,7 @@ class OVOSHomescreenSkill(OVOSSkill):
                 skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
                 self.gui['skill_examples'] = {"examples": skill_examples}
             except ImportError:
-                self.examples_enabled = False
+                self.settings["examples_enabled"] = False
 
         self.gui['skill_info_enabled'] = self.examples_enabled
         self.gui['skill_info_prefix'] = self.settings.get("examples_prefix", False)
