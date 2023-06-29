@@ -223,6 +223,24 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.gui['skill_info_enabled'] = self.examples_enabled
         self.gui['skill_info_prefix'] = self.settings.get("examples_prefix", False)
 
+    def _update_datetime_from_api(self):
+        """
+        Update the GUI with date/time from the configured Skill API
+        """
+        time_string = self.datetime_api.get_display_current_time()
+        date_string = self.datetime_api.get_display_date()
+        weekday_string = self.datetime_api.get_weekday()
+        # The datetime skill decides what order day and month are returned
+        day_string, month_string = \
+            self.datetime_api.get_month_date().split(maxsplit=1)
+        year_string = self.datetime_api.get_year()
+        self.gui["time_string"] = time_string
+        self.gui["date_string"] = date_string
+        self.gui["weekday_string"] = weekday_string
+        self.gui['day_string'] = day_string
+        self.gui["month_string"] = month_string
+        self.gui["year_string"] = year_string
+
     def update_dt(self):
         """
         Loads or updates date/time via the datetime_api.
@@ -231,21 +249,22 @@ class OVOSHomescreenSkill(OVOSSkill):
             LOG.debug("Requested update before datetime API loaded")
             self._load_skill_apis()
         if self.datetime_api:
-            time_string = self.datetime_api.get_display_current_time()
-            date_string = self.datetime_api.get_display_date()
-            weekday_string = self.datetime_api.get_weekday()
-            day_string, month_string = self._split_month_string(self.datetime_api.get_month_date())
-            year_string = self.datetime_api.get_year()
-        else:
-            date_string_object = get_date_strings(date_format=self.config_core.get("date_format", "MDY"), 
-                                                  time_format=self.config_core.get("time_format", "full"),
-                                                  lang=self.lang)
-            time_string = date_string_object.get("time_string")
-            date_string = date_string_object.get("date_string")
-            weekday_string = date_string_object.get("weekday_string")
-            day_string = date_string_object.get("day_string")
-            month_string = date_string_object.get("month_string")
-            year_string = date_string_object.get("year_string")
+            try:
+                self._update_datetime_from_api()
+                return
+            except Exception as e:
+                LOG.exception(f"Skill API error: {e}")
+
+        date_string_object = get_date_strings(
+            date_format=self.config_core.get("date_format", "MDY"),
+            time_format=self.config_core.get("time_format", "full"),
+            lang=self.lang)
+        time_string = date_string_object.get("time_string")
+        date_string = date_string_object.get("date_string")
+        weekday_string = date_string_object.get("weekday_string")
+        day_string = date_string_object.get("day_string")
+        month_string = date_string_object.get("month_string")
+        year_string = date_string_object.get("year_string")
 
         self.gui["time_string"] = time_string
         self.gui["date_string"] = date_string
@@ -384,31 +403,28 @@ class OVOSHomescreenSkill(OVOSSkill):
         try:
             if not self.datetime_api and self.datetime_skill_id:
                 self.datetime_api = SkillApi.get(self.datetime_skill_id)
+                assert self.datetime_api.get_display_current_time is not None
+                assert self.datetime_api.get_display_date is not None
+                assert self.datetime_api.get_weekday is not None
+                assert self.datetime_api.get_year is not None
+        except AssertionError as e:
+            LOG.error(f"missing API method: {e}")
+            self.datetime_api = None
         except Exception as e:
             LOG.error(f"Failed to import DateTime Skill: {e}")
+            self.datetime_api = None
 
         # Import Skill Info Skill if configured (default OSM)
         if not self.skill_info_api and self.examples_skill_id:
             try:
                 self.skill_info_api = SkillApi.get(self.examples_skill_id)
+                assert self.skill_info_api.skill_info_examples is not None
+            except AssertionError as e:
+                LOG.error(f"missing API method: {e}")
+                self.skill_info_api = None
             except Exception as e:
                 LOG.error(f"Failed to import Info Skill: {e}")
-
-    def _split_month_string(self, month_date: str) -> list:
-        """
-        Splits a month+date string into month and date (i.e. "August 06" -> ["August", "06"])
-        :param month_date: formatted month and day of month ("August 06" or "06 August")
-        :return: [day, month]
-        """
-        month_string = month_date.split(" ")
-        if self.config_core.get('date_format') == 'MDY':
-            day_string = month_string[1]
-            month_string = month_string[0]
-        else:
-            day_string = month_string[0]
-            month_string = month_string[1]
-
-        return [day_string, month_string]
+                self.skill_info_api = None
 
     #####################################################################
     # Build Voice Applications Model
