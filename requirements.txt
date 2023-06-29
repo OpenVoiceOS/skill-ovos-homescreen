@@ -1,3 +1,4 @@
-ovos-utils~=0.0, >=0.0.35a1
+# ovos-utils~=0.0, >=0.0.35a1
+ovos-utils@git+https://github.com/openvoiceos/ovos-utils@TEST_SkillApiDocsAndTests
 ovos_workshop~=0.0, >=0.0.12a32
 ovos-lingua-franca>=0.4.7
