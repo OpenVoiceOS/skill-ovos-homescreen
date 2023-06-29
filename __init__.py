@@ -140,6 +140,7 @@ class OVOSHomescreenSkill(OVOSSkill):
                     self.screenshot_taken)
 
         self.collect_wallpapers()
+        SkillApi.connect_bus(self.bus)
         self._load_skill_apis()
 
         self.schedule_repeating_event(self.update_weather, callback_time, 900)
