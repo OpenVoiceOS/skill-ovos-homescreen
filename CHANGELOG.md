@@ -1,8 +1,16 @@
 # Changelog
 
-## [0.0.3a4](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a4) (2023-06-28)
+## [0.0.3a5](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a5) (2023-06-30)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.3a3...0.0.3a4)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.3a4...0.0.3a5)
+
+**Merged pull requests:**
+
+- send it from the python side everytime even if not visible and idle is called [\#65](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/65) ([AIIX](https://github.com/AIIX))
+
+## [V0.0.3a4](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.3a4) (2023-06-28)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.3a3...V0.0.3a4)
 
 **Merged pull requests:**
 
