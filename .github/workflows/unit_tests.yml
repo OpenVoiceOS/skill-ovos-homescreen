@@ -64,6 +64,8 @@ jobs:
           sudo apt install libfann-dev
       - name: Install ovos dependencies
         run: |
+          pip install "cython<3.0.0"  # TODO: cython patching https://github.com/yaml/pyyaml/issues/724
+          pip install --no-build-isolation pyyaml~=5.4  # TODO: patching https://github.com/yaml/pyyaml/issues/724
           pip install ovos-plugin-manager ovos-core[skills_lgpl]>=0.0.5a28
       - name: Run unittests
         run: |
