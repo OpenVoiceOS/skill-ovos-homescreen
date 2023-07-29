@@ -1,8 +1,20 @@
 # Changelog
 
-## [0.0.3a5](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a5) (2023-06-30)
+## [0.0.3a6](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a6) (2023-07-29)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.3a4...0.0.3a5)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.3a5...0.0.3a6)
+
+**Fixed bugs:**
+
+- Improved exception handling around SkillAPIs [\#88](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/88) ([NeonDaniel](https://github.com/NeonDaniel))
+
+**Closed issues:**
+
+- Event `ovos.homescreen.displayed` after homescreen is fully loaded  [\#82](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/82)
+
+## [V0.0.3a5](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.3a5) (2023-06-30)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.3a4...V0.0.3a5)
 
 **Merged pull requests:**
 
