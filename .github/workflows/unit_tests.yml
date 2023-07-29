@@ -31,9 +31,13 @@ on:
   workflow_dispatch:
 
 jobs:
+  py_build_tests:
+    uses: neongeckocom/.github/.github/workflows/python_build_tests.yml@master
+    with:
+      test_pipaudit: True
+      pipaudit_ignored: GHSA-r9hx-vwmv-q579 PYSEC-2022-43012 PYSEC-2023-74
   unit_tests:
     strategy:
-      max-parallel: 2
       matrix:
         python-version: [ 3.7, 3.8, 3.9, "3.10" ]
     runs-on: ubuntu-latest
@@ -60,6 +64,8 @@ jobs:
           sudo apt install libfann-dev
       - name: Install ovos dependencies
         run: |
+          pip install "cython<3.0.0"  # TODO: cython patching https://github.com/yaml/pyyaml/issues/724
+          pip install --no-build-isolation pyyaml~=5.4  # TODO: patching https://github.com/yaml/pyyaml/issues/724
           pip install ovos-plugin-manager ovos-core[skills_lgpl]>=0.0.5a28
       - name: Run unittests
         run: |
