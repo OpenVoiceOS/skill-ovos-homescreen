@@ -45,6 +45,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         # Populate skill IDs to use for data sources
         self.datetime_api = None
         self.skill_info_api = None
+        self._update_interval_seconds = 900  # Seconds between non-clock updates
 
         # Display Configuration Variables
         self.dashboard_handler = None
@@ -123,22 +124,7 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         self.collect_wallpapers()
         SkillApi.connect_bus(self.bus)
-        self._load_skill_apis()
 
-        self._update_interval_seconds = 900  # Seconds between non-clock updates
-        try:
-            # Explicitly make sure the first update is exactly on a minute
-            # boundary, so the clock updates are on time
-            callback_time = datetime.datetime.now().replace(second=0,
-                                                            microsecond=0) + \
-                datetime.timedelta(minutes=1)
-            self.schedule_repeating_event(self.update_dt, callback_time, 60)
-            self.schedule_repeating_event(self.update_weather, callback_time,
-                                          self._update_interval_seconds)
-            self.schedule_repeating_event(self.update_examples, callback_time,
-                                          self._update_interval_seconds)
-        except Exception as e:
-            LOG.exception(f"Failed to schedule homescreen updates: {e}")
         self.bus.on("ovos.wallpaper.manager.loaded",
                     self.register_homescreen_wallpaper_provider)
         
@@ -414,6 +400,27 @@ class OVOSHomescreenSkill(OVOSSkill):
 
     def handle_mycroft_ready(self, message):
         self._load_skill_apis()
+        try:
+            # Explicitly update homescreen when everything is ready
+            self.update_dt()
+            self.update_weather()
+            self.update_examples()
+        except Exception as e:
+            LOG.error(e)
+
+        try:
+            # Explicitly make sure the first update is exactly on a minute
+            # boundary, so the clock updates are on time
+            callback_time = datetime.datetime.now().replace(second=0,
+                                                            microsecond=0) + \
+                datetime.timedelta(minutes=1)
+            self.schedule_repeating_event(self.update_dt, callback_time, 60)
+            self.schedule_repeating_event(self.update_weather, callback_time,
+                                          self._update_interval_seconds)
+            self.schedule_repeating_event(self.update_examples, callback_time,
+                                          self._update_interval_seconds)
+        except Exception as e:
+            LOG.exception(f"Failed to schedule homescreen updates: {e}")
 
     def _load_skill_apis(self):
         """
