@@ -124,18 +124,21 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.collect_wallpapers()
         SkillApi.connect_bus(self.bus)
         self._load_skill_apis()
-        self._update_interval_seconds = 900  # Seconds between non-clock updates
-        # Explicitly make sure the first update is exactly on a minute boundary,
-        # so the clock updates are on time
-        callback_time = datetime.datetime.now().replace(second=0,
-                                                        microsecond=0) + \
-            datetime.timedelta(minutes=1)
-        self.schedule_repeating_event(self.update_dt, callback_time, 60)
-        self.schedule_repeating_event(self.update_weather, callback_time,
-                                      self._update_interval_seconds)
-        self.schedule_repeating_event(self.update_examples, callback_time,
-                                      self._update_interval_seconds)
 
+        self._update_interval_seconds = 900  # Seconds between non-clock updates
+        try:
+            # Explicitly make sure the first update is exactly on a minute boundary,
+            # so the clock updates are on time
+            callback_time = datetime.datetime.now().replace(second=0,
+                                                            microsecond=0) + \
+                datetime.timedelta(minutes=1)
+            self.schedule_repeating_event(self.update_dt, callback_time, 60)
+            self.schedule_repeating_event(self.update_weather, callback_time,
+                                          self._update_interval_seconds)
+            self.schedule_repeating_event(self.update_examples, callback_time,
+                                          self._update_interval_seconds)
+        except Exception as e:
+            LOG.exception(f"Failed to schedule homescreen updates: {e}")
         self.bus.on("ovos.wallpaper.manager.loaded",
                     self.register_homescreen_wallpaper_provider)
         
