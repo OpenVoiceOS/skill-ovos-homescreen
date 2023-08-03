@@ -31,6 +31,8 @@ from .skill import (DashboardHandler, CardGenerator)
 
 class OVOSHomescreenSkill(OVOSSkill):
     def __init__(self, *args, **kwargs):
+        OVOSSkill.__init__(self, *args, **kwargs)
+
         self.notifications_storage_model = []
         self.def_wallpaper_folder = path.dirname(__file__) + '/ui/wallpapers/'
         self.loc_wallpaper_folder = None
@@ -54,33 +56,12 @@ class OVOSHomescreenSkill(OVOSSkill):
         # Offline / Online State
         self.system_connectivity = None
 
-        super().__init__(*args, **kwargs)
-
-    @classproperty
-    def runtime_requirements(self):
-        return RuntimeRequirements(internet_before_load=False,
-                                   network_before_load=False,
-                                   gui_before_load=True,
-                                   requires_internet=False,
-                                   requires_network=False,
-                                   requires_gui=True,
-                                   no_internet_fallback=True,
-                                   no_network_fallback=True,
-                                   no_gui_fallback=False)
-
-    def initialize(self):
         self.dashboard_handler = DashboardHandler(self.file_system.path,
                                                   path.dirname(__file__))
         self.card_generator = CardGenerator(self.file_system.path, self.bus,
                                             path.dirname(__file__))
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
-
-        now = datetime.datetime.now()
-        callback_time = datetime.datetime(
-            now.year, now.month, now.day, now.hour, now.minute
-        ) + datetime.timedelta(seconds=60)
-        self.schedule_repeating_event(self.update_dt, callback_time, 10)
 
         # Handler Registration For Notifications
         self.add_event("homescreen.wallpaper.set",
@@ -122,7 +103,8 @@ class OVOSHomescreenSkill(OVOSSkill):
             os.mkdir(path.join(self.file_system.path, "wallpapers"))
 
         # Handler For Weather Response
-        self.bus.on("skill-ovos-weather.openvoiceos.weather.response", self.update_weather_response)
+        self.bus.on("skill-ovos-weather.openvoiceos.weather.response",
+                    self.update_weather_response)
 
         # Handler For OCP Player State Tracking
         self.bus.on("gui.player.media.service.sync.status",
@@ -143,6 +125,11 @@ class OVOSHomescreenSkill(OVOSSkill):
         SkillApi.connect_bus(self.bus)
         self._load_skill_apis()
 
+        # TODO: Is this necessary? Might just be patching type annotation typos
+        callback_time = datetime.datetime.now().replace(second=0,
+                                                        microsecond=0) + \
+            datetime.timedelta(seconds=1)
+        self.schedule_repeating_event(self.update_dt, callback_time, 10)
         self.schedule_repeating_event(self.update_weather, callback_time, 900)
         self.schedule_repeating_event(self.update_examples, callback_time, 900)
 
@@ -164,6 +151,18 @@ class OVOSHomescreenSkill(OVOSSkill):
         #     "wallpaper") or "default.jpg"
 
         self.bus.emit(Message("mycroft.device.show.idle"))
+
+    @classproperty
+    def runtime_requirements(self):
+        return RuntimeRequirements(internet_before_load=False,
+                                   network_before_load=False,
+                                   gui_before_load=True,
+                                   requires_internet=False,
+                                   requires_network=False,
+                                   requires_gui=True,
+                                   no_internet_fallback=True,
+                                   no_network_fallback=True,
+                                   no_gui_fallback=False)
 
     @property
     def examples_enabled(self):
