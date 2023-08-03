@@ -46,6 +46,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.datetime_api = None
         self.skill_info_api = None
         self._update_interval_seconds = 900  # Seconds between non-clock updates
+        self._updates_scheduled = False
 
         # Display Configuration Variables
         self.dashboard_handler = None
@@ -71,9 +72,9 @@ class OVOSHomescreenSkill(OVOSSkill):
                        self.handle_notification_widget_update)
         self.add_event("ovos.notification.update_storage_model",
                        self.handle_notification_storage_model_update)
+
         self.gui.register_handler("homescreen.swipe.change.wallpaper",
                                   self.change_wallpaper)
-        self.add_event("mycroft.ready", self.handle_mycroft_ready)
 
         # Handler Registration For Widgets
         self.add_event("ovos.widgets.timer.update",
@@ -177,6 +178,9 @@ class OVOSHomescreenSkill(OVOSSkill):
     # Homescreen Registration & Handling
     @resting_screen_handler("OVOSHomescreen")
     def handle_idle(self, message):
+        """
+        Display the home screen when requested by the GUI service
+        """
         self._load_skill_apis()
         LOG.debug('Activating OVOSHomescreen')
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
@@ -188,6 +192,20 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.gui["dashboard_model"] = self.get_dashboard_cards()
         self.gui["persistent_menu_hint"] = \
             self.settings.get("persistent_menu_hint", False)
+
+        # TODO: Can the event scheduler be queried directly instead?
+        if not self._updates_scheduled:
+            # Explicitly make sure the first update is exactly on a minute
+            # boundary, so the clock updates are on time
+            callback_time = datetime.datetime.now().replace(second=0,
+                                                            microsecond=0) + \
+                datetime.timedelta(minutes=1)
+            self.schedule_repeating_event(self.update_dt, callback_time, 60)
+            self.schedule_repeating_event(self.update_weather, callback_time,
+                                          self._update_interval_seconds)
+            self.schedule_repeating_event(self.update_examples, callback_time,
+                                          self._update_interval_seconds)
+            self._updates_scheduled = True
 
         try:
             self.update_dt()
@@ -391,30 +409,6 @@ class OVOSHomescreenSkill(OVOSSkill):
     # Misc
     def shutdown(self):
         self.cancel_all_repeating_events()
-
-    def handle_mycroft_ready(self, message):
-        self._load_skill_apis()
-        try:
-            # Explicitly update homescreen when everything is ready
-            self.update_dt()
-            self.update_weather()
-            self.update_examples()
-        except Exception as e:
-            LOG.error(e)
-
-        try:
-            # Explicitly make sure the first update is exactly on a minute
-            # boundary, so the clock updates are on time
-            callback_time = datetime.datetime.now().replace(second=0,
-                                                            microsecond=0) + \
-                datetime.timedelta(minutes=1)
-            self.schedule_repeating_event(self.update_dt, callback_time, 60)
-            self.schedule_repeating_event(self.update_weather, callback_time,
-                                          self._update_interval_seconds)
-            self.schedule_repeating_event(self.update_examples, callback_time,
-                                          self._update_interval_seconds)
-        except Exception as e:
-            LOG.exception(f"Failed to schedule homescreen updates: {e}")
 
     def _load_skill_apis(self):
         """
