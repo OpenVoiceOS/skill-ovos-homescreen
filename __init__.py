@@ -205,24 +205,21 @@ class OVOSHomescreenSkill(OVOSSkill):
         """
         Loads or updates skill examples via the skill_info_api.
         """
-        try:
-            if self.skill_info_api:
-                self.gui['skill_examples'] = \
-                    {"examples": self.skill_info_api.skill_info_examples()}
-            else:
-                try:
-                    from ovos_skills_manager.utils import get_skills_examples
-                    skill_examples = get_skills_examples(
-                        randomize=self.settings.get("randomize_examples", True))
-                    self.gui['skill_examples'] = {"examples": skill_examples}
-                except ImportError:
-                    self.settings["examples_enabled"] = False
+        if self.skill_info_api:
+            self.gui['skill_examples'] = \
+                {"examples": self.skill_info_api.skill_info_examples()}
+        else:
+            try:
+                from ovos_skills_manager.utils import get_skills_examples
+                skill_examples = get_skills_examples(
+                    randomize=self.settings.get("randomize_examples", True))
+                self.gui['skill_examples'] = {"examples": skill_examples}
+            except ImportError:
+                self.settings["examples_enabled"] = False
 
-            self.gui['skill_info_enabled'] = self.examples_enabled
-            self.gui['skill_info_prefix'] = self.settings.get("examples_prefix",
-                                                              False)
-        except Exception as e:
-            LOG.exception(e)
+        self.gui['skill_info_enabled'] = self.examples_enabled
+        self.gui['skill_info_prefix'] = self.settings.get("examples_prefix",
+                                                          False)
 
     def _update_datetime_from_api(self):
         """
@@ -247,37 +244,34 @@ class OVOSHomescreenSkill(OVOSSkill):
         """
         Loads or updates date/time via the datetime_api.
         """
-        try:
-            if not self.datetime_api and self.datetime_skill_id:
-                LOG.debug("Requested update before datetime API loaded")
-                self._load_skill_apis()
-            if self.datetime_api:
-                try:
-                    self._update_datetime_from_api()
-                    return
-                except Exception as e:
-                    LOG.exception(f"Skill API error: {e}")
+        if not self.datetime_api and self.datetime_skill_id:
+            LOG.debug("Requested update before datetime API loaded")
+            self._load_skill_apis()
+        if self.datetime_api:
+            try:
+                self._update_datetime_from_api()
+                return
+            except Exception as e:
+                LOG.exception(f"Skill API error: {e}")
 
-            date_string_object = get_date_strings(
-                date_format=self.config_core.get("date_format", "MDY"),
-                time_format=self.config_core.get("time_format", "full"),
-                lang=self.lang)
-            time_string = date_string_object.get("time_string")
-            date_string = date_string_object.get("date_string")
-            weekday_string = date_string_object.get("weekday_string")
-            day_string = date_string_object.get("day_string")
-            month_string = date_string_object.get("month_string")
-            year_string = date_string_object.get("year_string")
+        date_string_object = get_date_strings(
+            date_format=self.config_core.get("date_format", "MDY"),
+            time_format=self.config_core.get("time_format", "full"),
+            lang=self.lang)
+        time_string = date_string_object.get("time_string")
+        date_string = date_string_object.get("date_string")
+        weekday_string = date_string_object.get("weekday_string")
+        day_string = date_string_object.get("day_string")
+        month_string = date_string_object.get("month_string")
+        year_string = date_string_object.get("year_string")
 
-            LOG.debug("Updating Homescreen GUI")
-            self.gui["time_string"] = time_string
-            self.gui["date_string"] = date_string
-            self.gui["weekday_string"] = weekday_string
-            self.gui['day_string'] = day_string
-            self.gui["month_string"] = month_string
-            self.gui["year_string"] = year_string
-        except Exception as e:
-            LOG.exception(e)
+        LOG.debug("Updating Homescreen GUI")
+        self.gui["time_string"] = time_string
+        self.gui["date_string"] = date_string
+        self.gui["weekday_string"] = weekday_string
+        self.gui['day_string'] = day_string
+        self.gui["month_string"] = month_string
+        self.gui["year_string"] = year_string
 
     def update_weather(self):
         """
