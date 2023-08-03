@@ -127,8 +127,8 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         self._update_interval_seconds = 900  # Seconds between non-clock updates
         try:
-            # Explicitly make sure the first update is exactly on a minute boundary,
-            # so the clock updates are on time
+            # Explicitly make sure the first update is exactly on a minute
+            # boundary, so the clock updates are on time
             callback_time = datetime.datetime.now().replace(second=0,
                                                             microsecond=0) + \
                 datetime.timedelta(minutes=1)
@@ -245,6 +245,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         time_string = self.datetime_api.get_display_current_time()
         date_string = self.datetime_api.get_display_date()
         weekday_string = self.datetime_api.get_weekday()
+        assert all((time_string, date_string, weekday_string))
         # The datetime skill decides what order day and month are returned
         day_string, month_string = \
             self.datetime_api.get_month_date().split(maxsplit=1)
@@ -282,6 +283,7 @@ class OVOSHomescreenSkill(OVOSSkill):
             month_string = date_string_object.get("month_string")
             year_string = date_string_object.get("year_string")
 
+            LOG.debug("Updating Homescreen GUI")
             self.gui["time_string"] = time_string
             self.gui["date_string"] = date_string
             self.gui["weekday_string"] = weekday_string
@@ -420,7 +422,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         # Import Date Time Skill As Date Time Provider if configured (default LF)
         try:
             if not self.datetime_api and self.datetime_skill_id:
-                self.datetime_api = SkillApi.get(self.datetime_skill_id)
+                self.datetime_api = SkillApi.get(self.datetime_skill_id, 10)
                 assert self.datetime_api.get_display_current_time is not None
                 assert self.datetime_api.get_display_date is not None
                 assert self.datetime_api.get_weekday is not None
