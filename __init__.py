@@ -46,7 +46,6 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.datetime_api = None
         self.skill_info_api = None
         self._update_interval_seconds = 900  # Seconds between non-clock updates
-        self._updates_scheduled = False
 
         # Display Configuration Variables
         self.dashboard_handler = None
@@ -194,19 +193,18 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.gui["persistent_menu_hint"] = \
             self.settings.get("persistent_menu_hint", False)
 
-        # TODO: Can the event scheduler be queried directly instead?
-        if not self._updates_scheduled:
-            # Explicitly make sure the first update is exactly on a minute
-            # boundary, so the clock updates are on time
-            callback_time = datetime.datetime.now().replace(second=0,
-                                                            microsecond=0) + \
-                datetime.timedelta(minutes=1)
-            self.schedule_repeating_event(self.update_dt, callback_time, 60)
-            self.schedule_repeating_event(self.update_weather, callback_time,
-                                          self._update_interval_seconds)
-            self.schedule_repeating_event(self.update_examples, callback_time,
-                                          self._update_interval_seconds)
-            self._updates_scheduled = True
+        # Explicitly make sure the first update is exactly on a minute
+        # boundary, so the clock updates are on time
+        callback_time = datetime.datetime.now().replace(second=0,
+                                                        microsecond=0) + \
+            datetime.timedelta(minutes=1)
+        # `schedule_repeating_event` is idempotent; if the event is already
+        # scheduled, then these requests will have no effect
+        self.schedule_repeating_event(self.update_dt, callback_time, 60)
+        self.schedule_repeating_event(self.update_weather, callback_time,
+                                      self._update_interval_seconds)
+        self.schedule_repeating_event(self.update_examples, callback_time,
+                                      self._update_interval_seconds)
 
         try:
             self.update_dt()
