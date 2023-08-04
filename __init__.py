@@ -433,7 +433,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         # Import Skill Info Skill if configured (default OSM)
         if not self.skill_info_api and self.examples_skill_id:
             try:
-                self.skill_info_api = SkillApi.get(self.examples_skill_id)
+                self.skill_info_api = SkillApi.get(self.examples_skill_id, 10)
                 assert self.skill_info_api.skill_info_examples is not None
             except AssertionError as e:
                 LOG.error(f"missing API method: {e}")
