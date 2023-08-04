@@ -58,6 +58,19 @@ class OVOSHomescreenSkill(OVOSSkill):
         # Offline / Online State
         self.system_connectivity = None
 
+    @classproperty
+    def runtime_requirements(self):
+        return RuntimeRequirements(internet_before_load=False,
+                                   network_before_load=False,
+                                   gui_before_load=True,
+                                   requires_internet=False,
+                                   requires_network=False,
+                                   requires_gui=True,
+                                   no_internet_fallback=True,
+                                   no_network_fallback=True,
+                                   no_gui_fallback=False)
+
+    def initialize(self):
         self.dashboard_handler = DashboardHandler(self.file_system.path,
                                                   path.dirname(__file__))
         self.card_generator = CardGenerator(self.file_system.path, self.bus,
@@ -144,18 +157,6 @@ class OVOSHomescreenSkill(OVOSSkill):
         #     "wallpaper") or "default.jpg"
 
         self.bus.emit(Message("mycroft.device.show.idle"))
-
-    @classproperty
-    def runtime_requirements(self):
-        return RuntimeRequirements(internet_before_load=False,
-                                   network_before_load=False,
-                                   gui_before_load=True,
-                                   requires_internet=False,
-                                   requires_network=False,
-                                   requires_gui=True,
-                                   no_internet_fallback=True,
-                                   no_network_fallback=True,
-                                   no_gui_fallback=False)
 
     @property
     def examples_enabled(self):
