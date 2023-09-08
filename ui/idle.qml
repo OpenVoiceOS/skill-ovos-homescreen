@@ -435,7 +435,6 @@ Mycroft.CardDelegate {
                 radius: 10
 
                 Kirigami.Icon {
-                    id: myIcon
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     opacity: 0.2
@@ -452,7 +451,6 @@ Mycroft.CardDelegate {
                     anchors.centerIn: parent
 
                     Label {
-                        id: myText
                         width: parent.width
                         height: parent.height
                         font.capitalization: Font.AllUppercase
