@@ -182,6 +182,14 @@ Mycroft.CardDelegate {
         }, 500);
     }
 
+    function sendAllNotificationActions() {
+        notificationModel.storedmodel.forEach(function(modelData) {
+            // only send action if notification is actionable
+            if(modelData.action != "") {
+                Mycroft.MycroftController.sendRequest(modelData.action, modelData.callback_data)
+            }
+        })
+    }
 
     Timer {
         id: textTimer
@@ -398,14 +406,25 @@ Mycroft.CardDelegate {
                 color: "#212121"
                 radius: 10
 
-                Kirigami.Heading {
-                    level: 2
+                Rectangle {
                     width: parent.width
-                    anchors.left: parent.left
-                    anchors.leftMargin: Kirigami.Units.largeSpacing
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: qsTr("Notifications")
-                    color: "#ffffff"
+                    height: 80
+                    color: "transparent"
+                    anchors.centerIn: parent
+
+                    Label {
+                        width: parent.width
+                        height: parent.height
+                        font.capitalization: Font.AllUppercase
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.weight: Font.ExtraBold
+                        fontSizeMode: Text.Fit
+                        font.pixelSize: height
+                        anchors.fill: parent
+                        text: qsTr("Notifications")
+                        color: "#ffffff"
+                    }
                 }
             }
 
@@ -415,20 +434,34 @@ Mycroft.CardDelegate {
                 color: "#212121"
                 radius: 10
 
-                RowLayout {
+                Kirigami.Icon {
+                    id: myIcon
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    opacity: 0.2
+                    width: parent.height / 1.5
+                    height: parent.height / 1.5
+                    source: Qt.resolvedUrl("icons/clear.svg")
+                    color: "white"
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: 80
+                    color: "transparent"
                     anchors.centerIn: parent
 
-                    Kirigami.Icon {
-                        Layout.preferredWidth: Kirigami.Units.iconSizes.medium
-                        Layout.preferredHeight: Kirigami.Units.iconSizes.medium
-                        source: Qt.resolvedUrl("icons/clear.svg")
-                        color: "white"
-                    }
-
-                    Kirigami.Heading {
-                        level: 3
+                    Label {
+                        id: myText
                         width: parent.width
-                        Layout.fillWidth: true
+                        height: parent.height
+                        font.capitalization: Font.AllUppercase
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.weight: Font.ExtraBold
+                        fontSizeMode: Text.Fit
+                        font.pixelSize: height
+                        anchors.fill: parent
                         text: qsTr("Clear")
                         color: "#ffffff"
                     }
@@ -438,6 +471,7 @@ Mycroft.CardDelegate {
                     anchors.fill: parent
                     onClicked: {
                         Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
+                        sendAllNotificationActions()
                         Mycroft.MycroftController.sendRequest("ovos.notification.api.storage.clear", {})
                     }
                 }
