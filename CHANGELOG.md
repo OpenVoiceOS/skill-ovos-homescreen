@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.0.3a7](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a7) (2023-11-12)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a6...0.0.3a7)
+
+**Closed issues:**
+
+- Add documentation [\#93](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/93)
+- Notification icon missing after navigating to settings and back [\#76](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/76)
+
+**Merged pull requests:**
+
+- add README.md [\#94](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/94) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.0.3a6](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a6) (2023-07-29)
 
 [Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.3a5...0.0.3a6)
