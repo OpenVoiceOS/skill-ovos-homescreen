@@ -63,19 +63,17 @@ Sample `settings.json` file with all of the options explained
 
 ```
 {
-    "__mycroft_skill_firstrun": false,
     "weather_skill": "skill-weather.openvoiceos",
     "datetime_skill": "skill-date-time.mycroftai",
     "examples_skill": "ovos-skills-info.openvoiceos",
     "wallpaper": "default.jpg",
-    "persistent_menu_hint": false,
-    "examples_enabled": true,
+    "persistent_menu_hint": true,
+    "examples_enabled": false,
     "randomize_examples": true,
-    "examples_prefix": true
+    "examples_prefix": false
 }
 ```
 
-  * __mycroft_skill_firstrun:  This is automatically set on first load of skill
   * weather_skill:  Allows you to use a custom skill to display the weather.  Defaults to `skill-ovos-weather.openvoiceos`
   * datetime_skill:  Allows you to use a custom skill to display the date and time.  Defaults to `skill-ovos-date-time.openvoiceos`
   * examples_skill:  Allows use of a custom skill for the displayed examples.  Defaults to `ovos_skills_manager.utils.get_skills_example()` function
