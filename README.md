@@ -82,3 +82,10 @@ Sample `settings.json` file with all of the options explained
   * examples_enabled:  When false, the examples at the bottom of the screen will be hidden
   * randomize_examples:  When false, the rotation of the examples will follow the way they are loaded
   * examples_prefix:  When false, the prefix 'Ask Me' will NOT be displayed with the examples
+
+`settings.json` will be located in the following places:
+
+OVOS: `~/.config/mycroft/skills/skill-ovos-homescreen.openvoiceos/settings.json`
+Neon: `~/.config/neon/skills/skill-ovos-homescreen.openvoiceos/settings.json`
+
+For other OVOS-based installations, first try the OVOS location, which is the default.
