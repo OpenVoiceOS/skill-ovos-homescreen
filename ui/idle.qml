@@ -72,6 +72,11 @@ Mycroft.CardDelegate {
         onIntentRecevied: {
             if (type == "phal.brightness.control.auto.night.mode.enabled") {
                 mainView.currentIndex = 0
+            } else if (type == "ovos.homescreen.main_view.current_index.set") {
+                mainView.currentIndex = data.current_index
+                Mycroft.MycroftController.sendRequest("ovos.homescreen.main_view.current_index.get.response", {"current_index": mainView.currentIndex})
+            } else if (type == "ovos.homescreen.main_view.current_index.get") {
+                Mycroft.MycroftController.sendRequest("ovos.homescreen.main_view.current_index.get.response", {"current_index": mainView.currentIndex})
             }
         }
     }
@@ -244,6 +249,7 @@ Mycroft.CardDelegate {
                 } else if (mainView.currentIndex == 1) {
                     mainView.currentIndex = 2
                 }
+                Mycroft.MycroftController.sendRequest("ovos.homescreen.main_view.current_index.get.response", {"current_index": mainView.currentIndex})
             }
         }
     }
@@ -310,6 +316,7 @@ Mycroft.CardDelegate {
                 } else if (mainView.currentIndex == 2) {
                     mainView.currentIndex = 1
                 }
+                Mycroft.MycroftController.sendRequest("ovos.homescreen.main_view.current_index.get.response", {"current_index": mainView.currentIndex})
             }
         }
     }
