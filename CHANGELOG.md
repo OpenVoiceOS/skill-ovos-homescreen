@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.3a10](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a10) (2023-11-14)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a9...0.0.3a10)
+
+**Implemented enhancements:**
+
+- Add bus events to control main view pages [\#98](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/98) ([atd](https://github.com/atd))
+
 ## [0.0.3a9](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a9) (2023-11-12)
 
 [Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a8...0.0.3a9)
