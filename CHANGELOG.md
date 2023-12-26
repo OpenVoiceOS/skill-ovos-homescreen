@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.3a11](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a11) (2023-12-26)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a10...0.0.3a11)
+
+**Implemented enhancements:**
+
+- Fix/notification popup [\#92](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/92) ([emphasize](https://github.com/emphasize))
+
+**Closed issues:**
+
+- notification dismissal expectations [\#91](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/91)
+
 ## [0.0.3a10](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a10) (2023-11-14)
 
 [Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a9...0.0.3a10)
