@@ -18,7 +18,7 @@ import datetime
 import os
 import tempfile
 from lingua_franca.format import get_date_strings
-from ovos_utils.skills.api import SkillApi
+from ovos_workshop.skills.api import SkillApi
 from ovos_workshop.skills.ovos import OVOSSkill
 from ovos_workshop.decorators import intent_handler, resting_screen_handler
 from ovos_bus_client import Message
@@ -205,7 +205,7 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         self.gui['rtl_mode'] = self.rtlMode
         self.gui['dateFormat'] = self.config_core.get("date_format") or "DMY"
-        self.gui.show_page("idle.qml")
+        self.gui.show_page("idle")
         self.bus.emit(Message("ovos.homescreen.displayed"))
 
     def update_examples(self):
