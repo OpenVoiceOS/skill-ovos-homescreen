@@ -205,7 +205,7 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         self.gui['rtl_mode'] = self.rtlMode
         self.gui['dateFormat'] = self.config_core.get("date_format") or "DMY"
-        self.gui.show_page("idle.qml")
+        self.gui.show_page("idle")
         self.bus.emit(Message("ovos.homescreen.displayed"))
 
     def update_examples(self):
