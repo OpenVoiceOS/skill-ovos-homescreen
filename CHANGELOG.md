@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.3a12](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a12) (2024-01-11)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a11...0.0.3a12)
+
+**Fixed bugs:**
+
+- Unable to upload the QML files to GUI [\#89](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/89)
+
+**Merged pull requests:**
+
+- working for ovos-utils 0.1.0 [\#101](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/101) ([builderjer](https://github.com/builderjer))
+
 ## [0.0.3a11](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a11) (2023-12-26)
 
 [Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a10...0.0.3a11)
