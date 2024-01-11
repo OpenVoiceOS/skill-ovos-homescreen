@@ -57,7 +57,7 @@ The media player widget is displayed in the bottom of the home screen, It replac
 
 ### Settings
 
-The homescreen has several customizations available via the standard [skill settings mechanism](https://openvoiceos.github.io/community-docs/082-ht_skills_config/)
+The homescreen has several customizations available via the standard [skill settings mechanism](https://openvoiceos.github.io/community-docs/115-ht_config_homescreen/)
 
 Sample `settings.json` file with all of the options explained
 
