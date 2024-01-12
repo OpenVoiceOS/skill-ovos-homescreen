@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.3a16](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a16) (2024-01-12)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a15...0.0.3a16)
+
+**Fixed bugs:**
+
+- add markdown content type [\#103](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/103) ([emphasize](https://github.com/emphasize))
+
 ## [0.0.3a15](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a15) (2024-01-12)
 
 [Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a14...0.0.3a15)
