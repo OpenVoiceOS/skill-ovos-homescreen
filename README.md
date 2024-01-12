@@ -63,25 +63,25 @@ Sample `settings.json` file with all of the options explained
 
 ```
 {
-    "weather_skill": "skill-weather.openvoiceos",
-    "datetime_skill": "skill-date-time.mycroftai",
-    "examples_skill": "ovos-skills-info.openvoiceos",
-    "wallpaper": "default.jpg",
-    "persistent_menu_hint": true,
-    "examples_enabled": false,
-    "randomize_examples": true,
-    "examples_prefix": false
+  "weather_skill": "skill-weather.openvoiceos",
+  "datetime_skill": "skill-date-time.mycroftai",
+  "examples_skill": "ovos-skills-info.openvoiceos",
+  "wallpaper": "default.jpg",
+  "persistent_menu_hint": true,
+  "examples_enabled": false,
+  "randomize_examples": true,
+  "examples_prefix": false
 }
 ```
 
-  * weather_skill:  Allows you to use a custom skill to display the weather.  Defaults to `skill-ovos-weather.openvoiceos`
-  * datetime_skill:  Allows you to use a custom skill to display the date and time.  Defaults to `skill-ovos-date-time.openvoiceos`
-  * examples_skill:  Allows use of a custom skill for the displayed examples.  Defaults to `ovos_skills_manager.utils.get_skills_example()` function
-  * wallpaper:  Allows a custom wallpaper to be displayed.  Use a complete url without any tilde `~`
-  * persistent_menu_hint:  When true, displayes a hint of the pull-down menu at the top of the page
-  * examples_enabled:  When false, the examples at the bottom of the screen will be hidden
-  * randomize_examples:  When false, the rotation of the examples will follow the way they are loaded
-  * examples_prefix:  When false, the prefix 'Ask Me' will NOT be displayed with the examples
+* weather_skill:  Allows you to use a custom skill to display the weather.  Defaults to `skill-ovos-weather.openvoiceos`
+* datetime_skill:  Allows you to use a custom skill to display the date and time.  Defaults to `skill-ovos-date-time.openvoiceos`
+* examples_skill:  Allows use of a custom skill for the displayed examples.  Defaults to `ovos_skills_manager.utils.get_skills_example()` function
+* wallpaper:  Allows a custom wallpaper to be displayed.  Use a complete url without any tilde `~`
+* persistent_menu_hint:  When true, displayes a hint of the pull-down menu at the top of the page
+* examples_enabled:  When false, the examples at the bottom of the screen will be hidden
+* randomize_examples:  When false, the rotation of the examples will follow the way they are loaded
+* examples_prefix:  When false, the prefix 'Ask Me' will NOT be displayed with the examples
 
 `settings.json` will be located in the following places:
 
