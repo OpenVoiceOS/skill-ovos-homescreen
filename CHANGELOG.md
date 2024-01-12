@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.3a15](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a15) (2024-01-12)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a14...0.0.3a15)
+
+**Fixed bugs:**
+
+- fix markup indentation [\#102](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/102) ([emphasize](https://github.com/emphasize))
+
+## [0.0.3a14](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a14) (2024-01-11)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a13...0.0.3a14)
+
 ## [0.0.3a13](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a13) (2024-01-11)
 
 [Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a12...0.0.3a13)
