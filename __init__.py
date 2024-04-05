@@ -411,24 +411,27 @@ class OVOSHomescreenSkill(OVOSSkill):
                 assert self.datetime_api.get_display_date is not None
                 assert self.datetime_api.get_weekday is not None
                 assert self.datetime_api.get_year is not None
+                LOG.info(f"Loaded API for {self.datetime_skill_id}")
         except AssertionError as e:
             LOG.error(f"missing API method: {e}")
             self.datetime_api = None
         except Exception as e:
-            LOG.error(f"Failed to import DateTime Skill: {e}")
+            LOG.error(f"Failed to import DateTime Skill "
+                      f"{self.datetime_skill_id}: {e}")
             self.datetime_api = None
 
         # Import Skill Info Skill if configured (default OSM)
-        if not self.skill_info_api and self.examples_skill_id:
-            try:
+        try:
+            if not self.skill_info_api and self.examples_skill_id:
                 self.skill_info_api = SkillApi.get(self.examples_skill_id, 10)
                 assert self.skill_info_api.skill_info_examples is not None
-            except AssertionError as e:
-                LOG.error(f"missing API method: {e}")
-                self.skill_info_api = None
-            except Exception as e:
-                LOG.error(f"Failed to import Info Skill: {e}")
-                self.skill_info_api = None
+                LOG.info(f"Loaded API for {self.examples_skill_id}")
+        except AssertionError as e:
+            LOG.error(f"missing API method: {e}")
+            self.skill_info_api = None
+        except Exception as e:
+            LOG.error(f"Failed to import Info Skill: {e}")
+            self.skill_info_api = None
 
     #####################################################################
     # Build Voice Applications Model
