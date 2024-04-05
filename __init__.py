@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import threading
 from os import environ, listdir, path
 
 import datetime
@@ -31,6 +31,8 @@ from .skill import (DashboardHandler, CardGenerator)
 
 class OVOSHomescreenSkill(OVOSSkill):
     def __init__(self, *args, **kwargs):
+        self._ready_event = threading.Event()
+        self._ready_event.clear()
         self.notifications_storage_model = []
         self.def_wallpaper_folder = path.dirname(__file__) + '/ui/wallpapers/'
         self.loc_wallpaper_folder = None
@@ -141,7 +143,7 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         self.collect_wallpapers()
         SkillApi.connect_bus(self.bus)
-        self._load_skill_apis()
+        # self._load_skill_apis()
 
         self.schedule_repeating_event(self.update_weather, callback_time, 900)
         self.schedule_repeating_event(self.update_examples, callback_time, 900)
@@ -185,6 +187,9 @@ class OVOSHomescreenSkill(OVOSSkill):
     # Homescreen Registration & Handling
     @resting_screen_handler("OVOSHomescreen")
     def handle_idle(self, message):
+        if not self._ready_event.is_set():
+            LOG.debug("Requested idle screen before ready")
+        self._ready_event.wait()
         self._load_skill_apis()
         LOG.debug('Activating OVOSHomescreen')
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
@@ -397,7 +402,8 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.cancel_all_repeating_events()
 
     def handle_mycroft_ready(self, message):
-        self._load_skill_apis()
+        # self._load_skill_apis()
+        self._ready_event.set()
 
     def _load_skill_apis(self):
         """
