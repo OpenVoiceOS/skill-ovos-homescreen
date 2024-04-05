@@ -411,6 +411,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         """
         # Import Date Time Skill As Date Time Provider if configured (default LF)
         try:
+            LOG.debug(f"datetime_skill_id={self.datetime_skill_id}")
             if not self.datetime_api and self.datetime_skill_id:
                 self.datetime_api = SkillApi.get(self.datetime_skill_id, 10)
                 assert self.datetime_api.get_display_current_time is not None
@@ -428,6 +429,7 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         # Import Skill Info Skill if configured (default OSM)
         try:
+            LOG.debug(f"examples_skill_id={self.examples_skill_id}")
             if not self.skill_info_api and self.examples_skill_id:
                 self.skill_info_api = SkillApi.get(self.examples_skill_id, 10)
                 assert self.skill_info_api.skill_info_examples is not None
