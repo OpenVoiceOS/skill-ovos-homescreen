@@ -220,6 +220,7 @@ class OVOSHomescreenSkill(OVOSSkill):
                 skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
                 self.gui['skill_examples'] = {"examples": skill_examples}
             except ImportError:
+                LOG.warning(f"Skill examples not available")
                 self.settings["examples_enabled"] = False
 
         self.gui['skill_info_enabled'] = self.examples_enabled
@@ -291,6 +292,7 @@ class OVOSHomescreenSkill(OVOSSkill):
             self.gui["weather_code"] = current_weather_report.get("weather_code")
             self.gui["weather_temp"] = current_weather_report.get("weather_temp")
         else:
+            LOG.warning(f"Weather API not available: data={message.data}")
             self.gui["weather_api_enabled"] = False
 
     def on_network_connected(self, message):
@@ -404,7 +406,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         # Import Date Time Skill As Date Time Provider if configured (default LF)
         try:
             if not self.datetime_api and self.datetime_skill_id:
-                self.datetime_api = SkillApi.get(self.datetime_skill_id)
+                self.datetime_api = SkillApi.get(self.datetime_skill_id, 10)
                 assert self.datetime_api.get_display_current_time is not None
                 assert self.datetime_api.get_display_date is not None
                 assert self.datetime_api.get_weekday is not None
@@ -419,7 +421,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         # Import Skill Info Skill if configured (default OSM)
         if not self.skill_info_api and self.examples_skill_id:
             try:
-                self.skill_info_api = SkillApi.get(self.examples_skill_id)
+                self.skill_info_api = SkillApi.get(self.examples_skill_id, 10)
                 assert self.skill_info_api.skill_info_examples is not None
             except AssertionError as e:
                 LOG.error(f"missing API method: {e}")
