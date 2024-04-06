@@ -225,7 +225,8 @@ class OVOSHomescreenSkill(OVOSSkill):
                 skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
                 self.gui['skill_examples'] = {"examples": skill_examples}
             except ImportError:
-                LOG.warning(f"Skill examples not available")
+                LOG.warning(f"Skill examples not available and "
+                            f"will be permanently disabled")
                 self.settings["examples_enabled"] = False
 
         self.gui['skill_info_enabled'] = self.examples_enabled
