@@ -1,0 +1,9 @@
+{
+    "change.wallpaper.intent": [
+        "Cambiar ( fondo | fondo de pantalla )"
+    ],
+    "take.screenshot.intent": [
+        "tomar una captura de pantalla",
+        "tomar captura de pantalla"
+    ]
+}

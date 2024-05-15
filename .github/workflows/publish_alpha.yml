@@ -8,6 +8,7 @@ on:
     paths-ignore:
       - 'version.py'
       - 'test/**'
+      - 'examples/**'
       - '.github/**'
       - '.gitignore'
       - 'LICENSE'
@@ -15,6 +16,7 @@ on:
       - 'MANIFEST.in'
       - 'readme.md'
       - 'scripts/**'
+      - 'translations/**'
   workflow_dispatch:
 
 jobs:

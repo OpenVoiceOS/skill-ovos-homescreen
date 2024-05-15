@@ -1,0 +1,8 @@
+{
+    "change.wallpaper.intent": [
+        "(Cambia|Modifica) (l'immagine di|lo) sfondo (della schermata iniziale|)"
+    ],
+    "take.screenshot.intent": [
+        "(scatta|fai) uno screenshot"
+    ]
+}

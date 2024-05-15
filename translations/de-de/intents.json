@@ -1,0 +1,11 @@
+{
+    "change.wallpaper.intent": [
+        "\u00e4ndere ( das | den | ) ( wallpaper | hintergrund | bildschirm | bildschirmhintergrund ) ",
+        "( neuen | neuer | neues ) ( wallpaper | hintergrund | bildschirmhintergrund )",
+        "( wallpaper | hintergrund | bildschirmhintergrund ) \u00e4ndern"
+    ],
+    "take.screenshot.intent": [
+        "einen Screenshot machen",
+        "schauspielerisch"
+    ]
+}
