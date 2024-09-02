@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.3](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3) (2024-09-02)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a16...0.0.3)
+
+**Merged pull requests:**
+
+- added italian [\#105](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/105) ([gitlocalize-app[bot]](https://github.com/apps/gitlocalize-app))
+
 ## [0.0.3a16](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a16) (2024-01-12)
 
 [Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a15...0.0.3a16)
