@@ -1,96 +1,154 @@
 # Changelog
 
-## [V0.0.2a12](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a12) (2023-04-20)
+## [0.0.3](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3) (2024-09-02)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a11...V0.0.2a12)
-
-**Merged pull requests:**
-
-- Update Dependencies and Release Automation [\#80](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/80) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [V0.0.2a11](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a11) (2023-04-04)
-
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a10...V0.0.2a11)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a16...0.0.3)
 
 **Merged pull requests:**
 
-- Update dependencies to stable versions [\#78](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/78) ([NeonDaniel](https://github.com/NeonDaniel))
+- added italian [\#105](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/105) ([gitlocalize-app[bot]](https://github.com/apps/gitlocalize-app))
 
-## [V0.0.2a10](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a10) (2023-04-04)
+## [0.0.3a16](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a16) (2024-01-12)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a9...V0.0.2a10)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a15...0.0.3a16)
 
-**Merged pull requests:**
+**Fixed bugs:**
 
-- Fix breaking settings reference from \#72 [\#79](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/79) ([NeonDaniel](https://github.com/NeonDaniel))
+- add markdown content type [\#103](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/103) ([emphasize](https://github.com/emphasize))
 
-## [V0.0.2a9](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a9) (2023-04-04)
+## [0.0.3a15](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a15) (2024-01-12)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a8...V0.0.2a9)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a14...0.0.3a15)
 
-**Merged pull requests:**
+**Fixed bugs:**
 
-- Fix/time format [\#73](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/73) ([builderjer](https://github.com/builderjer))
+- fix markup indentation [\#102](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/102) ([emphasize](https://github.com/emphasize))
 
-## [V0.0.2a8](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a8) (2023-04-03)
+## [0.0.3a14](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a14) (2024-01-11)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a7...V0.0.2a8)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a13...0.0.3a14)
 
-**Merged pull requests:**
+## [0.0.3a13](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a13) (2024-01-11)
 
-- removed depreciated weather\_skill from settingsmeta.yml [\#62](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/62) ([builderjer](https://github.com/builderjer))
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a12...0.0.3a13)
 
-## [V0.0.2a7](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a7) (2023-03-28)
+**Fixed bugs:**
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a6...V0.0.2a7)
-
-**Merged pull requests:**
-
-- fix notifications storage model being empty on show homescreen [\#77](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/77) ([AIIX](https://github.com/AIIX))
-
-## [V0.0.2a6](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a6) (2023-02-24)
-
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a5...V0.0.2a6)
+- fix/log\_spam [\#100](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/100) ([JarbasAl](https://github.com/JarbasAl))
 
 **Merged pull requests:**
 
-- move wallpaper management to phal plugin, become a consumer/provider [\#74](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/74) ([AIIX](https://github.com/AIIX))
+- Update link [\#97](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/97) ([builderjer](https://github.com/builderjer))
 
-## [V0.0.2a5](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a5) (2023-02-20)
+## [0.0.3a12](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a12) (2024-01-11)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a4...V0.0.2a5)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a11...0.0.3a12)
 
-**Merged pull requests:**
+**Fixed bugs:**
 
-- autopep8 + code comments + minor cleanup [\#72](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/72) ([JarbasAl](https://github.com/JarbasAl))
-
-## [V0.0.2a4](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a4) (2023-02-14)
-
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a3...V0.0.2a4)
-
-## [V0.0.2a3](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a3) (2023-02-14)
-
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a2...V0.0.2a3)
+- Unable to upload the QML files to GUI [\#89](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/89)
 
 **Merged pull requests:**
 
-- fix connectivity icon on homescreen and add distinctive states [\#70](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/70) ([AIIX](https://github.com/AIIX))
+- working for ovos-utils 0.1.0 [\#101](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/101) ([builderjer](https://github.com/builderjer))
 
-## [V0.0.2a2](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a2) (2023-02-14)
+## [0.0.3a11](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a11) (2023-12-26)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2a1...V0.0.2a2)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a10...0.0.3a11)
 
 **Implemented enhancements:**
 
-- use nice\_date changes from lingua franca [\#59](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/59) ([AIIX](https://github.com/AIIX))
+- Fix/notification popup [\#92](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/92) ([emphasize](https://github.com/emphasize))
 
-## [V0.0.2a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.2a1) (2023-02-09)
+**Closed issues:**
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.1...V0.0.2a1)
+- notification dismissal expectations [\#91](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/91)
+
+## [0.0.3a10](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a10) (2023-11-14)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a9...0.0.3a10)
+
+**Implemented enhancements:**
+
+- Add bus events to control main view pages [\#98](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/98) ([atd](https://github.com/atd))
+
+## [0.0.3a9](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a9) (2023-11-12)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a8...0.0.3a9)
 
 **Merged pull requests:**
 
-- feat/runtime\_requirements [\#71](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/71) ([JarbasAl](https://github.com/JarbasAl))
+- Companion to https://github.com/OpenVoiceOS/community-docs/pull/80 [\#96](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/96) ([builderjer](https://github.com/builderjer))
+
+## [0.0.3a8](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a8) (2023-11-12)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a7...0.0.3a8)
+
+**Merged pull requests:**
+
+- docs: include settings.json locations [\#95](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/95) ([mikejgray](https://github.com/mikejgray))
+
+## [0.0.3a7](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a7) (2023-11-12)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3a6...0.0.3a7)
+
+**Closed issues:**
+
+- Add documentation [\#93](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/93)
+- Notification icon missing after navigating to settings and back [\#76](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/76)
+
+**Merged pull requests:**
+
+- add README.md [\#94](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/94) ([JarbasAl](https://github.com/JarbasAl))
+
+## [0.0.3a6](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.3a6) (2023-07-29)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.3a5...0.0.3a6)
+
+**Fixed bugs:**
+
+- Improved exception handling around SkillAPIs [\#88](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/88) ([NeonDaniel](https://github.com/NeonDaniel))
+
+**Closed issues:**
+
+- Event `ovos.homescreen.displayed` after homescreen is fully loaded  [\#82](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/82)
+
+## [V0.0.3a5](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.3a5) (2023-06-30)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.3a4...V0.0.3a5)
+
+**Merged pull requests:**
+
+- send it from the python side everytime even if not visible and idle is called [\#65](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/65) ([AIIX](https://github.com/AIIX))
+
+## [V0.0.3a4](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.3a4) (2023-06-28)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.3a3...V0.0.3a4)
+
+**Merged pull requests:**
+
+- ovos\_bus\_client [\#87](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/87) ([JarbasAl](https://github.com/JarbasAl))
+
+## [V0.0.3a3](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.3a3) (2023-06-07)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.3a1...V0.0.3a3)
+
+**Merged pull requests:**
+
+- fix it-it [\#86](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/86) ([denics](https://github.com/denics))
+- refactor/disable\_prefix [\#84](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/84) ([JarbasAl](https://github.com/JarbasAl))
+
+## [V0.0.3a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/V0.0.3a1) (2023-06-07)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/V0.0.2...V0.0.3a1)
+
+**Closed issues:**
+
+- Log spam if date time api not available [\#51](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/51)
+
+**Merged pull requests:**
+
+- reviewd it-it [\#85](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/85) ([denics](https://github.com/denics))
 
 
 

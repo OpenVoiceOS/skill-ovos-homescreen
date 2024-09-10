@@ -29,16 +29,18 @@ Rectangle {
                 text: modelData.sender
                 width: parent.width
                 elide: Text.ElideRight
-                font.capitalization: Font.SmallCaps
-                font.bold: true
+                font.weight: Font.ExtraBold
                 font.pixelSize: parent.width * 0.035
                 color: "#ffffff"
                 
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        Mycroft.MycroftController.sendRequest(modelData.action, modelData.callback_data)
-                        notificationsStorageViewBox.close()
+                        Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
+                        if (modelData.action != "") {
+                            Mycroft.MycroftController.sendRequest(modelData.action, modelData.callback_data)
+                        }
+                        Mycroft.MycroftController.sendRequest("ovos.notification.api.storage.clear.item", {"notification": modelData})
                     }
                 }
             }
@@ -62,8 +64,11 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        Mycroft.MycroftController.sendRequest(modelData.action, modelData.callback_data)
-                        notificationsStorageViewBox.close()
+                        Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
+                        if (modelData.action != "") {
+                            Mycroft.MycroftController.sendRequest(modelData.action, modelData.callback_data)
+                        }
+                        Mycroft.MycroftController.sendRequest("ovos.notification.api.storage.clear.item", {"notification": modelData})
                     }
                 }
             }
@@ -96,6 +101,10 @@ Rectangle {
                 }
 
                 onClicked: {
+                    Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
+                    if (modelData.action != "") {
+                            Mycroft.MycroftController.sendRequest(modelData.action, modelData.callback_data)
+                    }
                     Mycroft.MycroftController.sendRequest("ovos.notification.api.storage.clear.item", {"notification": modelData})
                 }
             }

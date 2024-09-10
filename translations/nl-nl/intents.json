@@ -1,0 +1,10 @@
+{
+    "change.wallpaper.intent": [
+        "verander de achtergrond",
+        "achtergrond veranderen"
+    ],
+    "take.screenshot.intent": [
+        "Neem een schermenhot",
+        "schermenhot"
+    ]
+}

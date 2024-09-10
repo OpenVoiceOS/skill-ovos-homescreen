@@ -75,6 +75,7 @@ setup(
     version=get_version(),
     description='OVOS skill plugin',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url=URL,
     author='Aix',
     author_email='aix.m@outlook.com',

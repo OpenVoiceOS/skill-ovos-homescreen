@@ -72,6 +72,11 @@ Mycroft.CardDelegate {
         onIntentRecevied: {
             if (type == "phal.brightness.control.auto.night.mode.enabled") {
                 mainView.currentIndex = 0
+            } else if (type == "ovos.homescreen.main_view.current_index.set") {
+                mainView.currentIndex = data.current_index
+                Mycroft.MycroftController.sendRequest("ovos.homescreen.main_view.current_index.get.response", {"current_index": mainView.currentIndex})
+            } else if (type == "ovos.homescreen.main_view.current_index.get") {
+                Mycroft.MycroftController.sendRequest("ovos.homescreen.main_view.current_index.get.response", {"current_index": mainView.currentIndex})
             }
         }
     }
@@ -135,9 +140,6 @@ Mycroft.CardDelegate {
         if(visible && idleRoot.textModel){
             textTimer.running = true
         }
-        if(visible) {
-            Mycroft.MycroftController.sendRequest("ovos.homescreen.displayed", {})
-        }
     }
 
     function getWeatherImagery(weathercode) {
@@ -185,6 +187,14 @@ Mycroft.CardDelegate {
         }, 500);
     }
 
+    function sendAllNotificationActions() {
+        notificationModel.storedmodel.forEach(function(modelData) {
+            // only send action if notification is actionable
+            if(modelData.action != "") {
+                Mycroft.MycroftController.sendRequest(modelData.action, modelData.callback_data)
+            }
+        })
+    }
 
     Timer {
         id: textTimer
@@ -247,6 +257,7 @@ Mycroft.CardDelegate {
                 } else if (mainView.currentIndex == 1) {
                     mainView.currentIndex = 2
                 }
+                Mycroft.MycroftController.sendRequest("ovos.homescreen.main_view.current_index.get.response", {"current_index": mainView.currentIndex})
             }
         }
     }
@@ -313,6 +324,7 @@ Mycroft.CardDelegate {
                 } else if (mainView.currentIndex == 2) {
                     mainView.currentIndex = 1
                 }
+                Mycroft.MycroftController.sendRequest("ovos.homescreen.main_view.current_index.get.response", {"current_index": mainView.currentIndex})
             }
         }
     }
@@ -401,14 +413,25 @@ Mycroft.CardDelegate {
                 color: "#212121"
                 radius: 10
 
-                Kirigami.Heading {
-                    level: 2
+                Rectangle {
                     width: parent.width
-                    anchors.left: parent.left
-                    anchors.leftMargin: Kirigami.Units.largeSpacing
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: qsTr("Notifications")
-                    color: "#ffffff"
+                    height: 80
+                    color: "transparent"
+                    anchors.centerIn: parent
+
+                    Label {
+                        width: parent.width
+                        height: parent.height
+                        font.capitalization: Font.AllUppercase
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.weight: Font.ExtraBold
+                        fontSizeMode: Text.Fit
+                        font.pixelSize: height
+                        anchors.fill: parent
+                        text: qsTr("Notifications")
+                        color: "#ffffff"
+                    }
                 }
             }
 
@@ -418,20 +441,32 @@ Mycroft.CardDelegate {
                 color: "#212121"
                 radius: 10
 
-                RowLayout {
+                Kirigami.Icon {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    opacity: 0.2
+                    width: parent.height / 1.5
+                    height: parent.height / 1.5
+                    source: Qt.resolvedUrl("icons/clear.svg")
+                    color: "white"
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: 80
+                    color: "transparent"
                     anchors.centerIn: parent
 
-                    Kirigami.Icon {
-                        Layout.preferredWidth: Kirigami.Units.iconSizes.medium
-                        Layout.preferredHeight: Kirigami.Units.iconSizes.medium
-                        source: Qt.resolvedUrl("icons/clear.svg")
-                        color: "white"
-                    }
-
-                    Kirigami.Heading {
-                        level: 3
+                    Label {
                         width: parent.width
-                        Layout.fillWidth: true
+                        height: parent.height
+                        font.capitalization: Font.AllUppercase
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.weight: Font.ExtraBold
+                        fontSizeMode: Text.Fit
+                        font.pixelSize: height
+                        anchors.fill: parent
                         text: qsTr("Clear")
                         color: "#ffffff"
                     }
@@ -441,6 +476,7 @@ Mycroft.CardDelegate {
                     anchors.fill: parent
                     onClicked: {
                         Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/clicked.wav"))
+                        sendAllNotificationActions()
                         Mycroft.MycroftController.sendRequest("ovos.notification.api.storage.clear", {})
                     }
                 }
