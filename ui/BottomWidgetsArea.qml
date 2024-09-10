@@ -20,6 +20,7 @@ Item {
     }
 
     ExamplesDisplay {
+        visible: bottomWidgetsAreaRootItem.examplesDisplayEnabled
         color: "transparent"
         anchors.fill: parent
         visible: bottomWidgetsAreaRootItem.examplesDisplayEnabled && !mediaWidgetDisplay.enabled
