@@ -231,8 +231,8 @@ Mycroft.CardDelegate {
         anchors.right: parent.right
         anchors.rightMargin: -Mycroft.Units.gridUnit * 2
         anchors.verticalCenter: parent.verticalCenter
-        visible: mainView.currentIndex == 0 || mainView.currentIndex == 1
-        enabled: mainView.currentIndex == 0 || mainView.currentIndex == 1
+        visible: mainView.currentIndex == 0
+        enabled: mainView.currentIndex == 0
         z: 2
 
         Rectangle {
@@ -342,12 +342,6 @@ Mycroft.CardDelegate {
 
         MainPage {
             id: mainPageView
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
-
-        BoxesPage {
-            id: boxesView
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
