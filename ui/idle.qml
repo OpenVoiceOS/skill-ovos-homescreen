@@ -345,12 +345,6 @@ Mycroft.CardDelegate {
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
-
-        BoxesPage {
-            id: boxesView
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
     }
 
     Popup {

@@ -24,9 +24,8 @@ from ovos_workshop.decorators import intent_handler, resting_screen_handler
 from ovos_bus_client import Message
 from ovos_utils import classproperty
 from ovos_utils.log import LOG
+from ovos_utils.time import now_local
 from ovos_utils.process_utils import RuntimeRequirements
-
-from .skill import (DashboardHandler, CardGenerator)
 
 
 class OVOSHomescreenSkill(OVOSSkill):
@@ -43,9 +42,6 @@ class OVOSHomescreenSkill(OVOSSkill):
         # Populate skill IDs to use for data sources
         self.datetime_api = None
         self.skill_info_api = None
-
-        # Display Configuration Variables
-        self.dashboard_handler = None
 
         # Media State Tracking For Widget
         # Needed for setting qml button state
@@ -69,17 +65,10 @@ class OVOSHomescreenSkill(OVOSSkill):
                                    no_gui_fallback=False)
 
     def initialize(self):
-        self.dashboard_handler = DashboardHandler(self.file_system.path,
-                                                  path.dirname(__file__))
-        self.card_generator = CardGenerator(self.file_system.path, self.bus,
-                                            path.dirname(__file__))
         self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
 
-        now = datetime.datetime.now()
-        callback_time = datetime.datetime(
-            now.year, now.month, now.day, now.hour, now.minute
-        ) + datetime.timedelta(seconds=60)
+        callback_time = now_local() + datetime.timedelta(seconds=60)
         self.schedule_repeating_event(self.update_dt, callback_time, 10)
 
         # Handler Registration For Notifications
@@ -107,16 +96,6 @@ class OVOSHomescreenSkill(OVOSSkill):
                        self.handle_alarm_widget_manager)
         self.add_event("ovos.widgets.alarm.remove",
                        self.handle_alarm_widget_manager)
-
-        # Handler Registration For Dashboard
-        self.add_event("ovos.homescreen.dashboard.add.card",
-                       self.add_dashboard_card)
-        self.add_event("ovos.homescreen.dashboard.generate.card",
-                       self.generate_dashboard_card)
-        self.gui.register_handler("ovos.homescreen.dashboard.generate.card",
-                                  self.generate_dashboard_card)
-        self.gui.register_handler("ovos.homescreen.dashboard.remove.card",
-                                  self.remove_dashboard_card)
 
         if not self.file_system.exists("wallpapers"):
             os.mkdir(path.join(self.file_system.path, "wallpapers"))
@@ -193,7 +172,6 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.gui["notification_model"] = self.notifications_storage_model
         self.gui["system_connectivity"] = "offline"
         self.gui["applications_model"] = self.build_voice_applications_model()
-        self.gui["dashboard_model"] = self.get_dashboard_cards()
         self.gui["persistent_menu_hint"] = self.settings.get("persistent_menu_hint", False)
 
         try:
@@ -430,6 +408,8 @@ class OVOSHomescreenSkill(OVOSSkill):
 
     #####################################################################
     # Build Voice Applications Model
+    # TODO - handle this via bus, this was a standard from plasma bigscreen which we never really adopted,
+    #  and they dropped "voice apps" so there is nothing left to be compatible with
 
     def find_icon_full_path(self, icon_name):
         localuser = environ.get('USER')
@@ -450,6 +430,8 @@ class OVOSHomescreenSkill(OVOSSkill):
                 return icon_full_path
 
     def parse_desktop_file(self, file_path):
+        # TODO - handle this via bus, this was a standard from plasma bigscreen which we never really adopted,
+        #  and they dropped "voice apps" so there is nothing left to be compatible with
         if path.isfile(file_path) and path.splitext(file_path)[1] == ".desktop":
 
             if path.isfile(file_path) and path.isfile(file_path) and path.getsize(file_path) > 0:
@@ -569,48 +551,6 @@ class OVOSHomescreenSkill(OVOSSkill):
             "widget": message.data,
             "state": self.media_widget_player_state
         })
-
-    ######################################################################
-    # Handle Dashboard
-
-    def generate_dashboard_card(self, message=None):
-        """
-        Generate a custom dashboard card from the UI
-        """
-        if message is None:
-            return
-        card = message.data.get("card", {})
-        self.card_generator.generate(card)
-
-    def add_dashboard_card(self, message=None):
-        """
-        Adds a card to the dashboard from external source
-        """
-        if message is not None:
-            card = message.data.get("card", {})
-            self.dashboard_handler.add_item(card)
-
-        self.gui['dashboard_model'] = self.get_dashboard_cards()
-
-    def remove_dashboard_card(self, message=None):
-        """
-        Removes a card from the dashboard from external source
-        """
-        if message is not None:
-            self.log.info(f"Removing card: {message.data.get('card_id', {})}")
-            card_id = message.data.get("card_id", None)
-            self.dashboard_handler.remove_item(card_id)
-
-        self.gui['dashboard_model'] = self.get_dashboard_cards()
-
-    def get_dashboard_cards(self, message=None):
-        """
-        Returns the current dashboard cards
-        """
-        # Dump the model to a stringified JSON object
-        cards = self.dashboard_handler.get_collection()
-        collection = {"collection": cards}
-        return collection
 
     ######################################################################
     # Handle Screenshot
