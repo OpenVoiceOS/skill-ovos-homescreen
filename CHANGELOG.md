@@ -1,20 +1,12 @@
 # Changelog
 
-## [1.0.0a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.0a1) (2024-09-20)
+## [1.0.1a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.1a1) (2024-10-05)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.4a1...1.0.0a1)
-
-**Breaking changes:**
-
-- deprecate!:remove dashboard [\#112](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/112) ([JarbasAl](https://github.com/JarbasAl))
-
-## [0.0.4a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/0.0.4a1) (2024-09-20)
-
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/0.0.3...0.0.4a1)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.0...1.0.1a1)
 
 **Merged pull requests:**
 
-- feat:semver [\#113](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/113) ([JarbasAl](https://github.com/JarbasAl))
+- Add Catalan translation [\#116](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/116) ([gitlocalize-app[bot]](https://github.com/apps/gitlocalize-app))
 
 
 
