@@ -122,8 +122,10 @@ class OVOSHomescreenSkill(OVOSSkill):
         SkillApi.connect_bus(self.bus)
         self._load_skill_apis()
 
-        self.schedule_repeating_event(self.update_weather, callback_time, 900)
-        self.schedule_repeating_event(self.update_examples, callback_time, 900)
+        self.schedule_repeating_event(self.update_weather, callback_time,
+                                      self.weather_update_seconds)
+        self.schedule_repeating_event(self.update_examples, callback_time,
+                                      self.examples_update_seconds)
 
         self.bus.on("ovos.wallpaper.manager.loaded",
                     self.register_homescreen_wallpaper_provider)
@@ -159,7 +161,23 @@ class OVOSHomescreenSkill(OVOSSkill):
     @property
     def datetime_skill_id(self):
         return self.settings.get("datetime_skill")
-        
+
+    @property
+    def weather_update_seconds(self):
+        """
+        Duration in seconds between weather updates.
+        """
+        return self.settings.get("weather_update_seconds") or 900
+
+    @property
+    def examples_update_seconds(self):
+        """
+        Duration in seconds between updating skill examples. This is when
+        the list of examples is updated, NOT when the displayed example is
+        changed on screen.
+        """
+        return self.settings.get("examples_update_seconds") or 900
+
     #####################################################################
     # Homescreen Registration & Handling
     @resting_screen_handler("OVOSHomescreen")
