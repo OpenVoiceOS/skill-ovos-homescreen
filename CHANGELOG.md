@@ -1,12 +1,12 @@
 # Changelog
 
-## [1.0.1a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.1a1) (2024-10-05)
+## [1.0.2a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.2a1) (2024-10-15)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.0...1.0.1a1)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.1...1.0.2a1)
 
 **Merged pull requests:**
 
-- Add Catalan translation [\#116](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/116) ([gitlocalize-app[bot]](https://github.com/apps/gitlocalize-app))
+- fix:support workshop 1.0.0 [\#118](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/118) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
