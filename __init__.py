@@ -12,26 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from os import environ, listdir, path
-
 import datetime
 import os
 import tempfile
+from os import environ, listdir, path
+
 from lingua_franca.format import get_date_strings
-from ovos_workshop.skills.api import SkillApi
-from ovos_workshop.skills.ovos import OVOSSkill
-from ovos_workshop.decorators import intent_handler, resting_screen_handler
 from ovos_bus_client import Message
+from ovos_config.locations import get_xdg_cache_save_path
 from ovos_utils import classproperty
 from ovos_utils.log import LOG
 from ovos_utils.time import now_local
 from ovos_utils.process_utils import RuntimeRequirements
+from ovos_workshop.decorators import intent_handler, resting_screen_handler
+from ovos_workshop.skills.api import SkillApi
+from ovos_workshop.skills.ovos import OVOSSkill
 
 
 class OVOSHomescreenSkill(OVOSSkill):
     def __init__(self, *args, **kwargs):
         self.notifications_storage_model = []
-        self.def_wallpaper_folder = path.dirname(__file__) + '/ui/wallpapers/'
         self.loc_wallpaper_folder = None
         self.selected_wallpaper_path = None
         self.selected_wallpaper = None
@@ -288,14 +288,19 @@ class OVOSHomescreenSkill(OVOSSkill):
     # Follows OVOS PHAL Wallpaper Manager API
 
     def collect_wallpapers(self):
-        def_wallpaper_collection, loc_wallpaper_collection = None, None
-        for dirname, dirnames, filenames in os.walk(self.def_wallpaper_folder):
-            def_wallpaper_collection = filenames
-            def_wallpaper_collection = [os.path.join(dirname, wallpaper) for wallpaper in def_wallpaper_collection]
+        # this path is hardcoded in ovos_gui.constants and follows XDG spec
+        GUI_CACHE_PATH = get_xdg_cache_save_path('ovos_gui')
 
-        for dirname, dirnames, filenames in os.walk(self.loc_wallpaper_folder):
-            loc_wallpaper_collection = filenames
-            loc_wallpaper_collection = [os.path.join(dirname, wallpaper) for wallpaper in loc_wallpaper_collection]
+        def_wallpaper_collection, loc_wallpaper_collection = [], []
+
+        for _, _, filenames in os.walk(f'{self.root_dir}/ui/wallpapers/'):
+            # we use cache path to ensure files are available to other docker containers etc
+            # on load the full "ui" folder is cached in the standard dir
+            def_wallpaper_collection = [f"{GUI_CACHE_PATH}/qt5/wallpapers/{wallpaper}"
+                                        for wallpaper in filenames]
+
+        for root, _, filenames in os.walk(self.loc_wallpaper_folder):
+            loc_wallpaper_collection = [os.path.join(root, wallpaper) for wallpaper in filenames]
 
         self.wallpaper_collection = def_wallpaper_collection + loc_wallpaper_collection
         
