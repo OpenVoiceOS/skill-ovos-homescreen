@@ -190,17 +190,21 @@ class OVOSHomescreenSkill(OVOSSkill):
         """
         Loads or updates skill examples via the skill_info_api.
         """
+        examples = []
         if self.skill_info_api:
-            self.gui['skill_examples'] = {"examples": self.skill_info_api.skill_info_examples()}
-        else:
+            examples = self.skill_info_api.skill_info_examples()
+        elif self.settings.get("examples_enabled"):
             try:
                 from ovos_skills_manager.utils import get_skills_examples
-                skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
-                self.gui['skill_examples'] = {"examples": skill_examples}
+                examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
             except ImportError:
                 self.settings["examples_enabled"] = False
 
-        self.gui['skill_info_enabled'] = self.examples_enabled
+        if examples:
+            self.gui['skill_examples'] = {"examples": examples}
+            self.gui['skill_info_enabled'] = self.examples_enabled
+        else:
+            self.gui['skill_info_enabled'] = False
         self.gui['skill_info_prefix'] = self.settings.get("examples_prefix", False)
 
     def _update_datetime_from_api(self):
