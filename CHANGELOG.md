@@ -1,12 +1,16 @@
 # Changelog
 
-## [1.0.2a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.2a1) (2024-10-15)
+## [1.0.3a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.3a1) (2024-10-31)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.1...1.0.2a1)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.2...1.0.3a1)
+
+**Fixed bugs:**
+
+- Won't display homescreen with new "ready" settings [\#120](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/120)
 
 **Merged pull requests:**
 
-- fix:support workshop 1.0.0 [\#118](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/118) ([JarbasAl](https://github.com/JarbasAl))
+- fix:allow workshop 3.0.0 [\#121](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/121) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
