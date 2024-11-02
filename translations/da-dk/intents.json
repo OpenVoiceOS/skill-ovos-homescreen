@@ -6,7 +6,7 @@
     "skifte tapet"
   ],
   "take.screenshot.intent": [
-    null,
-    null
+    "tag et skærmbillede",
+    "tag et skærmbillede"
   ]
 }
