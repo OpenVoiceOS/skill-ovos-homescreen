@@ -1,16 +1,20 @@
 # Changelog
 
-## [1.0.3a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.3a1) (2024-10-31)
+## [1.0.4a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.4a1) (2024-11-05)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.2...1.0.3a1)
-
-**Fixed bugs:**
-
-- Won't display homescreen with new "ready" settings [\#120](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/120)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.4a1...1.0.4a1)
 
 **Merged pull requests:**
 
-- fix:allow workshop 3.0.0 [\#121](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/121) ([JarbasAl](https://github.com/JarbasAl))
+- fix:wallpaper\_paths [\#111](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/111) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.0.4a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.4a1) (2024-11-02)
+
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.3...1.0.4a1)
+
+**Merged pull requests:**
+
+- da-dk/translate [\#123](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/123) ([gitlocalize-app[bot]](https://github.com/apps/gitlocalize-app))
 
 
 
