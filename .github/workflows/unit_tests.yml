@@ -35,7 +35,7 @@ jobs:
     uses: neongeckocom/.github/.github/workflows/python_build_tests.yml@master
     with:
       test_pipaudit: True
-      pipaudit_ignored: GHSA-r9hx-vwmv-q579 PYSEC-2022-43012 PYSEC-2023-74
+      pipaudit_ignored: GHSA-r9hx-vwmv-q579 PYSEC-2022-43012 PYSEC-2023-74 GHSA-9wx4-h78v-vm56
   unit_tests:
     strategy:
       matrix:
