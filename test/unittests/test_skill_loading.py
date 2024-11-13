@@ -1,14 +1,10 @@
 import unittest
-from os.path import join, dirname
-import os
-from ovos_utils.bracket_expansion import expand_parentheses, expand_options
+from os.path import dirname
 
-from adapt.engine import IntentDeterminationEngine
-from adapt.intent import IntentBuilder
-from skill_ovos_homescreen import OVOSHomescreenSkill
+from ovos_workshop.skill_launcher import PluginSkillLoader, SkillLoader
 from ovos_plugin_manager.skills import find_skill_plugins
 from ovos_utils.messagebus import FakeBus
-from mycroft.skills.skill_loader import PluginSkillLoader, SkillLoader
+from skill_ovos_homescreen import OVOSHomescreenSkill
 
 
 class TestSkillLoading(unittest.TestCase):
@@ -56,5 +52,3 @@ class TestSkillLoading(unittest.TestCase):
         self.assertEqual(loader.skill_id, self.skill_id)
         self.assertEqual(loader.instance.bus, bus)
         self.assertEqual(loader.instance.skill_id, self.skill_id)
-
-
