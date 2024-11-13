@@ -207,6 +207,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         """
         Update the GUI with date/time from the configured Skill API
         """
+        LOG.debug("Getting date info via skill api")
         time_string = self.datetime_api.get_display_current_time()
         date_string = self.datetime_api.get_display_date()
         weekday_string = self.datetime_api.get_weekday()
@@ -239,6 +240,7 @@ class OVOSHomescreenSkill(OVOSSkill):
                                               date_format=self.config_core.get("date_format", "DMY"),
                                               time_format=self.config_core.get("time_format", "full"),
                                               lang=self.lang)
+        LOG.debug(f"Date info {self.lang}: {date_string_object}")
         time_string = date_string_object.get("time_string")
         date_string = date_string_object.get("date_string")
         weekday_string = date_string_object.get("weekday_string")
