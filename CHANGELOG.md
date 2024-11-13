@@ -1,20 +1,12 @@
 # Changelog
 
-## [1.0.4a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.4a1) (2024-11-05)
+## [1.0.5a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.5a1) (2024-11-13)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.4a1...1.0.4a1)
-
-**Merged pull requests:**
-
-- fix:wallpaper\_paths [\#111](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/111) ([JarbasAl](https://github.com/JarbasAl))
-
-## [1.0.4a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.4a1) (2024-11-02)
-
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.3...1.0.4a1)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.4...1.0.5a1)
 
 **Merged pull requests:**
 
-- da-dk/translate [\#123](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/123) ([gitlocalize-app[bot]](https://github.com/apps/gitlocalize-app))
+- fix:droplf [\#124](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/124) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
