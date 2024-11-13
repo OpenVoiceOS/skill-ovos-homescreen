@@ -17,13 +17,13 @@ import os
 import tempfile
 from os import environ, listdir, path
 
-from lingua_franca.format import get_date_strings
 from ovos_bus_client import Message
 from ovos_config.locations import get_xdg_cache_save_path
+from ovos_date_parser import get_date_strings
 from ovos_utils import classproperty
 from ovos_utils.log import LOG
-from ovos_utils.time import now_local
 from ovos_utils.process_utils import RuntimeRequirements
+from ovos_utils.time import now_local
 from ovos_workshop.decorators import intent_handler, resting_screen_handler
 from ovos_workshop.skills.api import SkillApi
 from ovos_workshop.skills.ovos import OVOSSkill
@@ -127,13 +127,13 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         self.bus.on("ovos.wallpaper.manager.loaded",
                     self.register_homescreen_wallpaper_provider)
-        
+
         self.bus.on(f"{self.skill_id}.get.wallpaper.collection",
                     self.supply_wallpaper_collection)
-        
+
         self.bus.on("ovos.wallpaper.manager.setup.default.provider.response",
                     self.handle_default_provider_response)
-        
+
         # We can't depend on loading order, so send a registration request
         # Regardless on startup
         self.register_homescreen_wallpaper_provider()
@@ -147,7 +147,7 @@ class OVOSHomescreenSkill(OVOSSkill):
     @property
     def examples_enabled(self):
         # A variable to turn on/off the example text
-        return self.settings.get("examples_enabled", 
+        return self.settings.get("examples_enabled",
                                  self.settings.get("examples_skill") is not None)
 
     @property
@@ -159,7 +159,7 @@ class OVOSHomescreenSkill(OVOSSkill):
     @property
     def datetime_skill_id(self):
         return self.settings.get("datetime_skill")
-        
+
     #####################################################################
     # Homescreen Registration & Handling
     @resting_screen_handler("OVOSHomescreen")
@@ -235,10 +235,10 @@ class OVOSHomescreenSkill(OVOSSkill):
             except Exception as e:
                 LOG.exception(f"Skill API error: {e}")
 
-        date_string_object = get_date_strings(
-            date_format=self.config_core.get("date_format", "MDY"),
-            time_format=self.config_core.get("time_format", "full"),
-            lang=self.lang)
+        date_string_object = get_date_strings(dt=now_local(),
+                                              date_format=self.config_core.get("date_format", "DMY"),
+                                              time_format=self.config_core.get("time_format", "full"),
+                                              lang=self.lang)
         time_string = date_string_object.get("time_string")
         date_string = date_string_object.get("date_string")
         weekday_string = date_string_object.get("weekday_string")
@@ -303,7 +303,7 @@ class OVOSHomescreenSkill(OVOSSkill):
             loc_wallpaper_collection = [os.path.join(root, wallpaper) for wallpaper in filenames]
 
         self.wallpaper_collection = def_wallpaper_collection + loc_wallpaper_collection
-        
+
     def register_homescreen_wallpaper_provider(self, message=None):
         self.bus.emit(Message("ovos.wallpaper.manager.register.provider", {
             "provider_name": self.skill_id,
@@ -318,17 +318,17 @@ class OVOSHomescreenSkill(OVOSSkill):
         # We need to call this here as we know wallpaper collection is ready
         if not self.default_provider_set:
             self.setup_default_provider()
-        
+
     def setup_default_provider(self):
         self.bus.emit(Message("ovos.wallpaper.manager.setup.default.provider", {
             "provider_name": self.skill_id,
             "default_wallpaper_name": self.settings.get("wallpaper", "default.jpg")
         }))
-    
+
     def handle_default_provider_response(self, message):
         self.default_provider_set = True
         url = message.data.get("url")
-        self.selected_wallpaper_path = self.extract_wallpaper_info(url)[0] 
+        self.selected_wallpaper_path = self.extract_wallpaper_info(url)[0]
         self.selected_wallpaper = self.extract_wallpaper_info(url)[1]
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
         self.gui['selected_wallpaper'] = self.selected_wallpaper
@@ -346,7 +346,7 @@ class OVOSHomescreenSkill(OVOSSkill):
 
     def handle_set_wallpaper(self, message):
         url = message.data.get("url")
-        self.selected_wallpaper_path = self.extract_wallpaper_info(url)[0] 
+        self.selected_wallpaper_path = self.extract_wallpaper_info(url)[0]
         self.selected_wallpaper = self.extract_wallpaper_info(url)[1]
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
         self.gui['selected_wallpaper'] = self.selected_wallpaper
@@ -580,4 +580,3 @@ class OVOSHomescreenSkill(OVOSSkill):
         result = message.data.get("result")
         display_message = f"Screenshot saved to {result}"
         self.gui.show_notification(display_message)
-
