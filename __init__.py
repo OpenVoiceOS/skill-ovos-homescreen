@@ -202,11 +202,9 @@ class OVOSHomescreenSkill(OVOSSkill):
         if self.skill_info_api:
             examples = self.skill_info_api.skill_info_examples()
         elif self.settings.get("examples_enabled"):
-            try:
-                from ovos_skills_manager.utils import get_skills_examples
-                examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
-            except ImportError:
-                self.settings["examples_enabled"] = False
+            LOG.warning("NOT IMPLEMENTED ERROR: utterance examples enabled in settings.json but not yet implemented! "
+                        "use an external skill_id via 'examples_skill' setting as an alternative")
+            self.settings["examples_enabled"] = False
 
         if examples:
             self.gui['skill_examples'] = {"examples": examples}
