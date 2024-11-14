@@ -148,13 +148,13 @@ class OVOSHomescreenSkill(OVOSSkill):
     def examples_enabled(self):
         # A variable to turn on/off the example text
         return self.settings.get("examples_enabled",
-                                 self.settings.get("examples_skill") is not None)
+                                 self.settings.get("examples_skill_id") is not None)
 
     @property
     def examples_skill_id(self):
         if not self.examples_enabled:
             return None
-        return self.settings.get("examples_skill")
+        return self.settings.get("examples_skill_id")
 
     @property
     def datetime_skill_id(self):
