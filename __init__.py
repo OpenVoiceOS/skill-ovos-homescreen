@@ -15,8 +15,7 @@
 import datetime
 import os
 import tempfile
-from os import path
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from ovos_bus_client import Message
 from ovos_config.locations import get_xdg_cache_save_path
@@ -34,7 +33,6 @@ from ovos_workshop.skills.ovos import OVOSSkill
 class OVOSHomescreenSkill(OVOSSkill):
     def __init__(self, *args, **kwargs):
         self.notifications_storage_model = []
-        self.loc_wallpaper_folder = None
         self.selected_wallpaper_path = None
         self.selected_wallpaper = None
         self.default_provider_set = False
@@ -73,49 +71,39 @@ class OVOSHomescreenSkill(OVOSSkill):
                                    no_gui_fallback=False)
 
     def initialize(self):
-        self.loc_wallpaper_folder = self.file_system.path + '/wallpapers/'
         self.rtlMode = 1 if self.config_core.get("rtl", False) else 0
 
         callback_time = now_local() + datetime.timedelta(seconds=60)
         self.schedule_repeating_event(self.update_dt, callback_time, 10)
 
+        # Handle metadata registration from skills
+        self.add_event("homescreen.register.examples", self.handle_register_sample_utterances)
+        self.add_event("homescreen.register.app", self.handle_register_homescreen_app)
+        self.add_event("detach_skill", self.handle_deregister_skill)
+
+        self.bus.emit(Message("homescreen.metadata.get"))
+
         # Handler Registration For Notifications
-        self.add_event("homescreen.wallpaper.set",
-                       self.handle_set_wallpaper)
-        self.add_event("ovos.notification.update_counter",
-                       self.handle_notification_widget_update)
-        self.add_event("ovos.notification.update_storage_model",
-                       self.handle_notification_storage_model_update)
-        self.gui.register_handler("homescreen.swipe.change.wallpaper",
-                                  self.change_wallpaper)
+        self.add_event("homescreen.wallpaper.set", self.handle_set_wallpaper)
+        self.add_event("ovos.notification.update_counter", self.handle_notification_widget_update)
+        self.add_event("ovos.notification.update_storage_model", self.handle_notification_storage_model_update)
+        self.gui.register_handler("homescreen.swipe.change.wallpaper", self.change_wallpaper)
         self.add_event("mycroft.ready", self.handle_mycroft_ready)
 
         # Handler Registration For Widgets
-        self.add_event("ovos.widgets.timer.update",
-                       self.handle_timer_widget_manager)
-        self.add_event("ovos.widgets.timer.display",
-                       self.handle_timer_widget_manager)
-        self.add_event("ovos.widgets.timer.remove",
-                       self.handle_timer_widget_manager)
-
-        self.add_event("ovos.widgets.alarm.update",
-                       self.handle_alarm_widget_manager)
-        self.add_event("ovos.widgets.alarm.display",
-                       self.handle_alarm_widget_manager)
-        self.add_event("ovos.widgets.alarm.remove",
-                       self.handle_alarm_widget_manager)
-
-        if not self.file_system.exists("wallpapers"):
-            os.mkdir(path.join(self.file_system.path, "wallpapers"))
+        self.add_event("ovos.widgets.timer.update", self.handle_timer_widget_manager)
+        self.add_event("ovos.widgets.timer.display", self.handle_timer_widget_manager)
+        self.add_event("ovos.widgets.timer.remove", self.handle_timer_widget_manager)
+        self.add_event("ovos.widgets.alarm.update", self.handle_alarm_widget_manager)
+        self.add_event("ovos.widgets.alarm.display", self.handle_alarm_widget_manager)
+        self.add_event("ovos.widgets.alarm.remove", self.handle_alarm_widget_manager)
 
         # Handler For Weather Response
         self.bus.on("skill-ovos-weather.openvoiceos.weather.response", self.update_weather_response)
 
         # Handler For OCP Player State Tracking
-        self.bus.on("gui.player.media.service.sync.status",
-                    self.handle_media_player_state_update)
-        self.bus.on("ovos.common_play.track_info.response",
-                    self.handle_media_player_widget_update)
+        self.bus.on("gui.player.media.service.sync.status", self.handle_media_player_state_update)
+        self.bus.on("ovos.common_play.track_info.response", self.handle_media_player_widget_update)
 
         # Handler For Offline Widget
         self.bus.on("mycroft.network.connected", self.on_network_connected)
@@ -123,8 +111,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.bus.on("enclosure.notify.no_internet", self.on_no_internet)
 
         # Handle Screenshot Response
-        self.bus.on("ovos.display.screenshot.get.response",
-                    self.screenshot_taken)
+        self.bus.on("ovos.display.screenshot.get.response", self.screenshot_taken)
 
         self.collect_wallpapers()
         SkillApi.connect_bus(self.bus)
@@ -133,14 +120,9 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.schedule_repeating_event(self.update_weather, callback_time, 900)
         self.schedule_repeating_event(self.update_examples, callback_time, 900)
 
-        self.bus.on("ovos.wallpaper.manager.loaded",
-                    self.register_homescreen_wallpaper_provider)
-
-        self.bus.on(f"{self.skill_id}.get.wallpaper.collection",
-                    self.supply_wallpaper_collection)
-
-        self.bus.on("ovos.wallpaper.manager.setup.default.provider.response",
-                    self.handle_default_provider_response)
+        self.bus.on("ovos.wallpaper.manager.loaded", self.register_homescreen_wallpaper_provider)
+        self.bus.on(f"{self.skill_id}.get.wallpaper.collection", self.supply_wallpaper_collection)
+        self.bus.on("ovos.wallpaper.manager.setup.default.provider.response", self.handle_default_provider_response)
 
         # We can't depend on loading order, so send a registration request
         # Regardless on startup
@@ -149,15 +131,6 @@ class OVOSHomescreenSkill(OVOSSkill):
         # Get / Set the default wallpaper
         # self.selected_wallpaper = self.settings.get(
         #     "wallpaper") or "default.jpg"
-
-        self.add_event("homescreen.register.examples",
-                       self.handle_register_sample_utterances)
-        self.add_event("homescreen.register.app",
-                       self.handle_register_homescreen_app)
-        self.add_event("detach_skill",
-                       self.handle_deregister_skill)
-
-        self.bus.emit(Message("homescreen.metadata.get"))
 
         self.bus.emit(Message("mycroft.device.show.idle"))
 
@@ -299,7 +272,7 @@ class OVOSHomescreenSkill(OVOSSkill):
                                               date_format=self.config_core.get("date_format", "DMY"),
                                               time_format=self.config_core.get("time_format", "full"),
                                               lang=self.lang)
-        #LOG.debug(f"Date info {self.lang}: {date_string_object}")
+        # LOG.debug(f"Date info {self.lang}: {date_string_object}")
         time_string = date_string_object.get("time_string")
         date_string = date_string_object.get("date_string")
         weekday_string = date_string_object.get("weekday_string")
@@ -352,18 +325,14 @@ class OVOSHomescreenSkill(OVOSSkill):
         # this path is hardcoded in ovos_gui.constants and follows XDG spec
         GUI_CACHE_PATH = get_xdg_cache_save_path('ovos_gui')
 
-        def_wallpaper_collection, loc_wallpaper_collection = [], []
+        def_wallpaper_collection = []
 
-        for _, _, filenames in os.walk(f'{self.root_dir}/gui/qt5/wallpapers/'):
+        for fn in os.listdir(f'{self.root_dir}/gui/qt5/wallpapers'):
             # we use cache path to ensure files are available to other docker containers etc
             # on load the full "gui" folder is cached in the standard dir "{GUI_CACHE_PATH}/{self.skill_id}"
-            def_wallpaper_collection = [f"{GUI_CACHE_PATH}/{self.skill_id}/qt5/wallpapers/{wallpaper}"
-                                        for wallpaper in filenames]
+            def_wallpaper_collection.append(f"{GUI_CACHE_PATH}/{self.skill_id}/qt5/wallpapers/{fn}")
 
-        for root, _, filenames in os.walk(self.loc_wallpaper_folder):
-            loc_wallpaper_collection = [os.path.join(root, wallpaper) for wallpaper in filenames]
-
-        self.wallpaper_collection = def_wallpaper_collection + loc_wallpaper_collection
+        self.wallpaper_collection = def_wallpaper_collection
 
     def register_homescreen_wallpaper_provider(self, message=None):
         self.bus.emit(Message("ovos.wallpaper.manager.register.provider", {
@@ -389,8 +358,7 @@ class OVOSHomescreenSkill(OVOSSkill):
     def handle_default_provider_response(self, message):
         self.default_provider_set = True
         url = message.data.get("url")
-        self.selected_wallpaper_path = self.extract_wallpaper_info(url)[0]
-        self.selected_wallpaper = self.extract_wallpaper_info(url)[1]
+        self.selected_wallpaper_path, self.selected_wallpaper = self.extract_wallpaper_info(url)
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
         self.gui['selected_wallpaper'] = self.selected_wallpaper
 
@@ -407,12 +375,12 @@ class OVOSHomescreenSkill(OVOSSkill):
 
     def handle_set_wallpaper(self, message):
         url = message.data.get("url")
-        self.selected_wallpaper_path = self.extract_wallpaper_info(url)[0]
-        self.selected_wallpaper = self.extract_wallpaper_info(url)[1]
+        self.selected_wallpaper_path, self.selected_wallpaper = self.extract_wallpaper_info(url)
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
         self.gui['selected_wallpaper'] = self.selected_wallpaper
 
-    def extract_wallpaper_info(self, wallpaper):
+    @staticmethod
+    def extract_wallpaper_info(wallpaper: str) -> Tuple[str, str]:
         wallpaper_split = wallpaper.rsplit('/', 1)
         wallpaper_path = wallpaper_split[0] + "/"
         wallpaper_filename = wallpaper_split[1]
