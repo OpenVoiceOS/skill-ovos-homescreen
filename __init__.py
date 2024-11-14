@@ -259,7 +259,6 @@ class OVOSHomescreenSkill(OVOSSkill):
             self.gui['skill_info_enabled'] = self.examples_enabled
         else:
             LOG.warning("no utterance examples registered with homescreen")
-            self.settings["examples_enabled"] = False
             self.gui['skill_info_enabled'] = False
         self.gui['skill_info_prefix'] = self.settings.get("examples_prefix", False)
 
