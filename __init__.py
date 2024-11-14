@@ -176,10 +176,18 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         try:
             self.update_dt()
+        except Exception as e:
+            LOG.error(f"Failed to update homescreen datetime: {e}")
+
+        try:
             self.update_weather()
+        except Exception as e:
+            LOG.error(f"Failed to update homescreen weather: {e}")
+
+        try:
             self.update_examples()
         except Exception as e:
-            LOG.error(e)
+            LOG.error(f"Failed to update homescreen skill examples: {e}")
 
         self.gui['rtl_mode'] = self.rtlMode
         self.gui['dateFormat'] = self.config_core.get("date_format") or "DMY"
