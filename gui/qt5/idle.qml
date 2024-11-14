@@ -20,7 +20,7 @@ Mycroft.CardDelegate {
     property var textModel: sessionData.skill_examples ? sessionData.skill_examples.examples : []
     property color shadowColor: Qt.rgba(0, 0, 0, 0.7)
     property bool rtlMode: sessionData.rtl_mode ? Boolean(sessionData.rtl_mode) : false
-    property bool examplesEnabled: sessionData.skill_info_enabled ? Boolean(sessionData.skill_info_enabled) : true
+    property bool examplesEnabled: sessionData.skill_info_enabled ? Boolean(sessionData.skill_info_enabled) : false
     property bool examplesPrefix: sessionData.skill_info_prefix
     property bool weatherEnabled: sessionData.weather_api_enabled ? Boolean(sessionData.weather_api_enabled) : false
     property var dateFormat: sessionData.dateFormat ? sessionData.dateFormat : "DMY"
@@ -131,13 +131,16 @@ Mycroft.CardDelegate {
     }
 
     onTextModelChanged: {
+        if (!idleRoot.examplesEnabled) {
+            return;
+        }
         exampleEntry = idleRoot.textModel[0] ? idleRoot.textModel[0] : ""
         exampleEntryUpdate(exampleEntry)
         textTimer.running = true
     }
 
     onVisibleChanged: {
-        if(visible && idleRoot.textModel){
+        if(visible && idleRoot.textModel && idleRoot.examplesEnabled){
             textTimer.running = true
         }
     }

@@ -176,10 +176,18 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         try:
             self.update_dt()
+        except Exception as e:
+            LOG.error(f"Failed to update homescreen datetime: {e}")
+
+        try:
             self.update_weather()
+        except Exception as e:
+            LOG.error(f"Failed to update homescreen weather: {e}")
+
+        try:
             self.update_examples()
         except Exception as e:
-            LOG.error(e)
+            LOG.error(f"Failed to update homescreen skill examples: {e}")
 
         self.gui['rtl_mode'] = self.rtlMode
         self.gui['dateFormat'] = self.config_core.get("date_format") or "DMY"
@@ -190,17 +198,19 @@ class OVOSHomescreenSkill(OVOSSkill):
         """
         Loads or updates skill examples via the skill_info_api.
         """
+        examples = []
         if self.skill_info_api:
-            self.gui['skill_examples'] = {"examples": self.skill_info_api.skill_info_examples()}
-        else:
-            try:
-                from ovos_skills_manager.utils import get_skills_examples
-                skill_examples = get_skills_examples(randomize=self.settings.get("randomize_examples", True))
-                self.gui['skill_examples'] = {"examples": skill_examples}
-            except ImportError:
-                self.settings["examples_enabled"] = False
+            examples = self.skill_info_api.skill_info_examples()
+        elif self.settings.get("examples_enabled"):
+            LOG.warning("NOT IMPLEMENTED ERROR: utterance examples enabled in settings.json but not yet implemented! "
+                        "use an external skill_id via 'examples_skill' setting as an alternative")
+            self.settings["examples_enabled"] = False
 
-        self.gui['skill_info_enabled'] = self.examples_enabled
+        if examples:
+            self.gui['skill_examples'] = {"examples": examples}
+            self.gui['skill_info_enabled'] = self.examples_enabled
+        else:
+            self.gui['skill_info_enabled'] = False
         self.gui['skill_info_prefix'] = self.settings.get("examples_prefix", False)
 
     def _update_datetime_from_api(self):
@@ -295,7 +305,7 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         def_wallpaper_collection, loc_wallpaper_collection = [], []
 
-        for _, _, filenames in os.walk(f'{self.root_dir}/ui/wallpapers/'):
+        for _, _, filenames in os.walk(f'{self.root_dir}/gui/qt5/wallpapers/'):
             # we use cache path to ensure files are available to other docker containers etc
             # on load the full "ui" folder is cached in the standard dir
             def_wallpaper_collection = [f"{GUI_CACHE_PATH}/qt5/wallpapers/{wallpaper}"
