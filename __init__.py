@@ -150,16 +150,16 @@ class OVOSHomescreenSkill(OVOSSkill):
         # self.selected_wallpaper = self.settings.get(
         #     "wallpaper") or "default.jpg"
 
-        self.bus.emit(Message("mycroft.device.show.idle"))
-
         self.add_event("homescreen.register.examples",
                        self.handle_register_sample_utterances)
-        self.add_event("homescreen.deregister.examples",
-                       self.handle_deregister_sample_utterances)
         self.add_event("homescreen.register.app",
                        self.handle_register_homescreen_app)
-        self.add_event("homescreen.deregister.app",
-                       self.handle_deregister_homescreen_app)
+        self.add_event("detach_skill",
+                       self.handle_deregister_skill)
+
+        self.bus.emit(Message("homescreen.metadata.get"))
+
+        self.bus.emit(Message("mycroft.device.show.idle"))
 
     #############
     # bus apis
@@ -172,12 +172,6 @@ class OVOSHomescreenSkill(OVOSSkill):
             self.skill_examples[skill_id] = {}
         self.skill_examples[skill_id][lang] = examples
 
-    def handle_deregister_sample_utterances(self, message: Message):
-        """skill unloaded, stop showing it's example utterances"""
-        skill_id = message.data["skill_id"]
-        if skill_id in self.skill_examples:
-            self.skill_examples.pop(skill_id)
-
     def handle_register_homescreen_app(self, message: Message):
         """a skill is registering an icon + bus event to show in app drawer (bottom pill button)"""
         skill_id = message.data["skill_id"]
@@ -185,9 +179,11 @@ class OVOSHomescreenSkill(OVOSSkill):
         event = message.data["event"]
         self.homescreen_apps[skill_id] = {"icon": icon, "event": event}
 
-    def handle_deregister_homescreen_app(self, message: Message):
-        """skill unloaded, stop showing the app launcher icon"""
+    def handle_deregister_skill(self, message: Message):
+        """skill unloaded, stop showing it's example utterances and app launcher icon"""
         skill_id = message.data["skill_id"]
+        if skill_id in self.skill_examples:
+            self.skill_examples.pop(skill_id)
         if skill_id in self.homescreen_apps:
             self.homescreen_apps.pop(skill_id)
 
