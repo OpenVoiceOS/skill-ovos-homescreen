@@ -18,7 +18,6 @@ import tempfile
 from typing import Dict, List, Tuple
 
 from ovos_bus_client import Message
-from ovos_config.locations import get_xdg_cache_save_path
 from ovos_date_parser import get_date_strings
 from ovos_utils import classproperty
 from ovos_utils.lang import standardize_lang_tag
@@ -35,8 +34,6 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.notifications_storage_model = []
         self.selected_wallpaper_path = None
         self.selected_wallpaper = None
-        self.default_provider_set = False
-        self.wallpaper_collection = []
         self.rtlMode = None  # Get from config after __init__ is done
 
         # Populate skill IDs to use for data sources
@@ -113,24 +110,11 @@ class OVOSHomescreenSkill(OVOSSkill):
         # Handle Screenshot Response
         self.bus.on("ovos.display.screenshot.get.response", self.screenshot_taken)
 
-        self.collect_wallpapers()
         SkillApi.connect_bus(self.bus)
         self._load_skill_apis()
 
         self.schedule_repeating_event(self.update_weather, callback_time, 900)
         self.schedule_repeating_event(self.update_examples, callback_time, 900)
-
-        self.bus.on("ovos.wallpaper.manager.loaded", self.register_homescreen_wallpaper_provider)
-        self.bus.on(f"{self.skill_id}.get.wallpaper.collection", self.supply_wallpaper_collection)
-        self.bus.on("ovos.wallpaper.manager.setup.default.provider.response", self.handle_default_provider_response)
-
-        # We can't depend on loading order, so send a registration request
-        # Regardless on startup
-        self.register_homescreen_wallpaper_provider()
-
-        # Get / Set the default wallpaper
-        # self.selected_wallpaper = self.settings.get(
-        #     "wallpaper") or "default.jpg"
 
         self.bus.emit(Message("mycroft.device.show.idle"))
 
@@ -321,57 +305,10 @@ class OVOSHomescreenSkill(OVOSSkill):
     #####################################################################
     # Homescreen Wallpaper Provider and Consumer Handling
     # Follows OVOS PHAL Wallpaper Manager API
-    def collect_wallpapers(self):
-        # this path is hardcoded in ovos_gui.constants and follows XDG spec
-        GUI_CACHE_PATH = get_xdg_cache_save_path('ovos_gui')
-
-        def_wallpaper_collection = []
-
-        for fn in os.listdir(f'{self.root_dir}/gui/qt5/wallpapers'):
-            # we use cache path to ensure files are available to other docker containers etc
-            # on load the full "gui" folder is cached in the standard dir "{GUI_CACHE_PATH}/{self.skill_id}"
-            def_wallpaper_collection.append(f"{GUI_CACHE_PATH}/{self.skill_id}/qt5/wallpapers/{fn}")
-
-        self.wallpaper_collection = def_wallpaper_collection
-
-    def register_homescreen_wallpaper_provider(self, message=None):
-        self.bus.emit(Message("ovos.wallpaper.manager.register.provider", {
-            "provider_name": self.skill_id,
-            "provider_display_name": "OVOSHomescreen"
-        }))
-
-    def supply_wallpaper_collection(self, message):
-        self.bus.emit(Message("ovos.wallpaper.manager.collect.collection.response", {
-            "provider_name": self.skill_id,
-            "wallpaper_collection": self.wallpaper_collection
-        }))
-        # We need to call this here as we know wallpaper collection is ready
-        if not self.default_provider_set:
-            self.setup_default_provider()
-
-    def setup_default_provider(self):
-        self.bus.emit(Message("ovos.wallpaper.manager.setup.default.provider", {
-            "provider_name": self.skill_id,
-            "default_wallpaper_name": self.settings.get("wallpaper", "default.jpg")
-        }))
-
-    def handle_default_provider_response(self, message):
-        self.default_provider_set = True
-        url = message.data.get("url")
-        self.selected_wallpaper_path, self.selected_wallpaper = self.extract_wallpaper_info(url)
-        self.gui['wallpaper_path'] = self.selected_wallpaper_path
-        self.gui['selected_wallpaper'] = self.selected_wallpaper
-
     @intent_handler("change.wallpaper.intent")
     def change_wallpaper(self, _):
+        # TODO - move to wallpapers skill
         self.bus.emit(Message("ovos.wallpaper.manager.change.wallpaper"))
-
-    def get_wallpaper_idx(self, filename):
-        try:
-            index_element = self.wallpaper_collection.index(filename)
-            return index_element
-        except ValueError:
-            return None
 
     def handle_set_wallpaper(self, message):
         url = message.data.get("url")
@@ -388,7 +325,6 @@ class OVOSHomescreenSkill(OVOSSkill):
 
     #####################################################################
     # Manage notifications widget
-
     def handle_notification_widget_update(self, message):
         # Receives notification counter update
         # Emits request to update storage model on counter update
