@@ -273,7 +273,7 @@ Mycroft.CardDelegate {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: -Mycroft.Units.gridUnit * 2
         anchors.horizontalCenter: parent.horizontalCenter
-        visible: mainView.currentIndex == 1
+        visible: mainView.currentIndex == 1 && idleRoot.appsEnabled
         enabled: mainView.currentIndex == 1
         z: 2
 

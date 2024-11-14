@@ -215,13 +215,15 @@ class OVOSHomescreenSkill(OVOSSkill):
     def handle_idle(self, message):
         self._load_skill_apis()
         LOG.debug('Activating OVOSHomescreen')
+        apps = self.build_voice_applications_model()
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
         self.gui['selected_wallpaper'] = self.selected_wallpaper
         self.gui['notification'] = {}
         self.gui["notification_model"] = self.notifications_storage_model
         self.gui["system_connectivity"] = "offline"
-        self.gui["applications_model"] = self.build_voice_applications_model()
+        self.gui["applications_model"] = apps
         self.gui["persistent_menu_hint"] = self.settings.get("persistent_menu_hint", False)
+        self.gui["apps_enabled"] = bool(apps)
 
         try:
             self.update_dt()
