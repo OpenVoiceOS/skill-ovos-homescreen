@@ -15,12 +15,14 @@
 import datetime
 import os
 import tempfile
-from os import environ, listdir, path
+from os import path
+from typing import Dict, List
 
 from ovos_bus_client import Message
 from ovos_config.locations import get_xdg_cache_save_path
 from ovos_date_parser import get_date_strings
 from ovos_utils import classproperty
+from ovos_utils.lang import standardize_lang_tag
 from ovos_utils.log import LOG
 from ovos_utils.process_utils import RuntimeRequirements
 from ovos_utils.time import now_local
@@ -49,6 +51,14 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         # Offline / Online State
         self.system_connectivity = None
+
+        # Bus apis for skills to register with homescreen, ovos-workshop provides util methods
+
+        # "lang-code": ["utterance"]
+        # "skill_id": {"lang-code": ["utterance"]}
+        self.skill_examples: Dict[str, Dict[str, List[str]]] = {}
+        # "skill_id": {"icon": "xx.png", "event": "emit.this.bus.event"}
+        self.homescreen_apps: Dict[str, Dict[str, str]] = {}
 
         super().__init__(*args, **kwargs)
 
@@ -144,6 +154,47 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         self.bus.emit(Message("mycroft.device.show.idle"))
 
+        self.add_event("homescreen.register.examples",
+                       self.handle_register_sample_utterances)
+        self.add_event("homescreen.deregister.examples",
+                       self.handle_deregister_sample_utterances)
+        self.add_event("homescreen.register.app",
+                       self.handle_register_homescreen_app)
+        self.add_event("homescreen.deregister.app",
+                       self.handle_deregister_homescreen_app)
+
+    #############
+    # bus apis
+    def handle_register_sample_utterances(self, message: Message):
+        """a skill is registering utterance examples to render on idle screen"""
+        lang = standardize_lang_tag(message.data["lang"])
+        skill_id = message.data["skill_id"]
+        examples = message.data["utterances"]
+        if skill_id not in self.skill_examples:
+            self.skill_examples[skill_id] = {}
+        self.skill_examples[skill_id][lang] = examples
+
+    def handle_deregister_sample_utterances(self, message: Message):
+        """skill unloaded, stop showing it's example utterances"""
+        skill_id = message.data["skill_id"]
+        if skill_id in self.skill_examples:
+            self.skill_examples.pop(skill_id)
+
+    def handle_register_homescreen_app(self, message: Message):
+        """a skill is registering an icon + bus event to show in app drawer (bottom pill button)"""
+        skill_id = message.data["skill_id"]
+        icon = message.data["icon"]
+        event = message.data["event"]
+        self.homescreen_apps[skill_id] = {"icon": icon, "event": event}
+
+    def handle_deregister_homescreen_app(self, message: Message):
+        """skill unloaded, stop showing the app launcher icon"""
+        skill_id = message.data["skill_id"]
+        if skill_id in self.homescreen_apps:
+            self.homescreen_apps.pop(skill_id)
+
+    #############
+    # skill properties
     @property
     def examples_enabled(self):
         # A variable to turn on/off the example text
@@ -202,14 +253,15 @@ class OVOSHomescreenSkill(OVOSSkill):
         if self.skill_info_api:
             examples = self.skill_info_api.skill_info_examples()
         elif self.settings.get("examples_enabled"):
-            LOG.warning("NOT IMPLEMENTED ERROR: utterance examples enabled in settings.json but not yet implemented! "
-                        "use an external skill_id via 'examples_skill' setting as an alternative")
-            self.settings["examples_enabled"] = False
+            for skill_id, data in self.skill_examples.items():
+                examples += data.get(self.lang, [])
 
         if examples:
             self.gui['skill_examples'] = {"examples": examples}
             self.gui['skill_info_enabled'] = self.examples_enabled
         else:
+            LOG.warning("no utterance examples registered with homescreen")
+            self.settings["examples_enabled"] = False
             self.gui['skill_info_enabled'] = False
         self.gui['skill_info_prefix'] = self.settings.get("examples_prefix", False)
 
@@ -423,107 +475,12 @@ class OVOSHomescreenSkill(OVOSSkill):
                 LOG.error(f"Failed to import Info Skill: {e}")
                 self.skill_info_api = None
 
-    #####################################################################
-    # Build Voice Applications Model
-    # TODO - handle this via bus, this was a standard from plasma bigscreen which we never really adopted,
-    #  and they dropped "voice apps" so there is nothing left to be compatible with
-
-    def find_icon_full_path(self, icon_name):
-        localuser = environ.get('USER')
-        folder_search_paths = ["/usr/share/icons/", "/usr/local/share/icons/",
-                               f"/home/{localuser}/.local/share/icons/"]
-        for folder_search_path in folder_search_paths:
-            # SVG extension
-            icon_full_path = folder_search_path + icon_name + ".svg"
-            if path.exists(icon_full_path):
-                return icon_full_path
-            # PNG extension
-            icon_full_path = folder_search_path + icon_name + ".png"
-            if path.exists(icon_full_path):
-                return icon_full_path
-            # JPEG extension
-            icon_full_path = folder_search_path + icon_name + ".jpg"
-            if path.exists(icon_full_path):
-                return icon_full_path
-
-    def parse_desktop_file(self, file_path):
-        # TODO - handle this via bus, this was a standard from plasma bigscreen which we never really adopted,
-        #  and they dropped "voice apps" so there is nothing left to be compatible with
-        if path.isfile(file_path) and path.splitext(file_path)[1] == ".desktop":
-
-            if path.isfile(file_path) and path.isfile(file_path) and path.getsize(file_path) > 0:
-
-                with open(file_path, "r") as f:
-                    file_contents = f.read()
-
-                    name_start = file_contents.find("Name=")
-                    name_end = file_contents.find("\n", name_start)
-                    name = file_contents[name_start + 5:name_end]
-
-                    icon_start = file_contents.find("Icon=")
-                    icon_end = file_contents.find("\n", icon_start)
-                    icon_name = file_contents[icon_start + 5:icon_end]
-                    icon = self.find_icon_full_path(icon_name)
-
-                    exec_start = file_contents.find("Exec=")
-                    exec_end = file_contents.find("\n", exec_start)
-                    exec_line = file_contents[exec_start + 5:exec_end]
-                    exec_array = exec_line.split(" ")
-                    for arg in exec_array:
-                        if arg.find("--skill=") == 0:
-                            skill_name = arg.split("=")[1]
-                            break
-                        else:
-                            skill_name = "None"
-                    exec_path = skill_name
-
-                    categories_start = file_contents.find("Categories=")
-                    categories_end = file_contents.find("\n", categories_start)
-                    categories = file_contents[categories_start +
-                                               11:categories_end]
-
-                    categories_list = categories.split(";")
-
-                    if "VoiceApp" in categories_list:
-                        app_entry = {
-                            "name": name,
-                            "thumbnail": icon,
-                            "action": exec_path
-                        }
-                        return app_entry
-                    else:
-                        return None
-            else:
-                return None
-        else:
-            return None
-
     def build_voice_applications_model(self):
-        voiceApplicationsList = []
-        localuser = environ.get('USER')
-        file_list = ["/usr/share/applications/", "/usr/local/share/applications/",
-                     f"/home/{localuser}/.local/share/applications/"]
-        for file_path in file_list:
-            if os.path.isdir(file_path):
-                files = listdir(file_path)
-                for file in files:
-                    app_dict = self.parse_desktop_file(file_path + file)
-                    if app_dict is not None:
-                        voiceApplicationsList.append(app_dict)
-
-        try:
-            sort_on = "name"
-            decorated = [(dict_[sort_on], dict_)
-                         for dict_ in voiceApplicationsList]
-            decorated.sort()
-            return [dict_ for (key, dict_) in decorated]
-
-        except Exception:
-            return voiceApplicationsList
+        return [{"name": skill_id, "thumbnail": data["icon"], "action": data["event"]}
+                for skill_id, data in self.homescreen_apps.items()]
 
     #####################################################################
     # Handle Widgets
-
     def handle_timer_widget_manager(self, message):
         timerWidget = message.data.get("widget", {})
         self.gui.send_event("ovos.timer.widget.manager.update", timerWidget)
