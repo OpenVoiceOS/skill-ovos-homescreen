@@ -131,13 +131,16 @@ Mycroft.CardDelegate {
     }
 
     onTextModelChanged: {
+        if (!idleRoot.examplesEnabled) {
+            return;
+        }
         exampleEntry = idleRoot.textModel[0] ? idleRoot.textModel[0] : ""
         exampleEntryUpdate(exampleEntry)
         textTimer.running = true
     }
 
     onVisibleChanged: {
-        if(visible && idleRoot.textModel){
+        if(visible && idleRoot.textModel && idleRoot.examplesEnabled){
             textTimer.running = true
         }
     }
