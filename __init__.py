@@ -53,7 +53,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         # Bus apis for skills to register with homescreen, ovos-workshop provides util methods
         # "skill_id": {"lang-code": ["utterance"]}
         self.skill_examples: Dict[str, Dict[str, List[str]]] = {}
-        # "skill_id": {"icon": "xx.png", "event": "emit.this.bus.event"}
+        # "skill_id": {"icon": "xx.png", "event": "emit.this.bus.event", "name": "app name"}
         self.homescreen_apps: Dict[str, Dict[str, str]] = {}
 
         super().__init__(*args, **kwargs)
@@ -151,7 +151,8 @@ class OVOSHomescreenSkill(OVOSSkill):
         skill_id = message.data["skill_id"]
         icon = message.data["icon"]
         event = message.data["event"]
-        self.homescreen_apps[skill_id] = {"icon": icon, "event": event}
+        name = message.data["name"]
+        self.homescreen_apps[skill_id] = {"icon": icon, "event": event, "name": name}
         LOG.info(f"Registered homescreen app from: {skill_id}")
 
     def handle_deregister_skill(self, message: Message):
@@ -320,7 +321,6 @@ class OVOSHomescreenSkill(OVOSSkill):
     #####################################################################
     # Homescreen Wallpaper Provider and Consumer Handling
     # Follows OVOS PHAL Wallpaper Manager API
-
     def collect_wallpapers(self):
         # this path is hardcoded in ovos_gui.constants and follows XDG spec
         GUI_CACHE_PATH = get_xdg_cache_save_path('ovos_gui')
@@ -447,7 +447,7 @@ class OVOSHomescreenSkill(OVOSSkill):
                 List[Dict[str, str]]: List of application metadata containing
                     name, thumbnail path, and action event
         """
-        return [{"name": skill_id, "thumbnail": data["icon"], "action": data["event"]}
+        return [{"name": data["name"], "thumbnail": data["icon"], "action": data["event"]}
                 for skill_id, data in self.homescreen_apps.items()]
 
     #####################################################################
@@ -499,7 +499,6 @@ class OVOSHomescreenSkill(OVOSSkill):
 
     ######################################################################
     # Handle Screenshot
-
     @intent_handler("take.screenshot.intent")
     def take_screenshot(self, message):
         folder_path = self.settings.get("screenshot_folder", "")
