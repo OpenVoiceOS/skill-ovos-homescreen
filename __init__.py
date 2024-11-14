@@ -53,8 +53,6 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.system_connectivity = None
 
         # Bus apis for skills to register with homescreen, ovos-workshop provides util methods
-
-        # "lang-code": ["utterance"]
         # "skill_id": {"lang-code": ["utterance"]}
         self.skill_examples: Dict[str, Dict[str, List[str]]] = {}
         # "skill_id": {"icon": "xx.png", "event": "emit.this.bus.event"}
