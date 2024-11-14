@@ -11,7 +11,7 @@ Mycroft.CardDelegate {
     skillBackgroundColorOverlay: "transparent"
     cardBackgroundOverlayColor: "transparent"
     cardRadius: 0
-    skillBackgroundSource: sessionData.wallpaper_path && sessionData.selected_wallpaper ? Qt.resolvedUrl(sessionData.wallpaper_path + sessionData.selected_wallpaper) : Qt.resolvedUrl("wallpapers/default.jpg")
+    skillBackgroundSource: sessionData.wallpaper_path && sessionData.selected_wallpaper ? Qt.resolvedUrl(sessionData.wallpaper_path + sessionData.selected_wallpaper) : Qt.resolvedUrl("https://raw.githubusercontent.com/OpenVoiceOS/ovos-PHAL-plugin-wallpaper-manager/refs/heads/dev/ovos_PHAL_plugin_wallpaper_manager/wallpapers/default.jpg")
 
     property bool horizontalMode: idleRoot.width > idleRoot.height ? 1 : 0
     readonly property color primaryBorderColor: Qt.rgba(1, 0, 0, 0.9)
