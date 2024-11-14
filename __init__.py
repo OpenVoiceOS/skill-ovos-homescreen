@@ -305,7 +305,7 @@ class OVOSHomescreenSkill(OVOSSkill):
 
         def_wallpaper_collection, loc_wallpaper_collection = [], []
 
-        for _, _, filenames in os.walk(f'{self.root_dir}/ui/wallpapers/'):
+        for _, _, filenames in os.walk(f'{self.root_dir}/gui/qt5/wallpapers/'):
             # we use cache path to ensure files are available to other docker containers etc
             # on load the full "ui" folder is cached in the standard dir
             def_wallpaper_collection = [f"{GUI_CACHE_PATH}/qt5/wallpapers/{wallpaper}"
