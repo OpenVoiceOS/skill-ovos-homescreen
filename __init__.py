@@ -297,7 +297,7 @@ class OVOSHomescreenSkill(OVOSSkill):
                                               date_format=self.config_core.get("date_format", "DMY"),
                                               time_format=self.config_core.get("time_format", "full"),
                                               lang=self.lang)
-        LOG.debug(f"Date info {self.lang}: {date_string_object}")
+        #LOG.debug(f"Date info {self.lang}: {date_string_object}")
         time_string = date_string_object.get("time_string")
         date_string = date_string_object.get("date_string")
         weekday_string = date_string_object.get("weekday_string")
