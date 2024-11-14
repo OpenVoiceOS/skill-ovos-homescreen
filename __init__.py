@@ -171,6 +171,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         if skill_id not in self.skill_examples:
             self.skill_examples[skill_id] = {}
         self.skill_examples[skill_id][lang] = examples
+        LOG.info(f"Registered utterance examples from: {skill_id}")
 
     def handle_register_homescreen_app(self, message: Message):
         """a skill is registering an icon + bus event to show in app drawer (bottom pill button)"""
@@ -178,6 +179,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         icon = message.data["icon"]
         event = message.data["event"]
         self.homescreen_apps[skill_id] = {"icon": icon, "event": event}
+        LOG.info(f"Registered homescreen app from: {skill_id}")
 
     def handle_deregister_skill(self, message: Message):
         """skill unloaded, stop showing it's example utterances and app launcher icon"""
