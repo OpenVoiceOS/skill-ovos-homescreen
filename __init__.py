@@ -253,7 +253,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         if self.skill_info_api:
             examples = self.skill_info_api.skill_info_examples()
         elif self.settings.get("examples_enabled"):
-            for skill_id, data in self.skill_examples.items():
+            for _skill_id, data in self.skill_examples.items():
                 examples += data.get(self.lang, [])
 
         if examples:
@@ -474,7 +474,13 @@ class OVOSHomescreenSkill(OVOSSkill):
                 LOG.error(f"Failed to import Info Skill: {e}")
                 self.skill_info_api = None
 
-    def build_voice_applications_model(self):
+    def build_voice_applications_model(self) -> List[Dict[str, str]]:
+        """Build a list of voice applications for the GUI model.
+
+           Returns:
+                List[Dict[str, str]]: List of application metadata containing
+                    name, thumbnail path, and action event
+        """
         return [{"name": skill_id, "thumbnail": data["icon"], "action": data["event"]}
                 for skill_id, data in self.homescreen_apps.items()]
 
