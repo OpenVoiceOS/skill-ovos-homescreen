@@ -1,10 +1,4 @@
 {
-    "change.wallpaper.intent": [
-        "change current wallpaper",
-        "change the wallpaper",
-        "change homescreen wallpaper",
-        "change wallpaper"
-    ],
     "take.screenshot.intent": [
         "take screenshot",
         "take a screenshot"

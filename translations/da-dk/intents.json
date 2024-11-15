@@ -1,10 +1,4 @@
 {
-  "change.wallpaper.intent": [
-    "ændre nuværende tapet",
-    "skifte tapet",
-    "skift tapet på startskærmen",
-    "skifte tapet"
-  ],
   "take.screenshot.intent": [
     "tag et skærmbillede",
     "tag et skærmbillede"

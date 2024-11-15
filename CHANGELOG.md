@@ -1,16 +1,12 @@
 # Changelog
 
-## [2.0.1a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/2.0.1a1) (2024-11-15)
+## [2.0.2a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/2.0.2a1) (2024-11-15)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/2.0.0...2.0.1a1)
-
-**Fixed bugs:**
-
-- use skills.json for examples [\#128](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/128)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/2.0.1...2.0.2a1)
 
 **Merged pull requests:**
 
-- fix:dict\_iteration\_error [\#132](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/132) ([JarbasAl](https://github.com/JarbasAl))
+- fix: remove wallpaper intent [\#134](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/134) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
