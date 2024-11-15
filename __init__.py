@@ -213,7 +213,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         elif self.settings.get("examples_enabled"):
             for _skill_id, data in self.skill_examples.items():
                 examples += data.get(self.lang, [])
-
+        examples = [e for e in examples if e.strip()]  # ensure no empty strings
         if examples:
             self.gui['skill_examples'] = {"examples": examples}
             self.gui['skill_info_enabled'] = self.examples_enabled
