@@ -312,11 +312,6 @@ class OVOSHomescreenSkill(OVOSSkill):
     #####################################################################
     # Homescreen Wallpaper Provider and Consumer Handling
     # Follows OVOS PHAL Wallpaper Manager API
-    @intent_handler("change.wallpaper.intent")
-    def change_wallpaper(self, _):
-        # TODO - move to wallpapers skill
-        self.bus.emit(Message("ovos.wallpaper.manager.change.wallpaper"))
-
     def handle_set_wallpaper(self, message):
         url = message.data.get("url")
         self.selected_wallpaper_path, self.selected_wallpaper = self.extract_wallpaper_info(url)
