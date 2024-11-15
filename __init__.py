@@ -139,7 +139,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         name = message.data["name"]
         self.homescreen_apps[skill_id] = {"icon": icon, "event": event, "name": name}
         LOG.info(f"Registered homescreen app from: {skill_id}")
-        self.gui["apps_enabled"] = True  # ensure homescreen re-renders
+        self.update_apps_drawer()  # ensure homescreen re-renders
 
     def handle_deregister_skill(self, message: Message):
         """skill unloaded, stop showing it's example utterances and app launcher icon"""
@@ -173,15 +173,14 @@ class OVOSHomescreenSkill(OVOSSkill):
     def handle_idle(self, message):
         self._load_skill_apis()
         LOG.debug('Activating OVOSHomescreen')
-        apps = self.build_voice_applications_model()
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
         self.gui['selected_wallpaper'] = self.selected_wallpaper
         self.gui['notification'] = {}
         self.gui["notification_model"] = self.notifications_storage_model
         self.gui["system_connectivity"] = "offline"
-        self.gui["applications_model"] = apps
         self.gui["persistent_menu_hint"] = self.settings.get("persistent_menu_hint", False)
-        self.gui["apps_enabled"] = bool(apps)
+
+        self.update_apps_drawer()
 
         try:
             self.update_dt()
@@ -202,6 +201,11 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.gui['dateFormat'] = self.config_core.get("date_format") or "DMY"
         self.gui.show_page("idle")
         self.bus.emit(Message("ovos.homescreen.displayed"))
+
+    def update_apps_drawer(self):
+        apps = self.build_voice_applications_model()
+        self.gui["applications_model"] = apps
+        self.gui["apps_enabled"] = bool(apps)
 
     def update_examples(self):
         """
