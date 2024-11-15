@@ -203,7 +203,8 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.bus.emit(Message("ovos.homescreen.displayed"))
 
     def update_apps_drawer(self):
-        apps = self.build_voice_applications_model()
+        apps = [{"name": data["name"], "thumbnail": data["icon"], "action": data["event"]}
+                for skill_id, data in dict(self.homescreen_apps).items()]
         self.gui["applications_model"] = apps
         self.gui["apps_enabled"] = bool(apps)
 
@@ -215,7 +216,7 @@ class OVOSHomescreenSkill(OVOSSkill):
         if self.skill_info_api:
             examples = self.skill_info_api.skill_info_examples()
         elif self.settings.get("examples_enabled"):
-            for _skill_id, data in self.skill_examples.items():
+            for _skill_id, data in dict(self.skill_examples).items():
                 examples += data.get(self.lang, [])
         examples = [e for e in examples if e.strip()]  # ensure no empty strings
         if examples:
@@ -381,16 +382,6 @@ class OVOSHomescreenSkill(OVOSSkill):
             except Exception as e:
                 LOG.error(f"Failed to import Info Skill: {e}")
                 self.skill_info_api = None
-
-    def build_voice_applications_model(self) -> List[Dict[str, str]]:
-        """Build a list of voice applications for the GUI model.
-
-           Returns:
-                List[Dict[str, str]]: List of application metadata containing
-                    name, thumbnail path, and action event
-        """
-        return [{"name": data["name"], "thumbnail": data["icon"], "action": data["event"]}
-                for skill_id, data in self.homescreen_apps.items()]
 
     #####################################################################
     # Handle Widgets
