@@ -11,7 +11,7 @@ Mycroft.CardDelegate {
     skillBackgroundColorOverlay: "transparent"
     cardBackgroundOverlayColor: "transparent"
     cardRadius: 0
-    skillBackgroundSource: sessionData.wallpaper_path && sessionData.selected_wallpaper ? Qt.resolvedUrl(sessionData.wallpaper_path + sessionData.selected_wallpaper) : Qt.resolvedUrl("wallpapers/default.jpg")
+    skillBackgroundSource: sessionData.wallpaper_path && sessionData.selected_wallpaper ? Qt.resolvedUrl(sessionData.wallpaper_path + sessionData.selected_wallpaper) : Qt.resolvedUrl("https://raw.githubusercontent.com/OpenVoiceOS/ovos-PHAL-plugin-wallpaper-manager/refs/heads/dev/ovos_PHAL_plugin_wallpaper_manager/wallpapers/default.jpg")
 
     property bool horizontalMode: idleRoot.width > idleRoot.height ? 1 : 0
     readonly property color primaryBorderColor: Qt.rgba(1, 0, 0, 0.9)
@@ -20,6 +20,7 @@ Mycroft.CardDelegate {
     property var textModel: sessionData.skill_examples ? sessionData.skill_examples.examples : []
     property color shadowColor: Qt.rgba(0, 0, 0, 0.7)
     property bool rtlMode: sessionData.rtl_mode ? Boolean(sessionData.rtl_mode) : false
+    property bool appsEnabled: sessionData.apps_enabled ? Boolean(sessionData.apps_enabled) : false
     property bool examplesEnabled: sessionData.skill_info_enabled ? Boolean(sessionData.skill_info_enabled) : false
     property bool examplesPrefix: sessionData.skill_info_prefix
     property bool weatherEnabled: sessionData.weather_api_enabled ? Boolean(sessionData.weather_api_enabled) : false
@@ -83,6 +84,7 @@ Mycroft.CardDelegate {
 
     controlBar: Local.AppsBar {
         id: appBar
+        visible: idleRoot.appsEnabled
         parentItem: idleRoot
         appsModel: sessionData.applications_model
         z: 100
@@ -271,7 +273,7 @@ Mycroft.CardDelegate {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: -Mycroft.Units.gridUnit * 2
         anchors.horizontalCenter: parent.horizontalCenter
-        visible: mainView.currentIndex == 1
+        visible: mainView.currentIndex == 1 && idleRoot.appsEnabled
         enabled: mainView.currentIndex == 1
         z: 2
 

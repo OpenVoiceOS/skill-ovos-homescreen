@@ -118,33 +118,6 @@ Item {
                             }
                         }
                     }
-
-                    Kirigami.Icon {
-                        id: micListenIcon
-                        anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        height: parent.height
-                        width: height
-                        source: Qt.resolvedUrl("icons/mic-start.svg")
-                        color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                appBarRoot.close()
-                                Mycroft.MycroftController.sendRequest("mycroft.mic.listen", {})
-                                Mycroft.SoundEffects.playClickedSound(Qt.resolvedUrl("sounds/start-listening.wav"))
-                            }
-
-                            onPressed: {
-                                micListenIcon.color = Kirigami.Theme.highlightColor
-                            }
-
-                            onReleased:  {
-                                micListenIcon.color = Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.5)
-                            }
-                        }
-                    }
                 }
 
                 Kirigami.Separator {
