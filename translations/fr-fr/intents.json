@@ -1,10 +1,4 @@
 {
-    "change.wallpaper.intent": [
-        "( change | modifie ) le ( fond d'\u00e9cran | arri\u00e8re plan )",
-        "change le fond d'\u00e9cran",
-        "change le fond d'\u00e9cran de la page d'accueil",
-        "( change | changer ) le fond d'\u00e9cran"
-    ],
     "take.screenshot.intent": [
         "prendre une capture d'\u00e9cran",
         "capture d'\u00e9cran"

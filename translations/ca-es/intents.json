@@ -1,10 +1,4 @@
 {
-  "change.wallpaper.intent": [
-    "canvia el fons de pantalla actual",
-    "canvia el fons de pantalla",
-    "canvia el fons de pantalla de la pantalla d'inici",
-    "canvia el fons"
-  ],
   "take.screenshot.intent": [
     "fes una captura de pantalla",
     "fes una captura"

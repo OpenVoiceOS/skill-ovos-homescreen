@@ -1,10 +1,4 @@
 {
-  "change.wallpaper.intent": [
-    "verander de achtergrond",
-    "achtergrond veranderen",
-    "verander startscherm achtergrond",
-    "verander achtergrond"
-  ],
   "take.screenshot.intent": [
     "maak (een) schermafbeelding",
     "schermenhot"

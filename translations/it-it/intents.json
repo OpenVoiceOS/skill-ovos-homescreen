@@ -1,10 +1,4 @@
 {
-  "change.wallpaper.intent": [
-    "(Cambia|Modifica) (l'immagine di|lo) sfondo (della schermata iniziale|)",
-    "cambia l'immagine (della schermata|dello schermo|)",
-    "cambia lo sfondo (della schermata|dello schermo|)",
-    "cambia sfondo"
-  ],
   "take.screenshot.intent": [
     "(scatta|fai) uno screenshot",
     "scatta una foto(grafia|)"
