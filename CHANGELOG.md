@@ -1,8 +1,20 @@
 # Changelog
 
-## [1.0.6a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/1.0.6a1) (2024-11-14)
+## [2.0.0a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/2.0.0a1) (2024-11-15)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.6a1...1.0.6a1)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/1.0.6a1...2.0.0a1)
+
+**Breaking changes:**
+
+- feat: bus api for homescreen apps and examples [\#130](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/130) ([JarbasAl](https://github.com/JarbasAl))
+
+**Implemented enhancements:**
+
+- adopt skill.json for examples [\#104](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/104)
+
+**Closed issues:**
+
+- Apps icons missing in the launch bar \(Mycroft 2\) [\#110](https://github.com/OpenVoiceOS/skill-ovos-homescreen/issues/110)
 
 **Merged pull requests:**
 
