@@ -9,7 +9,6 @@ import Mycroft 1.0 as Mycroft
 Item {
     id: bottomWidgetsAreaRootItem
     property bool verticalMode: false
-    property bool examplesDisplayEnabled: sessionData.skill_info_enabled ?  sessionData.skill_info_enabled : 1
     property bool mediaWidgetDisplayEnabled: idleRoot.mediaWidgetEnabled
 
     onMediaWidgetDisplayEnabledChanged: {
@@ -22,8 +21,8 @@ Item {
     ExamplesDisplay {
         color: "transparent"
         anchors.fill: parent
-        visible: bottomWidgetsAreaRootItem.examplesDisplayEnabled && !mediaWidgetDisplay.enabled
-        enabled: bottomWidgetsAreaRootItem.examplesDisplayEnabled && !mediaWidgetDisplay.enabled
+        visible: idleRoot.examplesEnabled && !mediaWidgetDisplay.enabled
+        enabled: idleRoot.examplesEnabled && !mediaWidgetDisplay.enabled
         verticalMode: bottomWidgetsAreaRootItem.verticalMode
     }
 

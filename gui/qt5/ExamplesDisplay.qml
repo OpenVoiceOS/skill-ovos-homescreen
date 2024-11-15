@@ -8,7 +8,6 @@ import Mycroft 1.0 as Mycroft
 Rectangle {
     id: examplesDisplay
     property bool verticalMode: false
-    property bool examplesPrefix: true
     color: "transparent"
 
     Connections {
@@ -53,7 +52,7 @@ Rectangle {
                 id: exampleLabel
                 width: parent.width
                 height: parent.height
-                visible: true
+                visible: idleRoot.examplesEnabled
                 fontSizeMode: Text.Fit
                 maximumLineCount: 3
                 elide: idleRoot.rtlMode ? Text.ElideLeft : Text.ElideRight
