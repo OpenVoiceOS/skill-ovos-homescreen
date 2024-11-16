@@ -318,6 +318,10 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.gui['wallpaper_path'] = self.selected_wallpaper_path
         self.gui['selected_wallpaper'] = self.selected_wallpaper
 
+    def change_wallpaper(self, message):
+        # GUI swipe left
+        self.bus.emit(Message("ovos.wallpaper.manager.change.wallpaper"))
+
     @staticmethod
     def extract_wallpaper_info(wallpaper: str) -> Tuple[str, str]:
         wallpaper_split = wallpaper.rsplit('/', 1)
