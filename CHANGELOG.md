@@ -1,12 +1,12 @@
 # Changelog
 
-## [2.0.2a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/2.0.2a1) (2024-11-15)
+## [2.0.3a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/2.0.3a1) (2024-11-16)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/2.0.1...2.0.2a1)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/2.0.2...2.0.3a1)
 
 **Merged pull requests:**
 
-- fix: remove wallpaper intent [\#134](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/134) ([JarbasAl](https://github.com/JarbasAl))
+- fix: wallpaper swipe left [\#136](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/136) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
