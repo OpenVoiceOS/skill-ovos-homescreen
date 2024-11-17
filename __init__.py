@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import datetime
+import random
 from typing import Dict, List, Tuple
 
 from ovos_bus_client import Message
@@ -215,6 +216,8 @@ class OVOSHomescreenSkill(OVOSSkill):
                 examples += data.get(self.lang, [])
         examples = [e for e in examples if e.strip()]  # ensure no empty strings
         if examples:
+            if self.settings.get("randomize_examples", True):
+                random.shuffle(examples)
             self.gui['skill_examples'] = {"examples": examples}
             self.gui['skill_info_enabled'] = self.examples_enabled
         else:
