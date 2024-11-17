@@ -215,9 +215,9 @@ class OVOSHomescreenSkill(OVOSSkill):
             for _skill_id, data in dict(self.skill_examples).items():
                 examples += data.get(self.lang, [])
         examples = [e for e in examples if e.strip()]  # ensure no empty strings
-        if self.settings.get("randomize_examples", True):
-            random.shuffle(examples)
         if examples:
+            if self.settings.get("randomize_examples", True):
+                random.shuffle(examples)
             self.gui['skill_examples'] = {"examples": examples}
             self.gui['skill_info_enabled'] = self.examples_enabled
         else:
