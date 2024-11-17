@@ -1,12 +1,12 @@
 # Changelog
 
-## [3.0.0a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/3.0.0a1) (2024-11-17)
+## [3.0.1a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/3.0.1a1) (2024-11-17)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/2.0.3...3.0.0a1)
+[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/3.0.0...3.0.1a1)
 
-**Breaking changes:**
+**Merged pull requests:**
 
-- fix!: remove screenshot intent [\#138](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/138) ([JarbasAl](https://github.com/JarbasAl))
+- fix: restore randomize examples setting [\#140](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/140) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
