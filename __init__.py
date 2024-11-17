@@ -13,8 +13,6 @@
 # limitations under the License.
 
 import datetime
-import os
-import tempfile
 from typing import Dict, List, Tuple
 
 from ovos_bus_client import Message
@@ -24,7 +22,7 @@ from ovos_utils.lang import standardize_lang_tag
 from ovos_utils.log import LOG
 from ovos_utils.process_utils import RuntimeRequirements
 from ovos_utils.time import now_local
-from ovos_workshop.decorators import intent_handler, resting_screen_handler
+from ovos_workshop.decorators import resting_screen_handler
 from ovos_workshop.skills.api import SkillApi
 from ovos_workshop.skills.ovos import OVOSSkill
 
@@ -106,9 +104,6 @@ class OVOSHomescreenSkill(OVOSSkill):
         self.bus.on("mycroft.network.connected", self.on_network_connected)
         self.bus.on("mycroft.internet.connected", self.on_internet_connected)
         self.bus.on("enclosure.notify.no_internet", self.on_no_internet)
-
-        # Handle Screenshot Response
-        self.bus.on("ovos.display.screenshot.get.response", self.screenshot_taken)
 
         SkillApi.connect_bus(self.bus)
         self._load_skill_apis()
@@ -428,26 +423,3 @@ class OVOSHomescreenSkill(OVOSSkill):
             "widget": message.data,
             "state": self.media_widget_player_state
         })
-
-    ######################################################################
-    # Handle Screenshot
-    @intent_handler("take.screenshot.intent")
-    def take_screenshot(self, message):
-        folder_path = self.settings.get("screenshot_folder", "")
-
-        if not folder_path:
-            folder_path = os.path.expanduser('~') + "/Pictures"
-
-        if not os.path.exists(folder_path):
-            try:
-                os.makedirs(folder_path, exist_ok=True)
-            except OSError as e:
-                LOG.error("Could not create screenshot folder: " + str(e))
-                folder_path = tempfile.gettempdir()
-
-        self.bus.emit(Message("ovos.display.screenshot.get", {"folderpath": folder_path}))
-
-    def screenshot_taken(self, message):
-        result = message.data.get("result")
-        display_message = f"Screenshot saved to {result}"
-        self.gui.show_notification(display_message)
