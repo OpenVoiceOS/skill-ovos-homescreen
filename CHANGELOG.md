@@ -1,12 +1,12 @@
 # Changelog
 
-## [3.0.1a1](https://github.com/OpenVoiceOS/skill-ovos-homescreen/tree/3.0.1a1) (2024-11-17)
+## [3.0.2a1](https://github.com/OpenVoiceOS/ovos-skill-homescreen/tree/3.0.2a1) (2024-11-19)
 
-[Full Changelog](https://github.com/OpenVoiceOS/skill-ovos-homescreen/compare/3.0.0...3.0.1a1)
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-skill-homescreen/compare/3.0.1...3.0.2a1)
 
 **Merged pull requests:**
 
-- fix: restore randomize examples setting [\#140](https://github.com/OpenVoiceOS/skill-ovos-homescreen/pull/140) ([JarbasAl](https://github.com/JarbasAl))
+- fix:allow workshop 3.0.0 [\#142](https://github.com/OpenVoiceOS/ovos-skill-homescreen/pull/142) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
